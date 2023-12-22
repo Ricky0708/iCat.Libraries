@@ -1,6 +1,6 @@
 using iCat.Localization.Models;
 using iCat.Localization.Extensions;
-using iCat.Localization.WebExtension;
+using iCat.Localization.Extension.Web;
 namespace iCat.Localization.Demo
 {
     public class Program
@@ -14,7 +14,7 @@ namespace iCat.Localization.Demo
                 .AddViewLocalization() // Localiztion in Razor View
                 .AddDataAnnotationsLocalization(); // Localization in Model Validation
 
-            // Configure  cultureInfo from request and support list
+            // Configure cultureInfo from request and support list
             builder.Services.AddRequestLocalizationOptions(new System.Globalization.CultureInfo[] {
                 new System.Globalization.CultureInfo("en-US"),
                 new System.Globalization.CultureInfo("zh-TW"),

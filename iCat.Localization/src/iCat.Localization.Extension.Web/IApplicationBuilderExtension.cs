@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace iCat.Localization.WebExtension
+namespace iCat.Localization.Extension.Web
 {
     public static class IApplicationBuilderExtension
     {
