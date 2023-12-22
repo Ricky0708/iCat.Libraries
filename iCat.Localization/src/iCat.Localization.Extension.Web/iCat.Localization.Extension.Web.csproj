@@ -5,7 +5,7 @@
 		<ImplicitUsings>disable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<GeneratePackageOnBuild>False</GeneratePackageOnBuild>
-		<Title>RNC.Localization.WebExtension</Title>
+		<Title>iCat.Localization.Extension.Web</Title>
 		<Authors>Ricky0708</Authors>
 		<Description>Dynamic localization extension library for web project </Description>
 		<PackageProjectUrl></PackageProjectUrl>
