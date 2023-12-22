@@ -24,6 +24,12 @@
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
 	</ItemGroup>
 	<ItemGroup>
+	  <None Include="..\..\README.md">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
+	</ItemGroup>
+	<ItemGroup>
 		<ProjectReference Include="..\iCat.Localization\iCat.Localization.csproj" />
 	</ItemGroup>
 
