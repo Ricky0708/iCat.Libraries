@@ -4,8 +4,8 @@ iCat.Localization is seamlessly integrated to the `Microsoft.Extensions.Localiza
 
 ## Installation
 ```bash
-dotnet add package iCat.Localization --version 1.0.0
-dotnet add package iCat.Localization.Extension.Web --version 1.0.0
+dotnet add package iCat.Localization
+dotnet add package iCat.Localization.Extension.Web
 ```
 
 ## Configuration
