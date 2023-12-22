@@ -15,9 +15,10 @@ namespace iCat.Localization.Demo.Controllers
 
         public IActionResult Index()
         {
-            var converted = "My name is {#Name}".AddParams(new { });
-            var resultA = "{Name}".Localize(); // current cultureInfo
-            var resultB = "{Name}".Localize("en-US"); // specify cultureName
+            // {TestSentence} is "My name is {#Name}" in LocalizationMapping data;
+            var converted = "{TestSentence}, Age is {#Age}, my school is {#School}".AddParams(new { Name = "Test", School = "School", Age = "99" });
+            var resultA = converted.Localize(); // current cultureInfo
+            var resultB = converted.Localize("en-US"); // specify cultureName
             return View();
         }
     }
