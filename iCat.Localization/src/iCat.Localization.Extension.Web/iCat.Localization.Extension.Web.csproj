@@ -8,9 +8,9 @@
 		<Title>iCat.Localization.Extension.Web</Title>
 		<Authors>Ricky0708</Authors>
 		<Description>Dynamic localization extension library for web project </Description>
-		<PackageProjectUrl></PackageProjectUrl>
+		<PackageProjectUrl>https://github.com/Ricky0708/iCat.Libraries/tree/main/iCat.Localization</PackageProjectUrl>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<RepositoryUrl>https://github.com/Ricky0708/RNC.Localization</RepositoryUrl>
+		<RepositoryUrl>https://github.com/Ricky0708/iCat.Libraries/tree/main/iCat.Localization</RepositoryUrl>
 		<PackageTags>Localization</PackageTags>
 		<PackageReleaseNotes>Version 1.0.0</PackageReleaseNotes>
 		<PackAsTool>False</PackAsTool>
