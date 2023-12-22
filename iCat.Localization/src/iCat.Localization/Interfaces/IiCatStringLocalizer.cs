@@ -20,7 +20,7 @@ namespace iCat.Localization.Interfaces
         /// <param name="str"></param>
         /// <param name="paramData"></param>
         /// <returns></returns>
-        string LangAddParams(string str, object paramData);
+        string AddParams(string str, object paramData);
 
         /// <summary>
         /// Localize string
