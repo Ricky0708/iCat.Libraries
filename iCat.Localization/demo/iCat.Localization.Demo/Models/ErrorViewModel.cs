@@ -1,4 +1,4 @@
-namespace iCat.Localization.WebApplicationTest.Models
+namespace iCat.Localization.Demo.Models
 {
     public class ErrorViewModel
     {

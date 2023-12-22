@@ -38,14 +38,14 @@ namespace iCat.Localization.Implements.Tests
         }
 
         [TestMethod()]
-        public void LangAddParamsTest()
+        public void AddParamsTest()
         {
             // arrange
             var provider = GetProvider();
             var processor = new iCatStringLocalizer(provider);
 
             // action
-            var result = processor.LangAddParams("Hello, my name is {#Name}", new { Name = "TestUser" });
+            var result = processor.AddParams("Hello, my name is {#Name}", new { Name = "TestUser" });
 
             // assert
             Assert.AreEqual("##Hello, my name is {#Name}^Name^TestUser@@", result);
@@ -61,7 +61,7 @@ namespace iCat.Localization.Implements.Tests
             var processor = new iCatStringLocalizer(provider);
 
             // action
-            var result = processor.Localize(processor.LangAddParams("{TestSentenceA}", new { Name = name, Age = 18 }), langCode);
+            var result = processor.Localize(processor.AddParams("{TestSentenceA}", new { Name = name, Age = 18 }), langCode);
 
             // assert
             Assert.AreEqual(expected, result);
@@ -77,7 +77,7 @@ namespace iCat.Localization.Implements.Tests
             var processor = new iCatStringLocalizer(provider);
 
             // action
-            var result = processor.Localize(processor.LangAddParams("{TestSentenceB}", new { Age = 18 }), langCode);
+            var result = processor.Localize(processor.AddParams("{TestSentenceB}", new { Age = 18 }), langCode);
 
             // assert
             Assert.AreEqual(expected, result);

@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace iCat.Localization.WebExtension
+namespace iCat.Localization.Extension.Web
 {
     public static class IApplicationBuilderExtension
     {
@@ -19,7 +19,7 @@ namespace iCat.Localization.WebExtension
         /// </summary>
         /// <param name="app"></param>
         /// <returns></returns>
-        public static WebApplication UseRncLocalizationExtension(this WebApplication app)
+        public static WebApplication UseiCatLocalizationExtension(this WebApplication app)
         {
             iCatLocalizationStringExtension.SetLocalizationFactory(app.Services.GetRequiredService<IiCatLocalizerFactory>());
             app.UseRequestLocalization();

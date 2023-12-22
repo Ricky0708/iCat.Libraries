@@ -26,9 +26,9 @@ namespace iCat.Localization.Extensions
         /// <param name="str"></param>
         /// <param name="paramData"></param>
         /// <returns></returns>
-        public static string LangAddParams(this string str, object paramData)
+        public static string AddParams(this string str, object paramData)
         {
-            return _factory?.Create().LangAddParams(str, paramData) ?? throw new NotImplementedException("");
+            return _factory?.Create().AddParams(str, paramData) ?? throw new NotImplementedException("");
         }
 
         /// <summary>

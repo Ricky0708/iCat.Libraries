@@ -94,7 +94,7 @@ namespace iCat.Localization.Implements
         /// <param name="str"></param>
         /// <param name="paramData"></param>
         /// <returns></returns>
-        public string LangAddParams(string str, object paramData)
+        public string AddParams(string str, object paramData)
         {
             var cacheKey = $"{str}{paramData.GetType().ToString()}";
             if (!_delgCacheGetProperty.TryGetValue(cacheKey, out var lambda))
@@ -221,7 +221,7 @@ namespace iCat.Localization.Implements
                 {
                     if (!item.GetType().IsValueType && item.GetType() != typeof(string))
                     {
-                        result = LangAddParams(result, item);
+                        result = AddParams(result, item);
                         result = Localize(result, CultureInfo.CurrentCulture.Name);
                     }
                     else

@@ -20,7 +20,7 @@ namespace iCat.Localization.Extensions
         /// </summary>
         /// <param name="services"></param>
         /// <returns></returns>
-        public static IServiceCollection AddRncLocalizationeService(this IServiceCollection services, IEnumerable<LocalizationMapping> localizationMappings, Options? options = null)
+        public static IServiceCollection AddiCatLocalizationeService(this IServiceCollection services, IEnumerable<LocalizationMapping> localizationMappings, Options? options = null)
         {
             services.AddSingleton<IStringLocalizerFactory>(s => s.GetRequiredService<IiCatLocalizerFactory>());
             services.AddSingleton<IStringLocalizer>(s => s.GetRequiredService<IiCatStringLocalizer>());

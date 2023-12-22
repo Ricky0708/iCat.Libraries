@@ -1,7 +1,7 @@
 using iCat.Localization.Models;
 using iCat.Localization.Extensions;
-using iCat.Localization.WebExtension;
-namespace iCat.Localization.WebApplicationTest
+using iCat.Localization.Extension.Web;
+namespace iCat.Localization.Demo
 {
     public class Program
     {
@@ -9,16 +9,19 @@ namespace iCat.Localization.WebApplicationTest
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
             builder.Services
                 .AddControllersWithViews()
-                .AddViewLocalization()
-                .AddDataAnnotationsLocalization();
+                .AddViewLocalization() // Localiztion in Razor View
+                .AddDataAnnotationsLocalization(); // Localization in Model Validation
+
+            // Configure cultureInfo from request and support list
             builder.Services.AddRequestLocalizationOptions(new System.Globalization.CultureInfo[] {
                 new System.Globalization.CultureInfo("en-US"),
                 new System.Globalization.CultureInfo("zh-TW"),
-            }, "LangCode");
-            builder.Services.AddRncLocalizationeService(new List<LocalizationMapping> {
+            }, "LangCode");  // key in Route/QueryString/Cookie
+
+            // Configure localization data
+            builder.Services.AddiCatLocalizationeService(new List<LocalizationMapping> {
                 new LocalizationMapping {
                     CultureName = "en-US",
                     LanguageData = new Dictionary<string, string>{
@@ -38,12 +41,10 @@ namespace iCat.Localization.WebApplicationTest
                     }
                 }
             }, new Options { EnableKeyNotFoundException = false });
-            ;
 
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
@@ -58,7 +59,8 @@ namespace iCat.Localization.WebApplicationTest
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
-            app.UseRncLocalizationExtension();
+            // Configure string extension for iCat.Localization
+            app.UseiCatLocalizationExtension();
 
             app.Run();
         }

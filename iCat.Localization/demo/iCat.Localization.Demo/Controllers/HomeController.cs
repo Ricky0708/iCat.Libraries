@@ -1,68 +1,25 @@
-using iCat.Localization.Extensions;
+using iCat.Localization.Demo.Models;
 using iCat.Localization.Interfaces;
-using iCat.Localization.WebApplicationTest.Models;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
+using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using iCat.Localization.Extensions;
 
-namespace iCat.Localization.WebApplicationTest.Controllers
+namespace iCat.Localization.Demo.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-        private readonly IStringLocalizer _stringLocalizer;
-        private readonly IiCatStringLocalizer _rncLocalizaionProcessor;
-
-        public HomeController(ILogger<HomeController> logger,
-            IStringLocalizer stringLocalizer,
-            IiCatStringLocalizer rncLocalizaionProcessor)
+        public HomeController()
         {
-            _logger = logger;
-            _stringLocalizer = stringLocalizer ?? throw new ArgumentNullException(nameof(stringLocalizer));
-            _rncLocalizaionProcessor = rncLocalizaionProcessor ?? throw new ArgumentNullException(nameof(rncLocalizaionProcessor));
         }
 
-        [HttpGet]
         public IActionResult Index()
         {
-            var a = _stringLocalizer.GetString("Name");
-            var b = _rncLocalizaionProcessor.Localize("{Name}", "zh-TW");
-            var c = "{Name}".Localize();
+            // {TestSentence} is "My name is {#Name}" in LocalizationMapping data;
+            var converted = "{TestSentence}, Age is {#Age}, my school is {#School}".AddParams(new { Name = "Test", School = "School", Age = "99" });
+            var resultA = converted.Localize(); // current cultureInfo
+            var resultB = converted.Localize("en-US"); // specify cultureName
             return View();
-        }
-
-        [HttpPost]
-        public IActionResult Post([FromBody] TestModel testModel)
-        {
-            if (ModelState.IsValid)
-            {
-                var a = _stringLocalizer.GetString("Name");
-                var b = _rncLocalizaionProcessor.Localize("{Name}", "zh-TW");
-                var c = "{Name}".Localize();
-                var d = _stringLocalizer.GetString("TestSentence", testModel);
-                var e = _rncLocalizaionProcessor.LangAddParams("{TestSentence}", testModel).Localize("zh-TW");
-                var f = "{TestSentence}".LangAddParams(testModel).Localize();
-                var g = _stringLocalizer.GetString("TestSentence", testModel);
-                var h = _rncLocalizaionProcessor.LangAddParams("{TestSentence}", testModel).Localize("zh-TW");
-                var i = "{TestSentence}".LangAddParams(testModel).Localize();
-            }
-            else
-            {
-                var n = 1;
-            }
-
-            return BadRequest(ModelState);
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }

@@ -14,7 +14,7 @@ using iCat.Localization.Models;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Localization.Routing;
 
-namespace iCat.Localization.WebExtension
+namespace iCat.Localization.Extension.Web
 {
     public static class IServiceCollectionExtension
     {
