@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+		<Title>RNC.Localization.WebExtension</Title>
+		<Authors>Ricky0708</Authors>
+		<Description>Dynamic localization extension library for web project </Description>
+		<PackageProjectUrl></PackageProjectUrl>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<RepositoryUrl>https://github.com/Ricky0708/RNC.Localization</RepositoryUrl>
+		<PackageTags>Localization</PackageTags>
+		<PackageReleaseNotes>Version 1.0.0</PackageReleaseNotes>
+		<PackAsTool>False</PackAsTool>
+		<NeutralLanguage>zh-TW</NeutralLanguage>
+		<AssemblyVersion>1.0.0</AssemblyVersion>
+		<FileVersion>1.0.0</FileVersion>
+		<Version>1.0.0</Version>
+		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+	</PropertyGroup>
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\iCat.Localization\iCat.Localization.csproj" />
+	</ItemGroup>
+
+</Project>
