@@ -22,11 +22,11 @@ namespace iCat.Localization.Extensions
         /// <returns></returns>
         public static IServiceCollection AddiCatLocalizationeService(this IServiceCollection services, IEnumerable<LocalizationMapping> localizationMappings, Options? options = null)
         {
-            services.AddSingleton<IStringLocalizerFactory>(s => s.GetRequiredService<IiCatLocalizerFactory>());
-            services.AddSingleton<IStringLocalizer>(s => s.GetRequiredService<IiCatStringLocalizer>());
-            services.AddSingleton<IiCatLocalizerFactory, iCatLocalizerFactory>();
-            services.AddSingleton<IiCatStringLocalizer>(s => new iCatStringLocalizer(s.GetRequiredService<IiCatLocalizationDataProvider>(), options));
-            services.AddSingleton<IiCatLocalizationDataProvider>(s => new DefaultiCatLocalizationDataProvider(localizationMappings));
+            services.AddSingleton((Func<IServiceProvider, IStringLocalizerFactory>)(s => s.GetRequiredService<Interfaces.LocalizerFactory>()));
+            services.AddSingleton((Func<IServiceProvider, IStringLocalizer>)(s => s.GetRequiredService<Interfaces.StringLocalizer>()));
+            services.AddSingleton<LocalizerFactory, LocalizerFactory>();
+            services.AddSingleton((Func<IServiceProvider, Interfaces.StringLocalizer>)(s => new Implements.StringLocalizer(s.GetRequiredService<LocalizationDataProvider>(), options)));
+            services.AddSingleton<LocalizationDataProvider>(s => new DefaultiCatLocalizationDataProvider(localizationMappings));
 
             return services;
         }
@@ -36,13 +36,13 @@ namespace iCat.Localization.Extensions
         /// </summary>
         /// <param name="services"></param>
         /// <returns></returns>
-        public static IServiceCollection AddiCatLocalizationeService(this IServiceCollection services, IiCatLocalizationDataProvider iCatLocalizationDataProvider, Options? options = null)
+        public static IServiceCollection AddiCatLocalizationeService(this IServiceCollection services, LocalizationDataProvider iCatLocalizationDataProvider, Options? options = null)
         {
-            services.AddSingleton<IStringLocalizerFactory>(s => s.GetRequiredService<IiCatLocalizerFactory>());
-            services.AddSingleton<IStringLocalizer>(s => s.GetRequiredService<IiCatStringLocalizer>());
-            services.AddSingleton<IiCatLocalizerFactory, iCatLocalizerFactory>();
-            services.AddSingleton<IiCatStringLocalizer>(s => new iCatStringLocalizer(s.GetRequiredService<IiCatLocalizationDataProvider>(), options));
-            services.AddSingleton<IiCatLocalizationDataProvider>(s => iCatLocalizationDataProvider);
+            services.AddSingleton((Func<IServiceProvider, IStringLocalizerFactory>)(s => s.GetRequiredService<Interfaces.LocalizerFactory>()));
+            services.AddSingleton((Func<IServiceProvider, IStringLocalizer>)(s => s.GetRequiredService<Interfaces.StringLocalizer>()));
+            services.AddSingleton<LocalizerFactory, LocalizerFactory>();
+            services.AddSingleton((Func<IServiceProvider, Interfaces.StringLocalizer>)(s => new Implements.StringLocalizer(s.GetRequiredService<LocalizationDataProvider>(), options)));
+            services.AddSingleton<LocalizationDataProvider>(s => iCatLocalizationDataProvider);
             return services;
         }
 
@@ -56,9 +56,9 @@ namespace iCat.Localization.Extensions
             //services.Where(p => p.ServiceType == typeof(IStringLocalizerFactory));
             services.RemoveAll(typeof(IStringLocalizerFactory));
             services.RemoveAll(typeof(IStringLocalizer));
-            services.RemoveAll(typeof(IiCatLocalizerFactory));
-            services.RemoveAll(typeof(IiCatStringLocalizer));
-            services.RemoveAll(typeof(IiCatLocalizationDataProvider));
+            services.RemoveAll(typeof(Interfaces.LocalizerFactory));
+            services.RemoveAll(typeof(Interfaces.StringLocalizer));
+            services.RemoveAll(typeof(LocalizationDataProvider));
             return services;
         }
 

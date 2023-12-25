@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace iCat.Localization.Interfaces
 {
-    public interface IiCatLocalizationDataProvider
+    public interface LocalizationDataProvider
     {
         delegate void UpdateHandler();
         event UpdateHandler? NotifyUpdate;

@@ -10,16 +10,16 @@ using System.Threading.Tasks;
 
 namespace iCat.Localization.Implements
 {
-    public class iCatLocalizerFactory : IiCatLocalizerFactory
+    public class LocalizerFactory : Interfaces.LocalizerFactory
     {
-        private readonly IiCatStringLocalizer _processor;
+        private readonly Interfaces.StringLocalizer _processor;
 
-        public iCatLocalizerFactory(IiCatStringLocalizer processor)
+        public LocalizerFactory(Interfaces.StringLocalizer processor)
         {
             _processor = processor ?? throw new ArgumentNullException(nameof(processor));
         }
 
-        public IiCatStringLocalizer Create()
+        public Interfaces.StringLocalizer Create()
         {
             return _processor;
         }

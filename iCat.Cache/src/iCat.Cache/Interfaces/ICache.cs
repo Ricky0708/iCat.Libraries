@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace iCat.Cache.Interfaces
 {
-    public interface IiCatCache
+    public interface ICache
     {
         T? Get<T>(string key);
         Task<T?> GetAsync<T>(string key);

@@ -15,7 +15,7 @@ using NuGet.Frameworks;
 namespace iCat.Cache.Implements.Tests
 {
     [TestClass()]
-    public class ForCacheTests
+    public class CacheTests
     {
         [TestMethod()]
         public void Get_Success_Test()
@@ -31,7 +31,7 @@ namespace iCat.Cache.Implements.Tests
             //    Arg.Any<DistributedCacheEntryOptions>());
 
 
-            var cache = new iCatCache(distributedCache);
+            var cache = new Cache(distributedCache);
 
             // action
             var result = cache.Get<TestModel>("AAA");
@@ -49,7 +49,7 @@ namespace iCat.Cache.Implements.Tests
             var distributedCache = Substitute.For<IDistributedCache>();
             distributedCache.Get(Arg.Do<string>(p => Assert.AreEqual(p, "AAA"))).Returns(p => null);
 
-            var cache = new iCatCache(distributedCache);
+            var cache = new Cache(distributedCache);
 
             // action
             var result = cache.Get<TestModel>("AAA");
@@ -67,7 +67,7 @@ namespace iCat.Cache.Implements.Tests
             var distributedCache = Substitute.For<IDistributedCache>();
             distributedCache.Get(Arg.Do<string>(p => Assert.AreEqual(p, "AAA"))).Returns(emptyValue);
 
-            var cache = new iCatCache(distributedCache);
+            var cache = new Cache(distributedCache);
 
             // action
             var result = cache.Get<TestModel>("AAA");
@@ -87,7 +87,7 @@ namespace iCat.Cache.Implements.Tests
             var distributedCache = Substitute.For<IDistributedCache>();
             distributedCache.Get(Arg.Do<string>(p => Assert.AreEqual(p, "AAA"))).Returns(jsonByte);
 
-            var cache = new iCatCache(distributedCache);
+            var cache = new Cache(distributedCache);
 
             // action
             var result = cache.GetString("AAA");
@@ -104,7 +104,7 @@ namespace iCat.Cache.Implements.Tests
             var distributedCache = Substitute.For<IDistributedCache>();
             distributedCache.Get(Arg.Do<string>(p => Assert.AreEqual(p, "AAA"))).Returns(p => null);
 
-            var cache = new iCatCache(distributedCache);
+            var cache = new Cache(distributedCache);
 
             // action
             var result = cache.GetString("AAA");
@@ -123,7 +123,7 @@ namespace iCat.Cache.Implements.Tests
             var distributedCache = Substitute.For<IDistributedCache>();
             distributedCache.Get(Arg.Do<string>(p => Assert.AreEqual(p, "AAA"))).Returns(jsonByte);
 
-            var cache = new iCatCache(distributedCache);
+            var cache = new Cache(distributedCache);
 
             // action
             var result = cache.GetString("AAA");
@@ -142,7 +142,7 @@ namespace iCat.Cache.Implements.Tests
             var distributedCache = Substitute.For<IDistributedCache>();
             distributedCache.Get(Arg.Do<string>(p => Assert.AreEqual(p, "AAA"))).Returns(jsonBytes);
 
-            var cache = new iCatCache(distributedCache);
+            var cache = new Cache(distributedCache);
 
             // action
             var result = cache.GetBytes("AAA");
@@ -159,7 +159,7 @@ namespace iCat.Cache.Implements.Tests
             var distributedCache = Substitute.For<IDistributedCache>();
             distributedCache.Get(Arg.Do<string>(p => Assert.AreEqual(p, "AAA"))).Returns(p => null);
 
-            var cache = new iCatCache(distributedCache);
+            var cache = new Cache(distributedCache);
 
             // action
             var result = cache.GetBytes("AAA");
@@ -177,7 +177,7 @@ namespace iCat.Cache.Implements.Tests
             var distributedCache = Substitute.For<IDistributedCache>();
             distributedCache.Get(Arg.Do<string>(p => Assert.AreEqual(p, "AAA"))).Returns(jsonBytes);
 
-            var cache = new iCatCache(distributedCache);
+            var cache = new Cache(distributedCache);
 
             // action
             var result = cache.GetBytes("AAA");
@@ -194,7 +194,7 @@ namespace iCat.Cache.Implements.Tests
             var distributedCache = Substitute.For<IDistributedCache>();
             distributedCache.GetAsync(Arg.Do<string>(p => Assert.AreEqual(p, "AAA"))).ReturnsNull();
 
-            var cache = new iCatCache(distributedCache);
+            var cache = new Cache(distributedCache);
 
             // action
             var result = cache.GetAsync<TestModel>("AAA").Result;
@@ -213,7 +213,7 @@ namespace iCat.Cache.Implements.Tests
             var distributedCache = Substitute.For<IDistributedCache>();
             distributedCache.GetAsync(Arg.Do<string>(p => Assert.AreEqual(p, "AAA"))).Returns(json);
 
-            var cache = new iCatCache(distributedCache);
+            var cache = new Cache(distributedCache);
 
             // action
             var result = cache.GetAsync<TestModel>("AAA").Result;
@@ -231,7 +231,7 @@ namespace iCat.Cache.Implements.Tests
             var distributedCache = Substitute.For<IDistributedCache>();
             distributedCache.GetAsync(Arg.Do<string>(p => Assert.AreEqual(p, "AAA"))).Returns(json);
 
-            var cache = new iCatCache(distributedCache);
+            var cache = new Cache(distributedCache);
 
             // action
             var result = cache.GetAsync<TestModel>("AAA").Result;
@@ -251,7 +251,7 @@ namespace iCat.Cache.Implements.Tests
             var distributedCache = Substitute.For<IDistributedCache>();
             distributedCache.GetAsync(Arg.Do<string>(p => Assert.AreEqual(p, "AAA"))).Returns(jsonByte);
 
-            var cache = new iCatCache(distributedCache);
+            var cache = new Cache(distributedCache);
 
             // action
             var result = cache.GetStringAsync("AAA").Result;
@@ -268,7 +268,7 @@ namespace iCat.Cache.Implements.Tests
             var distributedCache = Substitute.For<IDistributedCache>();
             distributedCache.GetAsync(Arg.Do<string>(p => Assert.AreEqual(p, "AAA"))).ReturnsNull();
 
-            var cache = new iCatCache(distributedCache);
+            var cache = new Cache(distributedCache);
 
             // action
             var result = cache.GetStringAsync("AAA").Result;
@@ -286,7 +286,7 @@ namespace iCat.Cache.Implements.Tests
             var distributedCache = Substitute.For<IDistributedCache>();
             distributedCache.GetAsync(Arg.Do<string>(p => Assert.AreEqual(p, "AAA"))).Returns(json);
 
-            var cache = new iCatCache(distributedCache);
+            var cache = new Cache(distributedCache);
 
             // action
             var result = cache.GetStringAsync("AAA").Result;
@@ -306,7 +306,7 @@ namespace iCat.Cache.Implements.Tests
             var distributedCache = Substitute.For<IDistributedCache>();
             distributedCache.GetAsync(Arg.Do<string>(p => Assert.AreEqual(p, "AAA"))).Returns(jsonBytes);
 
-            var cache = new iCatCache(distributedCache);
+            var cache = new Cache(distributedCache);
 
             // action
             var result = cache.GetBytesAsync("AAA").Result;
@@ -324,7 +324,7 @@ namespace iCat.Cache.Implements.Tests
             var distributedCache = Substitute.For<IDistributedCache>();
             distributedCache.GetAsync(Arg.Do<string>(p => Assert.AreEqual(p, "AAA"))).ReturnsNull();
 
-            var cache = new iCatCache(distributedCache);
+            var cache = new Cache(distributedCache);
 
             // action
             var result = cache.GetBytesAsync("AAA").Result;
@@ -344,7 +344,7 @@ namespace iCat.Cache.Implements.Tests
             var distributedCache = Substitute.For<IDistributedCache>();
             distributedCache.GetAsync(Arg.Do<string>(p => Assert.AreEqual(p, "AAA"))).Returns(jsonByte);
 
-            var cache = new iCatCache(distributedCache);
+            var cache = new Cache(distributedCache);
 
             // action
             var result = cache.GetBytesAsync("AAA").Result;
@@ -368,7 +368,7 @@ namespace iCat.Cache.Implements.Tests
                 Arg.Any<DistributedCacheEntryOptions>());
 
 
-            var cache = new iCatCache(distributedCache);
+            var cache = new Cache(distributedCache);
 
             // action
             cache.Set("AAA", data);
@@ -384,7 +384,7 @@ namespace iCat.Cache.Implements.Tests
             var data = default(TestModel);
             var distributedCache = Substitute.For<IDistributedCache>();
 
-            var cache = new iCatCache(distributedCache);
+            var cache = new Cache(distributedCache);
 
             // action
             cache.Set("AAA", data);
@@ -407,7 +407,7 @@ namespace iCat.Cache.Implements.Tests
                 Arg.Any<DistributedCacheEntryOptions>());
 
 
-            var cache = new iCatCache(distributedCache);
+            var cache = new Cache(distributedCache);
 
             // action
             cache.SetString("AAA", json);
@@ -423,7 +423,7 @@ namespace iCat.Cache.Implements.Tests
             var distributedCache = Substitute.For<IDistributedCache>();
 
 
-            var cache = new iCatCache(distributedCache);
+            var cache = new Cache(distributedCache);
 
             // action
             cache.SetString("AAA", "");
@@ -446,7 +446,7 @@ namespace iCat.Cache.Implements.Tests
                 Arg.Any<DistributedCacheEntryOptions>());
 
 
-            var cache = new iCatCache(distributedCache);
+            var cache = new Cache(distributedCache);
 
             // action
             cache.SetAsync("AAA", data).Wait();
@@ -462,7 +462,7 @@ namespace iCat.Cache.Implements.Tests
             var data = default(TestModel);
             var distributedCache = Substitute.For<IDistributedCache>();
 
-            var cache = new iCatCache(distributedCache);
+            var cache = new Cache(distributedCache);
 
             // action
             cache.SetAsync("AAA", data).Wait();
@@ -486,7 +486,7 @@ namespace iCat.Cache.Implements.Tests
                 Arg.Any<CancellationToken>());
 
 
-            var cache = new iCatCache(distributedCache);
+            var cache = new Cache(distributedCache);
 
             // action
             cache.SetStringAsync("AAA", json).Wait();
@@ -502,7 +502,7 @@ namespace iCat.Cache.Implements.Tests
             var distributedCache = Substitute.For<IDistributedCache>();
 
 
-            var cache = new iCatCache(distributedCache);
+            var cache = new Cache(distributedCache);
 
             // action
             cache.SetStringAsync("AAA", "").Wait();
@@ -519,7 +519,7 @@ namespace iCat.Cache.Implements.Tests
             distributedCache.Refresh(Arg.Do<string>(p => Assert.AreEqual(p, "AAA")));
 
 
-            var cache = new iCatCache(distributedCache);
+            var cache = new Cache(distributedCache);
 
             // action
             cache.Refresh("AAA");
@@ -536,7 +536,7 @@ namespace iCat.Cache.Implements.Tests
             distributedCache.RefreshAsync(Arg.Do<string>(p => Assert.AreEqual(p, "AAA")));
 
 
-            var cache = new iCatCache(distributedCache);
+            var cache = new Cache(distributedCache);
 
             // action
             cache.RefreshAsync("AAA").Wait();
@@ -553,7 +553,7 @@ namespace iCat.Cache.Implements.Tests
             distributedCache.Remove(Arg.Do<string>(p => Assert.AreEqual(p, "AAA")));
 
 
-            var cache = new iCatCache(distributedCache);
+            var cache = new Cache(distributedCache);
 
             // action
             cache.Remove("AAA");
@@ -570,7 +570,7 @@ namespace iCat.Cache.Implements.Tests
             distributedCache.RemoveAsync(Arg.Do<string>(p => Assert.AreEqual(p, "AAA")));
 
 
-            var cache = new iCatCache(distributedCache);
+            var cache = new Cache(distributedCache);
 
             // action
             cache.RemoveAsync("AAA").Wait();
