@@ -157,11 +157,11 @@ namespace iCat.RabbitMQ.Implements
         /// <returns></returns>
         private static IModel DeclareChannelAndQueInfo(IConnection connection, string queueName, bool isAutoDeleteQueue, string exchangeName)
         {
-            // 建立Exchange
+            // Create Exchange
             var channel = connection.CreateModel();
             channel.ExchangeDeclare(exchangeName, ExchangeType.Topic, false, false, null);
 
-            // 建立Queue
+            // Create Queue
             channel.QueueDeclare(queueName, false, false, isAutoDeleteQueue, null);
 
             // 把Queue跟Exchange bind

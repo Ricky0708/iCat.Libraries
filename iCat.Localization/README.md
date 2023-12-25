@@ -98,19 +98,18 @@ Sentence parser does not work with Microsoft IStringLocalizer, It can only use g
 ````C#
 using Microsoft.Extensions.Localization;
 
-public class HomeController : Controller
+public class MSStringLocalizerController : Controller
 {
     private readonly IStringLocalizer _stringLocalizer;
-
-    public HomeController(IStringLocalizer stringLocalizer)
+    public MSStringLocalizerController(IStringLocalizer stringLocalizer)
     {
         _stringLocalizer = stringLocalizer;
     }
-
+    [HttpGet]
     public IActionResult Index()
     {
-        var result = _stringLocalizer["Name"];
-        return View();
+        var result = _stringLocalizer["Name"].Value;
+        return Ok(result);
     }
 }
 
@@ -121,17 +120,19 @@ public class HomeController : Controller
 ````C#
 using iCat.Localization.Interfaces;
 
-public class HomeController : Controller
+public class iCatStringLocalizerController : Controller
 {
-    private readonly IiCatStringLocalizer _iCatStringLocalizer;
-    public HomeController(IiCatStringLocalizer iCatStringLocalizer)
+    private readonly IStringLocalizer _stringLocalizer;
+    public iCatStringLocalizerController(IStringLocalizer stringLocalizer)
     {
-        _iCatStringLocalizer = iCatStringLocalizer;
+        _stringLocalizer = stringLocalizer;
     }
+    [HttpGet]
     public IActionResult Index()
     {
-        var result = _iCatStringLocalizer.Localize("My name is {Name}", "en-US");
-        return View();
+        var resultA = _stringLocalizer["Name"].Value;
+        var resultB = _stringLocalizer.Localize("{Name}", CultureInfoCurrentCulture.Name);
+        return Ok($"{resultA}_{resultB}");
     }
 }
 ````
@@ -143,20 +144,18 @@ public class HomeController : Controller
 ````C#
 using iCat.Localization.Extensions;
 
-public class HomeController : Controller
+public class StringExtensionController : Controller
 {
-    public HomeController()
-    {
-    }
+    [HttpGet]
     public IActionResult Index()
     {
-        var resultA = "My name is {Name}".Localize(); // current cultureInfo
-        var resultB = "My name is {Name}".Localize("en-US"); // specify cultureName
-        return View();
+        var resultA = "My name is {Name}".Localize(); // currentcultureInfo
+        var resultB = "My name is {Name}".Localize(CultureInfoCurrentCulture.Name); // specify cultureName
+        return Ok($"{resultA}_{resultB}");
     }
 }
 ````
-
+---
 #### Parameters
 
 Reserved word "{# //property }" will get string from dynamic parameter.
@@ -167,13 +166,17 @@ using iCat.Localization.Extensions;
 
 public class HomeController : Controller
 {
+public class ParametersController : Controller
+{
+    [HttpGet]
     public IActionResult Index()
     {
-        var converted = "My name is {Name}, Age is {#Age}, my school is {#School}".AddParams(new { School = "School", Age = "99" });
+        var converted = "My name is {Name}, Age is {#Age}, my school is{#School}".AddParams(new { School = "School", Age = "99" });
         var resultA = converted.Localize(); // current cultureInfo
-        var resultB = converted.Localize("en-US"); // specify cultureName
-        return View();
+        var resultB = converted.Localize(CultureInfo.CurrentCultureName); // specify cultureName
+        return Ok($"{resultA}_{resultB}");
     }
+}
 }
 ````
 ---
@@ -183,15 +186,16 @@ public class HomeController : Controller
 ````C#
 using iCat.Localization.Extensions;
 
-public class HomeController : Controller
+public class MultiLayerController : Controller
 {
+    [HttpGet]
     public IActionResult Index()
     {
-        // {TestSentence} is "My name is {#Name}" in LocalizationMappingdata;
-        var converted = "{TestSentence}, Age is {#Age}, my school is{#School}".AddParams(new { Name = "Test", School = "School", Age ="99" });
+        // {TestSentence} is "My name is {#Name}" inLocalizationMappingdata;
+        var converted = "{TestSentence}, Age is {#Age}, my school i{#School}".AddParams(new { Name = "Test", School = "School", Age ="99" });
         var resultA = converted.Localize(); // current cultureInfo
-        var resultB = converted.Localize("en-US"); // specify cultureName
-        return View();
+        var resultB = converted.Localize(CultureInfo.CurrentCultureName); // specify cultureName
+        return Ok($"{resultA}_{resultB}");
     }
 }
 ````
