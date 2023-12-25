@@ -21,7 +21,7 @@ namespace iCat.DB.Client.MySQL
         #region command executors
 
         /// <summary>
-        /// <see cref="ISQLDBManager.ExecuteNonQuery(string, DbParameter[])"/>
+        /// <inheritdoc/>
         /// </summary>
         /// <param name="commandString"></param>
         /// <param name="params"></param>
@@ -42,7 +42,7 @@ namespace iCat.DB.Client.MySQL
         }
 
         /// <summary>
-        /// <see cref="ISQLDBManager.ExecuteNonQueryAsync(string, DbParameter[])"/>
+        /// <inheritdoc/>
         /// </summary>
         /// <param name="commandString"></param>
         /// <param name="params"></param>
@@ -63,7 +63,7 @@ namespace iCat.DB.Client.MySQL
         }
 
         /// <summary>
-        /// <see cref="ISQLDBManager.ExecuteScalar(string, DbParameter[])"/>
+        /// <inheritdoc/>
         /// </summary>
         /// <param name="commandString"></param>
         /// <param name="params"></param>
@@ -84,7 +84,7 @@ namespace iCat.DB.Client.MySQL
         }
 
         /// <summary>
-        /// <see cref="ISQLDBManager.ExecuteScalarAsync(string, DbParameter[])"/>
+        /// <inheritdoc/>
         /// </summary>
         /// <param name="commandString"></param>
         /// <param name="params"></param>
@@ -105,7 +105,7 @@ namespace iCat.DB.Client.MySQL
         }
 
         /// <summary>
-        /// <see cref="ISQLDBManager.ExecuteReader(string, DbParameter[], Action{DbDataReader})"/>
+        /// <inheritdoc/>
         /// </summary>
         /// <param name="commandString"></param>
         /// <param name="params"></param>
@@ -130,9 +130,8 @@ namespace iCat.DB.Client.MySQL
         }
 
         /// <summary>
-        /// <see cref="ISQLDBManager.ExecuteReader(string, DbParameter[])"/>
+        /// <inheritdoc/>
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <param name="commandString"></param>
         /// <param name="params"></param>
         /// <returns></returns>
@@ -156,9 +155,9 @@ namespace iCat.DB.Client.MySQL
         }
 
         /// <summary>
-        /// <see cref="ISQLDBManager.ExecuteReader{T}(string, DbParameter[], Func{DbDataReader, T})"/>
+        /// <inheritdoc/>
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="V"></typeparam>
         /// <param name="commandString"></param>
         /// <param name="params"></param>
         /// <param name="func"></param>
@@ -183,7 +182,7 @@ namespace iCat.DB.Client.MySQL
         }
 
         /// <summary>
-        /// <see cref="ISQLDBManager.ExecuteReaderAsync(string, DbParameter[], Action{DbDataReader})"/>
+        /// <inheritdoc/>
         /// </summary>
         /// <param name="commandString"></param>
         /// <param name="params"></param>

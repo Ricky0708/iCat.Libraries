@@ -51,8 +51,9 @@ namespace iCat.DB.Client.Implements
         #region IUnitOfWork
 
         /// <summary>
-        /// <see cref="ISQLDBManager.Open"/>
+        /// <inheritdoc/>
         /// </summary>
+        /// <returns></returns>
         public IDbConnection Open()
         {
             _conn.Open();
@@ -61,8 +62,9 @@ namespace iCat.DB.Client.Implements
         }
 
         /// <summary>
-        /// <see cref="ISQLDBManager.OpenAsync"/>
+        /// <inheritdoc/>
         /// </summary>
+        /// <returns></returns>
         public async Task<IDbConnection> OpenAsync()
         {
             await _conn.OpenAsync();
@@ -71,7 +73,7 @@ namespace iCat.DB.Client.Implements
         }
 
         /// <summary>
-        /// <see cref="ISQLDBManager.Close"/>
+        /// <inheritdoc/>
         /// </summary>
         public void Close()
         {
@@ -83,8 +85,9 @@ namespace iCat.DB.Client.Implements
         }
 
         /// <summary>
-        /// <see cref="ISQLDBManager.CloseAsync"/>
+        /// <inheritdoc/>
         /// </summary>
+        /// <returns></returns>
         public async ValueTask CloseAsync()
         {
             _tran?.Dispose();
@@ -95,8 +98,10 @@ namespace iCat.DB.Client.Implements
         }
 
         /// <summary>
-        /// <see cref="ISQLDBManager.BeginTransaction(IsolationLevel)"/>
+        /// <inheritdoc/>
         /// </summary>
+        /// <param name="isolationLevel"></param>
+        /// <returns></returns>
         public IDbTransaction BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.Unspecified)
         {
             _tran = _conn.BeginTransaction(isolationLevel);
@@ -105,8 +110,10 @@ namespace iCat.DB.Client.Implements
         }
 
         /// <summary>
-        /// <see cref="ISQLDBManager.BeginTransactionAsync(IsolationLevel)"/>
+        /// <inheritdoc/>
         /// </summary>
+        /// <param name="isolationLevel"></param>
+        /// <returns></returns>
         public async Task<IDbTransaction> BeginTransactionAsync(IsolationLevel isolationLevel = IsolationLevel.Unspecified)
         {
             _tran = await _conn.BeginTransactionAsync(isolationLevel);
@@ -115,7 +122,7 @@ namespace iCat.DB.Client.Implements
         }
 
         /// <summary>
-        /// <see cref="ISQLDBManager.Commit"/>
+        /// <inheritdoc/>
         /// </summary>
         public void Commit()
         {
@@ -126,8 +133,9 @@ namespace iCat.DB.Client.Implements
         }
 
         /// <summary>
-        /// <see cref="ISQLDBManager.CommitAsync"/>
+        /// <inheritdoc/>
         /// </summary>
+        /// <returns></returns>
         public async ValueTask CommitAsync()
         {
             _tran?.Commit();
@@ -138,7 +146,7 @@ namespace iCat.DB.Client.Implements
         }
 
         /// <summary>
-        /// <see cref="ISQLDBManager.Rollback"/>
+        /// <inheritdoc/>
         /// </summary>
         public void Rollback()
         {
@@ -149,8 +157,9 @@ namespace iCat.DB.Client.Implements
         }
 
         /// <summary>
-        /// <see cref="ISQLDBManager.RollbackAsync"/>
+        /// <inheritdoc/>
         /// </summary>
+        /// <returns></returns>
         public async ValueTask RollbackAsync()
         {
             _tran?.Rollback();
@@ -164,20 +173,71 @@ namespace iCat.DB.Client.Implements
 
         #region IConnection
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <param name="commandString"></param>
+        /// <param name="params"></param>
+        /// <returns></returns>
         public abstract int ExecuteNonQuery(string commandString, DbParameter[] @params);
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <param name="commandString"></param>
+        /// <param name="params"></param>
+        /// <returns></returns>
         public abstract Task<int> ExecuteNonQueryAsync(string commandString, DbParameter[] @params);
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <param name="commandString"></param>
+        /// <param name="params"></param>
+        /// <param name="action"></param>
         public abstract void ExecuteReader(string commandString, DbParameter[] @params, Action<DbDataReader> action);
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <param name="commandString"></param>
+        /// <param name="params"></param>
+        /// <returns></returns>
         public abstract IEnumerable<DbDataReader> ExecuteReader(string commandString, DbParameter[] @params);
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <typeparam name="V"></typeparam>
+        /// <param name="commandString"></param>
+        /// <param name="params"></param>
+        /// <param name="action"></param>
+        /// <returns></returns>
         public abstract IEnumerable<V> ExecuteReader<V>(string commandString, DbParameter[] @params, Func<DbDataReader, V> action);
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <param name="commandString"></param>
+        /// <param name="params"></param>
+        /// <param name="executedAction"></param>
+        /// <returns></returns>
         public abstract ValueTask ExecuteReaderAsync(string commandString, DbParameter[] @params, Action<DbDataReader> executedAction);
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <param name="commandString"></param>
+        /// <param name="params"></param>
+        /// <returns></returns>
         public abstract object ExecuteScalar(string commandString, DbParameter[] @params);
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <param name="commandString"></param>
+        /// <param name="params"></param>
+        /// <returns></returns>
         public abstract Task<object> ExecuteScalarAsync(string commandString, DbParameter[] @params);
 
         #endregion
