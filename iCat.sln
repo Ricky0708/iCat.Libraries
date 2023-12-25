@@ -1,0 +1,60 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34309.116
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iCat.Localization", "iCat.Localization\src\iCat.Localization\iCat.Localization.csproj", "{558FA157-525E-4166-900B-645FD86FCA5A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "iCat.Localization", "iCat.Localization", "{E9A7AB81-95CE-4F02-B0A9-0F343154C1BE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2F13804A-78D9-473F-9BCB-B314F18D0FE8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{0895F923-C32B-47C9-8432-34373CFF8D65}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iCat.Localization.Extension.Web", "iCat.Localization\src\iCat.Localization.Extension.Web\iCat.Localization.Extension.Web.csproj", "{18B24B48-BF75-4A95-AF9E-CCD43693082C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iCat.LocalizationTests", "iCat.Localization\test\iCat.LocalizationTests\iCat.LocalizationTests.csproj", "{A61E352F-7EE9-460F-BE23-6991A69CA901}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "demo", "demo", "{0BE59762-853E-4337-9D46-26EB45F18646}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iCat.Localization.Demo", "iCat.Localization\demo\iCat.Localization.Demo\iCat.Localization.Demo.csproj", "{D9F27B33-C8C7-4166-93E7-2939CBF6A5BF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{558FA157-525E-4166-900B-645FD86FCA5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{558FA157-525E-4166-900B-645FD86FCA5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{558FA157-525E-4166-900B-645FD86FCA5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{558FA157-525E-4166-900B-645FD86FCA5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18B24B48-BF75-4A95-AF9E-CCD43693082C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18B24B48-BF75-4A95-AF9E-CCD43693082C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18B24B48-BF75-4A95-AF9E-CCD43693082C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18B24B48-BF75-4A95-AF9E-CCD43693082C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A61E352F-7EE9-460F-BE23-6991A69CA901}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A61E352F-7EE9-460F-BE23-6991A69CA901}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A61E352F-7EE9-460F-BE23-6991A69CA901}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A61E352F-7EE9-460F-BE23-6991A69CA901}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9F27B33-C8C7-4166-93E7-2939CBF6A5BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9F27B33-C8C7-4166-93E7-2939CBF6A5BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9F27B33-C8C7-4166-93E7-2939CBF6A5BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9F27B33-C8C7-4166-93E7-2939CBF6A5BF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{558FA157-525E-4166-900B-645FD86FCA5A} = {2F13804A-78D9-473F-9BCB-B314F18D0FE8}
+		{2F13804A-78D9-473F-9BCB-B314F18D0FE8} = {E9A7AB81-95CE-4F02-B0A9-0F343154C1BE}
+		{0895F923-C32B-47C9-8432-34373CFF8D65} = {E9A7AB81-95CE-4F02-B0A9-0F343154C1BE}
+		{18B24B48-BF75-4A95-AF9E-CCD43693082C} = {2F13804A-78D9-473F-9BCB-B314F18D0FE8}
+		{A61E352F-7EE9-460F-BE23-6991A69CA901} = {0895F923-C32B-47C9-8432-34373CFF8D65}
+		{0BE59762-853E-4337-9D46-26EB45F18646} = {E9A7AB81-95CE-4F02-B0A9-0F343154C1BE}
+		{D9F27B33-C8C7-4166-93E7-2939CBF6A5BF} = {0BE59762-853E-4337-9D46-26EB45F18646}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A810155F-2505-4F4C-9E08-79E51ED9B742}
+	EndGlobalSection
+EndGlobal
