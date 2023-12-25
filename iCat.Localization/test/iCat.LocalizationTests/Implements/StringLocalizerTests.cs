@@ -15,7 +15,7 @@ using iCat.Localization.Models;
 namespace iCat.Localization.Implements.Tests
 {
     [TestClass()]
-    public class iCatStringLocalizerTests
+    public class StringLocalizerTests
     {
         #region ILocalizaionProcessor
 
@@ -24,7 +24,7 @@ namespace iCat.Localization.Implements.Tests
         {
             // arrange
             var provider = GetProvider();
-            var processor = new iCatStringLocalizer(provider);
+            var processor = new StringLocalizer(provider);
 
             // action
             var result_before_changed = processor.Localize("{Name}", "en-US");
@@ -42,7 +42,7 @@ namespace iCat.Localization.Implements.Tests
         {
             // arrange
             var provider = GetProvider();
-            var processor = new iCatStringLocalizer(provider);
+            var processor = new StringLocalizer(provider);
 
             // action
             var result = processor.AddParams("Hello, my name is {#Name}", new { Name = "TestUser" });
@@ -58,7 +58,7 @@ namespace iCat.Localization.Implements.Tests
         {
             // arrange
             var provider = GetProvider();
-            var processor = new iCatStringLocalizer(provider);
+            var processor = new StringLocalizer(provider);
 
             // action
             var result = processor.Localize(processor.AddParams("{TestSentenceA}", new { Name = name, Age = 18 }), langCode);
@@ -74,7 +74,7 @@ namespace iCat.Localization.Implements.Tests
         {
             // arrange
             var provider = GetProvider();
-            var processor = new iCatStringLocalizer(provider);
+            var processor = new StringLocalizer(provider);
 
             // action
             var result = processor.Localize(processor.AddParams("{TestSentenceB}", new { Age = 18 }), langCode);
@@ -94,7 +94,7 @@ namespace iCat.Localization.Implements.Tests
         {
             // arrange
             var provider = GetProvider();
-            var processor = new iCatStringLocalizer(provider);
+            var processor = new StringLocalizer(provider);
             CultureInfo.CurrentCulture = new CultureInfo(lang);
 
             // action
@@ -111,7 +111,7 @@ namespace iCat.Localization.Implements.Tests
         {
             // arrange
             var provider = GetProvider();
-            var processor = new iCatStringLocalizer(provider);
+            var processor = new StringLocalizer(provider);
             CultureInfo.CurrentCulture = new CultureInfo(lang);
 
             // action
@@ -128,7 +128,7 @@ namespace iCat.Localization.Implements.Tests
         {
             // arrange
             var provider = GetProvider();
-            var processor = new iCatStringLocalizer(provider);
+            var processor = new StringLocalizer(provider);
             CultureInfo.CurrentCulture = new CultureInfo(lang);
 
             // action
@@ -140,10 +140,9 @@ namespace iCat.Localization.Implements.Tests
    
         #endregion
 
-
-        private IiCatLocalizationDataProvider GetProvider()
+        private IStringLocalizationDataProvider GetProvider()
         {
-            var provider = Substitute.For<IiCatLocalizationDataProvider>();
+            var provider = Substitute.For<IStringLocalizationDataProvider>();
             provider.GetLanguageMappingData().Returns(new List<LocalizationMapping> {
                 new LocalizationMapping {
                     CultureName = "en-US",

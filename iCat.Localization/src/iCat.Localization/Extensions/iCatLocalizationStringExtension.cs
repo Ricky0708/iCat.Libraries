@@ -13,9 +13,9 @@ namespace iCat.Localization.Extensions
     public static class iCatLocalizationStringExtension
     {
 
-        private static IiCatLocalizerFactory? _factory;
+        private static Interfaces.IStringLocalizerFactory? _factory;
 
-        public static void SetLocalizationFactory(IiCatLocalizerFactory stringLocalizerFactory)
+        public static void SetLocalizationFactory(Interfaces.IStringLocalizerFactory stringLocalizerFactory)
         {
             _factory = stringLocalizerFactory ?? throw new ArgumentNullException(nameof(stringLocalizerFactory));
         }

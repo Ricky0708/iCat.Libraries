@@ -11,12 +11,12 @@ namespace iCat.Localization.Implements
     /// <summary>
     /// In order to reduce network latency, so data caching is implemented in Localizer, not here
     /// </summary>
-    public class DefaultiCatLocalizationDataProvider : IiCatLocalizationDataProvider
+    public class DefaultiCatLocalizationDataProvider : IStringLocalizationDataProvider
     {
         private readonly IEnumerable<LocalizationMapping> _localizationMappings;
 
         /// Call NotifyRefresh to notify the Localizer to update the cache
-        public event IiCatLocalizationDataProvider.UpdateHandler? NotifyUpdate;
+        public event IStringLocalizationDataProvider.UpdateHandler? NotifyUpdate;
 
         public DefaultiCatLocalizationDataProvider(IEnumerable<LocalizationMapping> localizationMappings)
         {
