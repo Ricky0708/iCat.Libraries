@@ -164,8 +164,7 @@ The variable "converted" could be stored in database, and read then localized.
 ````C#
 using iCat.Localization.Extensions;
 
-public class HomeController : Controller
-{
+
 public class ParametersController : Controller
 {
     [HttpGet]
@@ -176,7 +175,6 @@ public class ParametersController : Controller
         var resultB = converted.Localize(CultureInfo.CurrentCultureName); // specify cultureName
         return Ok($"{resultA}_{resultB}");
     }
-}
 }
 ````
 ---
