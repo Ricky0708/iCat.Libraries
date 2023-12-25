@@ -1,0 +1,80 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.Common;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using static iCat.DB.Client.Delegates.Handlers;
+
+namespace iCat.DB.Client.Interfaces
+{
+    public interface IUnitOfWork : IDisposable
+    {
+        /// <summary>
+        /// 物件的category
+        /// </summary>
+        string Category { get; }
+
+        #region operators
+
+        /// <summary>
+        /// Open connection
+        /// </summary>
+        /// <returns></returns>
+        IDbConnection Open();
+
+        /// <summary>
+        /// Open connection asynchronous
+        /// </summary>
+        /// <returns></returns>
+        Task<IDbConnection> OpenAsync();
+
+        /// <summary>
+        /// Close connection
+        /// </summary>
+        void Close();
+
+        /// <summary>
+        /// Close connection asynchronous
+        /// </summary>
+        /// <returns></returns>
+        ValueTask CloseAsync();
+
+        /// <summary>
+        /// Begin db transaction
+        /// </summary>
+        /// <returns></returns>
+        IDbTransaction BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.Unspecified);
+
+        /// <summary>
+        /// Begin transaction asynchronous
+        /// </summary>
+        /// <returns></returns>
+        Task<IDbTransaction> BeginTransactionAsync(IsolationLevel isolationLevel = IsolationLevel.Unspecified);
+
+        /// <summary>
+        /// Commit transaction
+        /// </summary>
+        void Commit();
+
+        /// <summary>
+        /// Commit transaction asynchronous 
+        /// </summary>
+        /// <returns></returns>
+        ValueTask CommitAsync();
+
+        /// <summary>
+        /// Rollback transaction
+        /// </summary>
+        void Rollback();
+
+        /// <summary>
+        /// Rollback asynchronous 
+        /// </summary>
+        /// <returns></returns>
+        ValueTask RollbackAsync();
+
+        #endregion
+    }
+}
