@@ -9,17 +9,17 @@ namespace iCat.RabbitMQ.Interfaces
 {
     public interface IPublisher
     {
-        /// <summary>
-        /// Get all available exchanges
-        /// </summary>
-        /// <returns></returns>
-        List<string> GetBasicExchangesName();
+        ///// <summary>
+        ///// Get all available exchanges
+        ///// </summary>
+        ///// <returns></returns>
+        //List<string> GetBasicExchangesName();
 
-        /// <summary>
-        /// Get all available models
-        /// </summary>
-        /// <returns></returns>
-        List<string> GetModelCanBeUsed();
+        ///// <summary>
+        ///// Get all available models
+        ///// </summary>
+        ///// <returns></returns>
+        //List<string> GetModelCanBeUsed();
 
         /// <summary>
         /// Send to mq

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace iCat.Localization.Interfaces
 {
-    public interface StringLocalizer : IStringLocalizer
+    public interface IStringLocalizer : Microsoft.Extensions.Localization.IStringLocalizer
     {
         /// <summary>
         /// Language Dictionary

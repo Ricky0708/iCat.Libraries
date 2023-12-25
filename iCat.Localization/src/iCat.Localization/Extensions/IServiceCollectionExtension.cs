@@ -22,11 +22,11 @@ namespace iCat.Localization.Extensions
         /// <returns></returns>
         public static IServiceCollection AddiCatLocalizationeService(this IServiceCollection services, IEnumerable<LocalizationMapping> localizationMappings, Options? options = null)
         {
-            services.AddSingleton((Func<IServiceProvider, IStringLocalizerFactory>)(s => s.GetRequiredService<Interfaces.LocalizerFactory>()));
-            services.AddSingleton((Func<IServiceProvider, IStringLocalizer>)(s => s.GetRequiredService<Interfaces.StringLocalizer>()));
-            services.AddSingleton<LocalizerFactory, LocalizerFactory>();
-            services.AddSingleton((Func<IServiceProvider, Interfaces.StringLocalizer>)(s => new Implements.StringLocalizer(s.GetRequiredService<LocalizationDataProvider>(), options)));
-            services.AddSingleton<LocalizationDataProvider>(s => new DefaultiCatLocalizationDataProvider(localizationMappings));
+            services.AddSingleton((Func<IServiceProvider, Microsoft.Extensions.Localization.IStringLocalizerFactory>)(s => s.GetRequiredService<Interfaces.IStringLocalizerFactory>()));
+            services.AddSingleton((Func<IServiceProvider, Microsoft.Extensions.Localization.IStringLocalizer>)(s => s.GetRequiredService<Interfaces.IStringLocalizer>()));
+            services.AddSingleton<Interfaces.IStringLocalizerFactory, StringLocalizerFactory>();
+            services.AddSingleton((Func<IServiceProvider, Interfaces.IStringLocalizer>)(s => new Implements.StringLocalizer(s.GetRequiredService<IStringLocalizationDataProvider>(), options)));
+            services.AddSingleton<IStringLocalizationDataProvider>(s => new DefaultiCatLocalizationDataProvider(localizationMappings));
 
             return services;
         }
@@ -36,13 +36,13 @@ namespace iCat.Localization.Extensions
         /// </summary>
         /// <param name="services"></param>
         /// <returns></returns>
-        public static IServiceCollection AddiCatLocalizationeService(this IServiceCollection services, LocalizationDataProvider iCatLocalizationDataProvider, Options? options = null)
+        public static IServiceCollection AddiCatLocalizationeService(this IServiceCollection services, IStringLocalizationDataProvider iCatLocalizationDataProvider, Options? options = null)
         {
-            services.AddSingleton((Func<IServiceProvider, IStringLocalizerFactory>)(s => s.GetRequiredService<Interfaces.LocalizerFactory>()));
-            services.AddSingleton((Func<IServiceProvider, IStringLocalizer>)(s => s.GetRequiredService<Interfaces.StringLocalizer>()));
-            services.AddSingleton<LocalizerFactory, LocalizerFactory>();
-            services.AddSingleton((Func<IServiceProvider, Interfaces.StringLocalizer>)(s => new Implements.StringLocalizer(s.GetRequiredService<LocalizationDataProvider>(), options)));
-            services.AddSingleton<LocalizationDataProvider>(s => iCatLocalizationDataProvider);
+            services.AddSingleton((Func<IServiceProvider, Microsoft.Extensions.Localization.IStringLocalizerFactory>)(s => s.GetRequiredService<Interfaces.IStringLocalizerFactory>()));
+            services.AddSingleton((Func<IServiceProvider, Microsoft.Extensions.Localization.IStringLocalizer>)(s => s.GetRequiredService<Interfaces.IStringLocalizer>()));
+            services.AddSingleton<Interfaces.IStringLocalizerFactory, StringLocalizerFactory>();
+            services.AddSingleton((Func<IServiceProvider, Interfaces.IStringLocalizer>)(s => new Implements.StringLocalizer(s.GetRequiredService<IStringLocalizationDataProvider>(), options)));
+            services.AddSingleton<IStringLocalizationDataProvider>(s => iCatLocalizationDataProvider);
             return services;
         }
 
@@ -54,11 +54,11 @@ namespace iCat.Localization.Extensions
         public static IServiceCollection RemoveiCatLocalizationService(this IServiceCollection services)
         {
             //services.Where(p => p.ServiceType == typeof(IStringLocalizerFactory));
-            services.RemoveAll(typeof(IStringLocalizerFactory));
-            services.RemoveAll(typeof(IStringLocalizer));
-            services.RemoveAll(typeof(Interfaces.LocalizerFactory));
-            services.RemoveAll(typeof(Interfaces.StringLocalizer));
-            services.RemoveAll(typeof(LocalizationDataProvider));
+            services.RemoveAll(typeof(Microsoft.Extensions.Localization.IStringLocalizerFactory));
+            services.RemoveAll(typeof(Microsoft.Extensions.Localization.IStringLocalizer));
+            services.RemoveAll(typeof(Interfaces.IStringLocalizerFactory));
+            services.RemoveAll(typeof(Interfaces.IStringLocalizer));
+            services.RemoveAll(typeof(IStringLocalizationDataProvider));
             return services;
         }
 

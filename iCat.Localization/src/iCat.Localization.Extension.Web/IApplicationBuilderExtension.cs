@@ -21,7 +21,7 @@ namespace iCat.Localization.Extension.Web
         /// <returns></returns>
         public static WebApplication UseiCatLocalizationExtension(this WebApplication app)
         {
-            iCatLocalizationStringExtension.SetLocalizationFactory(app.Services.GetRequiredService<LocalizerFactory>());
+            iCatLocalizationStringExtension.SetLocalizationFactory(app.Services.GetRequiredService<Interfaces.IStringLocalizerFactory>());
             app.UseRequestLocalization();
             return app;
         }

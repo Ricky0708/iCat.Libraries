@@ -18,7 +18,7 @@ namespace iCat.Localization.Implements
     /// <summary>
     /// Localizaion Processor
     /// </summary>
-    public class StringLocalizer : Interfaces.StringLocalizer
+    public class StringLocalizer : Interfaces.IStringLocalizer
     {
         /// <summary>
         /// <inheritdoc/>
@@ -31,10 +31,10 @@ namespace iCat.Localization.Implements
         private readonly ConcurrentDictionary<string, delgGetData> _delgCacheGetParam = new ConcurrentDictionary<string, delgGetData>();
         private readonly ConcurrentDictionary<string, delgGetData> _delgCacheGetProperty = new ConcurrentDictionary<string, delgGetData>();
         private readonly Regex _reg = new Regex("(##)[^###](?!.*\\1).+?@@", RegexOptions.Multiline | RegexOptions.Singleline);
-        private readonly LocalizationDataProvider _localizationDataProvider;
+        private readonly IStringLocalizationDataProvider _localizationDataProvider;
         private readonly Options _options;
 
-        public StringLocalizer(LocalizationDataProvider localizationDataProvider, Options? options = null)
+        public StringLocalizer(IStringLocalizationDataProvider localizationDataProvider, Options? options = null)
         {
             _localizationDataProvider = localizationDataProvider ?? throw new ArgumentNullException(nameof(localizationDataProvider));
             _options = options ?? new Options();

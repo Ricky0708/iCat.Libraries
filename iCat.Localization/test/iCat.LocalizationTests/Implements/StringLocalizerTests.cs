@@ -140,10 +140,9 @@ namespace iCat.Localization.Implements.Tests
    
         #endregion
 
-
-        private LocalizationDataProvider GetProvider()
+        private IStringLocalizationDataProvider GetProvider()
         {
-            var provider = Substitute.For<LocalizationDataProvider>();
+            var provider = Substitute.For<IStringLocalizationDataProvider>();
             provider.GetLanguageMappingData().Returns(new List<LocalizationMapping> {
                 new LocalizationMapping {
                     CultureName = "en-US",

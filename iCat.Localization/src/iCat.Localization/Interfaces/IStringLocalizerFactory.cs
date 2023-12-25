@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace iCat.Localization.Interfaces
 {
-    public interface LocalizerFactory : IStringLocalizerFactory
+    public interface IStringLocalizerFactory : Microsoft.Extensions.Localization.IStringLocalizerFactory
     {
-        StringLocalizer Create();
+        IStringLocalizer Create();
     }
 }

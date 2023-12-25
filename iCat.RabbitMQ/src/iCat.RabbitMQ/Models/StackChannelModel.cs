@@ -9,7 +9,6 @@ namespace iCat.RabbitMQ.Models
 {
     internal class StackChannelModel
     {
-
         /// <summary>
         /// last use time
         /// </summary>
@@ -18,6 +17,6 @@ namespace iCat.RabbitMQ.Models
         /// <summary>
         /// Channel
         /// </summary>
-        internal required IModel Channel { get; set; }
+        internal IModel Channel { get; set; } = default!;
     }
 }
