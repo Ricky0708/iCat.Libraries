@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace iCat.CacheTests.Models
+namespace iCat.DB.Client.Interfaces
 {
-    public class TestModel
+    public interface IUnitOfWork : IDisposable
     {
-        public string? Name { get; set; }
+
     }
 }
