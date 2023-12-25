@@ -51,7 +51,6 @@ namespace iCat.Localization.Implements
         /// <param name="langCode"></param>
         public void SetLanguageCollection(Dictionary<string, string> dic, string langCode)
         {
-
             if (!_langCache.ContainsKey(langCode))
             {
                 lock (_langCache)
@@ -73,18 +72,22 @@ namespace iCat.Localization.Implements
                 }
             }
 
-            _langCache[langCode] = dic;
-            lock (_processedCache[langCode])
+            if (!(_langCache[langCode].Count == dic.Count
+                && _langCache[langCode].All(p => dic.TryGetValue(p.Key, out var value) && value == p.Value)))
             {
-                _processedCache[langCode].Clear();
-            }
-            lock (_delgCacheGetParam)
-            {
-                _delgCacheGetParam.Clear();
-            }
-            lock (_delgCacheGetProperty)
-            {
-                _delgCacheGetProperty.Clear();
+                _langCache[langCode] = dic;
+                lock (_processedCache[langCode])
+                {
+                    _processedCache[langCode].Clear();
+                }
+                lock (_delgCacheGetParam)
+                {
+                    _delgCacheGetParam.Clear();
+                }
+                lock (_delgCacheGetProperty)
+                {
+                    _delgCacheGetProperty.Clear();
+                }
             }
         }
 
