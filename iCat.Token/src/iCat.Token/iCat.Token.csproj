@@ -7,11 +7,11 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Folder Include="Implements\Sequence\" />
+	  <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.0.3" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.0.3" />
+	  <ProjectReference Include="..\..\..\iCat.Crypto\src\iCat.Crypto\iCat.Crypto.csproj" />
 	</ItemGroup>
 
 </Project>
