@@ -27,6 +27,8 @@ namespace iCat.DB.Client.Implements
 
         public int CommandTimeout { get; set; } = 30;
 
+        public DbConnection Connection => _conn;
+
         #endregion
 
         #region private fields
