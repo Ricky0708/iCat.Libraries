@@ -1,11 +1,11 @@
-﻿using iCat.Token.Models.JWT;
+﻿using iCat.Token.JWT.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace iCat.Token.Implements.JWT
+namespace iCat.Token.JWT
 {
     internal static class Utilities
     {
