@@ -37,5 +37,33 @@ namespace iCat.DB.Client.Implements.Tests
             // assert
             Assert.IsTrue(a.Equals(b));
         }
+
+        [TestMethod()]
+        public void RemoveUnitOfWorkTest()
+        {
+            // arrange
+            var factory = new DBClientFactory(new DefaultConnectionStringProvider(new Dictionary<string, ConnectionData> {
+                { "A", new ConnectionData {
+                        ConnectionString = "server=192.168.51.233;port=2883;uid=mgplatform@mgplatform#test;pwd=mg@OB123!;DataBase=MgPlatform;max pool size=5000;",
+                        DBClientType = typeof(iCat.DB.Client.MySQL.DBClient)
+                    }
+                },
+                { "B", new ConnectionData {
+                        ConnectionString = "server=192.168.51.233;port=2883;uid=mgplatform@mgplatform#test;pwd=mg@OB123!;DataBase=MgPlatform;max pool size=5000;",
+                        DBClientType = typeof(iCat.DB.Client.MySQL.DBClient)
+                    }
+                }
+            }));
+
+            // action
+            var a = factory.GetUnitOfWork("B");
+            using (a)
+            {
+
+            }
+            var b = factory.GetConnection("B");
+            // assert
+            Assert.IsTrue(!a.Equals(b));
+        }
     }
 }

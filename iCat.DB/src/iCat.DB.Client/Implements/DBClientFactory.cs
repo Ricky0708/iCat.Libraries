@@ -38,11 +38,28 @@ namespace iCat.DB.Client.Implements
                     if (!_dbClients.TryGetValue(key, out result))
                     {
                         var connectionData = _provider.GetConnectionDatas()[key];
-                        _dbClients.Add(key, (DBClient)Activator.CreateInstance(connectionData.DBClientType!, key, connectionData.ConnectionString)!);
+                        var dbClient = (DBClient)Activator.CreateInstance(connectionData.DBClientType!, key, connectionData.ConnectionString)!;
+                        dbClient.DisposingHandler += RemoveInstance;
+                        _dbClients.Add(key, dbClient);
                     }
                 }
             }
             return _dbClients[key];
+        }
+
+        private void RemoveInstance(object? sender, EventArgs e)
+        {
+            var key = ((DBClient?)sender)!.Category;
+            if (_dbClients.ContainsKey(key))
+            {
+                lock (_dbClients)
+                {
+                    if (_dbClients.ContainsKey(key))
+                    {
+                        _dbClients.Remove(key);
+                    }
+                }
+            }
         }
 
     }
