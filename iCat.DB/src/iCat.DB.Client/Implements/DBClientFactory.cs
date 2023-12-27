@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace iCat.DB.Client.Implements
 {
-    public class DBClientFactory
+    public class DBClientFactory: IDBClientFactory
     {
         private readonly IConnectionStringProvider _provider;
         private readonly Dictionary<string, DBClient> _dbClients = new Dictionary<string, DBClient>();
