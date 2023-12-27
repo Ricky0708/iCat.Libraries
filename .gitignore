@@ -23,6 +23,7 @@ mono_crash.*
 [Rr]eleases/
 [Rr]eleased/
 [Pp]acked/
+[Bb]uilt/
 x64/
 x86/
 [Ww][Ii][Nn]32/
