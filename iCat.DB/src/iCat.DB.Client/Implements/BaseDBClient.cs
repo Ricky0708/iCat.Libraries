@@ -14,7 +14,18 @@ namespace iCat.DB.Client.Implements
 {
     public abstract class DBClient
     {
+        public event EventHandler? DisposingHandler;
+        public string Category { get; }
 
+        public DBClient(string category)
+        {
+            Category = category;
+        }
+
+        protected void Disposing()
+        {
+            DisposingHandler?.Invoke(this, EventArgs.Empty);
+        }
     }
     public abstract class BaseDBClient<T> : DBClient, IConnection, IUnitOfWork where T : DbConnection
     {
@@ -26,8 +37,6 @@ namespace iCat.DB.Client.Implements
         #endregion
 
         #region properties
-
-        public string Category => _category ?? "";
 
         public int CommandTimeout { get; set; } = 30;
 
@@ -46,7 +55,7 @@ namespace iCat.DB.Client.Implements
 
         #region constructors
 
-        public BaseDBClient(string category, string connectionString)
+        public BaseDBClient(string category, string connectionString) : base(category)
         {
             _conn = (T)Activator.CreateInstance(typeof(T), connectionString)!;
             _category = category;
@@ -268,7 +277,6 @@ namespace iCat.DB.Client.Implements
             await Task.CompletedTask;
         }
 
-
         private void Dispose(bool disposing)
         {
             if (_disposed)
@@ -281,16 +289,14 @@ namespace iCat.DB.Client.Implements
                 _conn.Close();
                 _tran?.Dispose();
                 _conn.Dispose();
+                base.Disposing();
             }
 
             _disposed = true;
         }
 
-
-
         ~BaseDBClient()
         {
-
             Dispose(false);
         }
 
