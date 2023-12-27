@@ -89,6 +89,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iCat.Token.Sequence", "iCat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iCat.DB.ClientTests", "iCat.DB\test\iCat.DB.ClientTests\iCat.DB.ClientTests.csproj", "{19097BB0-AFB0-43D6-8445-D10593B1A3C8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iCat.DB.Client.Extension.Web", "iCat.DB\src\iCat.DB.Client.Extension.Web\iCat.DB.Client.Extension.Web.csproj", "{D7E400AD-8247-46AB-8E3D-5DA36DA73D86}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -167,6 +169,10 @@ Global
 		{19097BB0-AFB0-43D6-8445-D10593B1A3C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{19097BB0-AFB0-43D6-8445-D10593B1A3C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{19097BB0-AFB0-43D6-8445-D10593B1A3C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7E400AD-8247-46AB-8E3D-5DA36DA73D86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7E400AD-8247-46AB-8E3D-5DA36DA73D86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7E400AD-8247-46AB-8E3D-5DA36DA73D86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7E400AD-8247-46AB-8E3D-5DA36DA73D86}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -207,6 +213,7 @@ Global
 		{8FDAF326-80F2-4293-8181-CA461914A2E9} = {475B2D00-C715-45D5-ACA7-8E293EC9437A}
 		{731D9D27-87A4-4C15-8EB7-2CBFD64D583E} = {475B2D00-C715-45D5-ACA7-8E293EC9437A}
 		{19097BB0-AFB0-43D6-8445-D10593B1A3C8} = {5221F59B-44E9-4641-AACD-5AFE366D5362}
+		{D7E400AD-8247-46AB-8E3D-5DA36DA73D86} = {D16211D0-93DE-44D0-9507-0E05DA1A3165}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A810155F-2505-4F4C-9E08-79E51ED9B742}
