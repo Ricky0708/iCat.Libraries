@@ -16,6 +16,8 @@ namespace iCat.DB.Client.Interfaces
         /// </summary>
         string Category { get; }
 
+        DbConnection Connection { get; }
+
         #region operators
 
         /// <summary>
