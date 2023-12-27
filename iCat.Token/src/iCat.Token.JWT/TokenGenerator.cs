@@ -1,6 +1,6 @@
 ﻿using iCat.Token.Constants;
 using iCat.Token.Interfaces;
-using iCat.Token.Models.JWT;
+using iCat.Token.JWT.Models;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -10,11 +10,11 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace iCat.Token.Implements.JWT
+namespace iCat.Token.JWT
 {
     public class TokenGenerator : ITokenGenerator
     {
-        public string Category => TokenImplementCategory.JWT;
+        public string Category => "JWT";
         private GenerateOption _options;
 
         /// <summary>

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace iCat.Token.Models.JWT
+namespace iCat.Token.JWT.Models
 {
     public class ValidateOption
     {

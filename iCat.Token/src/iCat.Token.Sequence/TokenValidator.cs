@@ -9,13 +9,13 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace iCat.Token.Implements.Sequence
+namespace iCat.Token.Sequence
 {
     public class TokenValidator<T> : ITokenValidator
     {
         private readonly ICryptor _cryptor;
 
-        public string Category => TokenImplementCategory.Sequence;
+        public string Category => "Sequence";
 
         public TokenValidator(ICryptor cryptor)
         {
