@@ -1,0 +1,8 @@
+for /d %%d in (".\iCat.Cache\src\*") do (dotnet pack %%d -c Release -o packed)
+for /d %%d in (".\iCat.Crypto\src\*") do (dotnet pack %%d -c Release -o packed)
+for /d %%d in (".\iCat.DB\src\*") do (dotnet pack %%d -c Release -o packed)
+for /d %%d in (".\iCat.Localization\src\*") do (dotnet pack %%d -c Release -o packed)
+for /d %%d in (".\iCat.Logger\src\*") do (dotnet pack %%d -c Release -o packed)
+for /d %%d in (".\iCat.RabbitMQ\src\*") do (dotnet pack %%d -c Release -o packed)
+for /d %%d in (".\iCat.Token\src\*") do (dotnet pack %%d -c Release -o packed)
+for /d %%d in (".\iCat.Worker\src\*") do (dotnet pack %%d -c Release -o packed)
