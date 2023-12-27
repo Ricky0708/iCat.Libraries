@@ -12,7 +12,8 @@ namespace iCat.DB.Client.Interfaces
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="key"></param>
         /// <returns></returns>
-        public Dictionary<string, ConnectionData> GetConnectionDatas();
+        ConnectionData GetConnectionData(string key);
     }
 }

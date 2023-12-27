@@ -16,9 +16,9 @@ namespace iCat.DB.Client.Implements
         {
             _connectionDatas = connectionDatas ?? throw new ArgumentNullException(nameof(connectionDatas));
         }
-        public Dictionary<string, ConnectionData> GetConnectionDatas()
+        public ConnectionData GetConnectionData(string key)
         {
-            return _connectionDatas;
+            return _connectionDatas[key];
         }
     }
 }
