@@ -9,7 +9,6 @@ namespace iCat.DB.Client.Models
 {
     public class ConnectionData
     {
-        public string Category { get; set; } = "";
         public Type? DBClientType { get; set; }
         public string ConnectionString { get; set; } = "";
     }
