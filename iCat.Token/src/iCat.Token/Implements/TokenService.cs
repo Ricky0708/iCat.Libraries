@@ -223,7 +223,7 @@ namespace iCat.Token.Implements
         private string GetConvertName(Type propType)
         {
             var enumName = propType.IsEnum ? "Int64" : Enum.GetNames(typeof(TypeCode)).FirstOrDefault(p => p == propType.Name);
-            var typeCode = (TypeCode)Enum.Parse(typeof(TypeCode), enumName);
+            var typeCode = (TypeCode)Enum.Parse(typeof(TypeCode), enumName!);
 
             switch (typeCode)
             {
