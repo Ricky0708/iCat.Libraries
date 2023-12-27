@@ -9,6 +9,10 @@ namespace iCat.DB.Client.Interfaces
 {
     public interface IConnectionStringProvider
     {
-        public IEnumerable<ConnectionData> GetConnectionDatas();
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public Dictionary<string, ConnectionData> GetConnectionDatas();
     }
 }

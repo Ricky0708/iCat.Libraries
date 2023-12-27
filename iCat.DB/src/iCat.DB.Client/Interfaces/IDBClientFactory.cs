@@ -8,7 +8,7 @@ namespace iCat.DB.Client.Interfaces
 {
     public interface IDBClientFactory
     {
-        IUnitOfWork GetUnitOfWork(string category);
-        IConnection GetConnection(string category);
+        IUnitOfWork GetUnitOfWork(string key);
+        IConnection GetConnection(string key);
     }
 }
