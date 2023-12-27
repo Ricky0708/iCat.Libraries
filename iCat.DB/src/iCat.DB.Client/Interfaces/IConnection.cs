@@ -31,6 +31,8 @@ namespace iCat.DB.Client.Interfaces
         /// </summary>
         int CommandTimeout { get; set; }
 
+        DbConnection Connection { get; }
+
         #endregion
 
         #region command executors

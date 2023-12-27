@@ -12,7 +12,11 @@ using static iCat.DB.Client.Constants.ExecuteCommand;
 
 namespace iCat.DB.Client.Implements
 {
-    public abstract class BaseDBClient<T> : IConnection, IUnitOfWork where T : DbConnection
+    public abstract class DBClient
+    {
+
+    }
+    public abstract class BaseDBClient<T> : DBClient, IConnection, IUnitOfWork where T : DbConnection
     {
 
         #region events
