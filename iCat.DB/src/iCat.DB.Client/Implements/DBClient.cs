@@ -1,5 +1,6 @@
 ﻿using iCat.DB.Client.Delegates;
 using iCat.DB.Client.Interfaces;
+using iCat.DB.Client.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -43,9 +44,9 @@ namespace iCat.DB.Client.Implements
 
         #region constructors
 
-        public DBClient(string category)
+        public DBClient(DBClientInfo info)
         {
-            _category = category;
+            _category = info.Category;
         }
 
         #endregion
