@@ -1,11 +1,12 @@
-﻿using iCat.DB.Client.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using iCat.DB.Client.Factory.Models;
+using iCat.DB.Client.Implements;
 
-namespace iCat.DB.Client.Interfaces
+namespace iCat.DB.Client.Factory.Interfaces
 {
     public interface IConnectionStringProvider
     {
@@ -14,6 +15,6 @@ namespace iCat.DB.Client.Interfaces
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        ConnectionData GetConnectionData(string key);
+        Func<DBClient> GetConnectionData(string key);
     }
 }

@@ -12,25 +12,12 @@ using static iCat.DB.Client.Constants.ExecuteCommand;
 
 namespace iCat.DB.Client.Implements
 {
-    public abstract class DBClient
-    {
-        public event EventHandler? DisposingHandler;
-        public string Category { get; }
-
-        public DBClient(string category)
-        {
-            Category = category;
-        }
-
-        protected void Disposing()
-        {
-            DisposingHandler?.Invoke(this, EventArgs.Empty);
-        }
-    }
-    public abstract class BaseDBClient<T> : DBClient, IConnection, IUnitOfWork where T : DbConnection
+    public abstract class DBClient : IConnection, IUnitOfWork
     {
 
         #region events
+
+        public event EventHandler? DisposingHandler;
 
         public event Handlers.ExectuedCommandHandler? ExecutedEvent;
 
@@ -38,16 +25,17 @@ namespace iCat.DB.Client.Implements
 
         #region properties
 
+        public string Category => _category;
+
         public int CommandTimeout { get; set; } = 30;
 
-        public DbConnection Connection => _conn;
+        public abstract DbConnection Connection { get; }
 
         #endregion
 
-        #region private fields
+        #region fields
 
-        private readonly string? _category;
-        protected readonly DbConnection _conn = default!;
+        private readonly string _category;
         protected IDbTransaction? _tran;
         private bool _disposed;
 
@@ -55,9 +43,8 @@ namespace iCat.DB.Client.Implements
 
         #region constructors
 
-        public BaseDBClient(string category, string connectionString) : base(category)
+        public DBClient(string category)
         {
-            _conn = (T)Activator.CreateInstance(typeof(T), connectionString)!;
             _category = category;
         }
 
@@ -71,9 +58,9 @@ namespace iCat.DB.Client.Implements
         /// <returns></returns>
         public IDbConnection Open()
         {
-            _conn.Open();
+            Connection.Open();
             CallEvent(Command.Opened, "").Wait();
-            return _conn;
+            return Connection;
         }
 
         /// <summary>
@@ -82,9 +69,9 @@ namespace iCat.DB.Client.Implements
         /// <returns></returns>
         public async Task<IDbConnection> OpenAsync()
         {
-            await _conn.OpenAsync();
+            await Connection.OpenAsync();
             await CallEvent(Command.Opened, "");
-            return _conn;
+            return Connection;
         }
 
         /// <summary>
@@ -94,7 +81,7 @@ namespace iCat.DB.Client.Implements
         {
             _tran?.Dispose();
             _tran = null;
-            _conn.Close();
+            Connection.Close();
 
             CallEvent(Command.Closed, "").Wait();
         }
@@ -107,7 +94,7 @@ namespace iCat.DB.Client.Implements
         {
             _tran?.Dispose();
             _tran = null;
-            _conn.Close();
+            Connection.Close();
             await CallEvent(Command.Closed, "");
             await Task.CompletedTask;
         }
@@ -119,7 +106,7 @@ namespace iCat.DB.Client.Implements
         /// <returns></returns>
         public IDbTransaction BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.Unspecified)
         {
-            _tran = _conn.BeginTransaction(isolationLevel);
+            _tran = Connection.BeginTransaction(isolationLevel);
             CallEvent(Command.TransactionBegined, "").Wait();
             return _tran;
         }
@@ -131,7 +118,7 @@ namespace iCat.DB.Client.Implements
         /// <returns></returns>
         public async Task<IDbTransaction> BeginTransactionAsync(IsolationLevel isolationLevel = IsolationLevel.Unspecified)
         {
-            _tran = await _conn.BeginTransactionAsync(isolationLevel);
+            _tran = await Connection.BeginTransactionAsync(isolationLevel);
             await CallEvent(Command.TransactionBegined, "");
             return _tran;
         }
@@ -269,6 +256,11 @@ namespace iCat.DB.Client.Implements
 
         #region dispose
 
+        protected void Disposing()
+        {
+            DisposingHandler?.Invoke(this, EventArgs.Empty);
+        }
+
         public void Dispose() => Dispose(true);
 
         public async ValueTask DisposeAsync()
@@ -286,20 +278,21 @@ namespace iCat.DB.Client.Implements
 
             if (disposing)
             {
-                _conn.Close();
+                Connection.Close();
                 _tran?.Dispose();
-                _conn.Dispose();
-                base.Disposing();
+                Connection.Dispose();
+                Disposing();
             }
 
             _disposed = true;
         }
 
-        ~BaseDBClient()
+        ~DBClient()
         {
             Dispose(false);
         }
 
         #endregion
+
     }
 }

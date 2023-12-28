@@ -12,10 +12,15 @@ using static iCat.DB.Client.Constants.ExecuteCommand;
 
 namespace iCat.DB.Client.MySQL
 {
-    public class DBClient : BaseDBClient<MySqlConnection>
+    public class DBClient : iCat.DB.Client.Implements.DBClient
     {
-        public DBClient(string category, string connectionString) : base(category, connectionString)
+        public override DbConnection Connection => _conn;
+
+        private readonly MySqlConnection _conn;
+
+        public DBClient(string category, string connectionString) : base(category)
         {
+            _conn = new MySqlConnection(connectionString);
         }
 
         #region command executors
@@ -28,7 +33,7 @@ namespace iCat.DB.Client.MySQL
         /// <returns></returns>
         public override int ExecuteNonQuery(string commandString, DbParameter[] @params)
         {
-            using (var cmd = new MySqlCommand(commandString, (MySqlConnection)_conn))
+            using (var cmd = new MySqlCommand(commandString, _conn))
             {
                 cmd.CommandTimeout = CommandTimeout;
                 if (_tran != null) cmd.Transaction = _tran as MySqlTransaction;
@@ -49,7 +54,7 @@ namespace iCat.DB.Client.MySQL
         /// <returns></returns>
         public override async Task<int> ExecuteNonQueryAsync(string commandString, DbParameter[] @params)
         {
-            using (var cmd = new MySqlCommand(commandString, (MySqlConnection)_conn))
+            using (var cmd = new MySqlCommand(commandString, _conn))
             {
                 cmd.CommandTimeout = CommandTimeout;
                 if (_tran != null) cmd.Transaction = _tran as MySqlTransaction;
@@ -70,7 +75,7 @@ namespace iCat.DB.Client.MySQL
         /// <returns></returns>
         public override object ExecuteScalar(string commandString, DbParameter[] @params)
         {
-            using (var cmd = new MySqlCommand(commandString, (MySqlConnection)_conn))
+            using (var cmd = new MySqlCommand(commandString, _conn))
             {
                 cmd.CommandTimeout = CommandTimeout;
                 if (_tran != null) cmd.Transaction = _tran as MySqlTransaction;
@@ -91,7 +96,7 @@ namespace iCat.DB.Client.MySQL
         /// <returns></returns>
         public override async Task<object> ExecuteScalarAsync(string commandString, DbParameter[] @params)
         {
-            using (var cmd = new MySqlCommand(commandString, (MySqlConnection)_conn))
+            using (var cmd = new MySqlCommand(commandString, _conn))
             {
                 cmd.CommandTimeout = CommandTimeout;
                 if (_tran != null) cmd.Transaction = _tran as MySqlTransaction;
@@ -112,7 +117,7 @@ namespace iCat.DB.Client.MySQL
         /// <param name="action"></param>
         public override void ExecuteReader(string commandString, DbParameter[] @params, Action<DbDataReader> action)
         {
-            using (var cmd = new MySqlCommand(commandString, (MySqlConnection)_conn))
+            using (var cmd = new MySqlCommand(commandString, _conn))
             {
                 cmd.CommandTimeout = CommandTimeout;
                 if (_tran != null) cmd.Transaction = _tran as MySqlTransaction;
@@ -137,7 +142,7 @@ namespace iCat.DB.Client.MySQL
         /// <returns></returns>
         public override IEnumerable<DbDataReader> ExecuteReader(string commandString, DbParameter[] @params)
         {
-            using (var cmd = new MySqlCommand(commandString, (MySqlConnection)_conn))
+            using (var cmd = new MySqlCommand(commandString, _conn))
             {
                 cmd.CommandTimeout = CommandTimeout;
                 if (_tran != null) cmd.Transaction = _tran as MySqlTransaction;
@@ -164,7 +169,7 @@ namespace iCat.DB.Client.MySQL
         /// <returns></returns>
         public override IEnumerable<V> ExecuteReader<V>(string commandString, DbParameter[] @params, Func<DbDataReader, V> func)
         {
-            using (var cmd = new MySqlCommand(commandString, (MySqlConnection)_conn))
+            using (var cmd = new MySqlCommand(commandString, _conn))
             {
                 cmd.CommandTimeout = CommandTimeout;
                 if (_tran != null) cmd.Transaction = _tran as MySqlTransaction;
@@ -190,7 +195,7 @@ namespace iCat.DB.Client.MySQL
         /// <returns></returns>
         public override async ValueTask ExecuteReaderAsync(string commandString, DbParameter[] @params, Action<DbDataReader> executedAction)
         {
-            using (var cmd = new MySqlCommand(commandString, (MySqlConnection)_conn))
+            using (var cmd = new MySqlCommand(commandString, _conn))
             {
                 cmd.CommandTimeout = CommandTimeout;
                 if (_tran != null) cmd.Transaction = _tran as MySqlTransaction;

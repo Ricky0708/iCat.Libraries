@@ -1,11 +1,12 @@
-﻿using iCat.DB.Client.Interfaces;
+﻿using iCat.DB.Client.Factory.Interfaces;
+using iCat.DB.Client.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
-namespace iCat.DB.Client.Implements
+using iCat.DB.Client.Implements;
+namespace iCat.DB.Client.Factory.Implements
 {
     public class DBClientFactory : IDBClientFactory
     {
@@ -18,33 +19,33 @@ namespace iCat.DB.Client.Implements
             _provider = provider ?? throw new ArgumentNullException(nameof(provider));
         }
 
-        public IUnitOfWork GetUnitOfWork(string key)
+        public IUnitOfWork GetUnitOfWork(string category)
         {
-            return (IUnitOfWork)GetInstance(key);
+            return (IUnitOfWork)GetInstance(category);
 
         }
 
-        public IConnection GetConnection(string key)
+        public IConnection GetConnection(string category)
         {
-            return (IConnection)GetInstance(key);
+            return (IConnection)GetInstance(category);
         }
 
-        private DBClient GetInstance(string key)
+        private DBClient GetInstance(string category)
         {
-            if (!_dbClients.TryGetValue(key, out var result))
+            if (!_dbClients.TryGetValue(category, out var result))
             {
                 lock (_dbClients)
                 {
-                    if (!_dbClients.TryGetValue(key, out result))
+                    if (!_dbClients.TryGetValue(category, out result))
                     {
-                        var connectionData = _provider.GetConnectionData(key);
-                        var dbClient = (DBClient)Activator.CreateInstance(connectionData.DBClientType!, key, connectionData.ConnectionString)!;
+                        var func = _provider.GetConnectionData(category);
+                        var dbClient = func?.Invoke() ?? throw new NotImplementedException();
                         dbClient.DisposingHandler += RemoveInstance;
-                        _dbClients.Add(key, dbClient);
+                        _dbClients.Add(category, dbClient);
                     }
                 }
             }
-            return _dbClients[key];
+            return _dbClients[category];
         }
 
         private void RemoveInstance(object? sender, EventArgs e)
