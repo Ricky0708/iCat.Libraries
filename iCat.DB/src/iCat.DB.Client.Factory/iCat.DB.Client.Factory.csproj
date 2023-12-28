@@ -5,10 +5,9 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
+
 	<ItemGroup>
-		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	  <ProjectReference Include="..\iCat.DB.Client\iCat.DB.Client.csproj" />
 	</ItemGroup>
-	<ItemGroup>
-	  <ProjectReference Include="..\iCat.DB.Client.Factory\iCat.DB.Client.Factory.csproj" />
-	</ItemGroup>
+
 </Project>

@@ -81,15 +81,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{475B2D00-C71
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{4007205B-07E6-4125-9979-71F7C41CFC2E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iCat.Token.JWT", "iCat.Token\src\iCat.Token.JWT\iCat.Token.JWT.csproj", "{8FDAF326-80F2-4293-8181-CA461914A2E9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iCat.Token.JWT", "iCat.Token\src\iCat.Token.JWT\iCat.Token.JWT.csproj", "{8FDAF326-80F2-4293-8181-CA461914A2E9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iCat.Token.Sequence", "iCat.Token\src\iCat.Token.Sequence\iCat.Token.Sequence.csproj", "{731D9D27-87A4-4C15-8EB7-2CBFD64D583E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iCat.Token.Sequence", "iCat.Token\src\iCat.Token.Sequence\iCat.Token.Sequence.csproj", "{731D9D27-87A4-4C15-8EB7-2CBFD64D583E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iCat.DB.ClientTests", "iCat.DB\test\iCat.DB.ClientTests\iCat.DB.ClientTests.csproj", "{19097BB0-AFB0-43D6-8445-D10593B1A3C8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iCat.DB.Client.Extension.Web", "iCat.DB\src\iCat.DB.Client.Extension.Web\iCat.DB.Client.Extension.Web.csproj", "{D7E400AD-8247-46AB-8E3D-5DA36DA73D86}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iCat.DB.Client.Extension.Web", "iCat.DB\src\iCat.DB.Client.Extension.Web\iCat.DB.Client.Extension.Web.csproj", "{D7E400AD-8247-46AB-8E3D-5DA36DA73D86}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iCat.CryptoTests", "iCat.Crypto\test\iCat.CryptoTests\iCat.CryptoTests.csproj", "{B10D6D65-603F-48DD-B05D-16C5571F2CF7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iCat.DB.Client.Factory", "iCat.DB\src\iCat.DB.Client.Factory\iCat.DB.Client.Factory.csproj", "{736FEB97-EC8D-489C-B390-B7F9D81465A7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iCat.DB.Client.FactoryTests", "iCat.DB\test\iCat.DB.Client.FactoryTests\iCat.DB.Client.FactoryTests.csproj", "{EC36562B-D2CD-47E7-92C6-C5254FAE08E0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -173,6 +177,14 @@ Global
 		{B10D6D65-603F-48DD-B05D-16C5571F2CF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B10D6D65-603F-48DD-B05D-16C5571F2CF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B10D6D65-603F-48DD-B05D-16C5571F2CF7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{736FEB97-EC8D-489C-B390-B7F9D81465A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{736FEB97-EC8D-489C-B390-B7F9D81465A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{736FEB97-EC8D-489C-B390-B7F9D81465A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{736FEB97-EC8D-489C-B390-B7F9D81465A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC36562B-D2CD-47E7-92C6-C5254FAE08E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC36562B-D2CD-47E7-92C6-C5254FAE08E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC36562B-D2CD-47E7-92C6-C5254FAE08E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC36562B-D2CD-47E7-92C6-C5254FAE08E0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -214,6 +226,8 @@ Global
 		{19097BB0-AFB0-43D6-8445-D10593B1A3C8} = {5221F59B-44E9-4641-AACD-5AFE366D5362}
 		{D7E400AD-8247-46AB-8E3D-5DA36DA73D86} = {D16211D0-93DE-44D0-9507-0E05DA1A3165}
 		{B10D6D65-603F-48DD-B05D-16C5571F2CF7} = {63E6E5D7-A3A2-4C2E-8421-9DC97B6BF884}
+		{736FEB97-EC8D-489C-B390-B7F9D81465A7} = {D16211D0-93DE-44D0-9507-0E05DA1A3165}
+		{EC36562B-D2CD-47E7-92C6-C5254FAE08E0} = {5221F59B-44E9-4641-AACD-5AFE366D5362}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A810155F-2505-4F4C-9E08-79E51ED9B742}
