@@ -1,0 +1,8 @@
+for /d %%d in (".\iCat.Cache\src\*") do (dotnet build %%d -f net7.0 -c Release -o built)
+for /d %%d in (".\iCat.Crypto\src\*") do (dotnet build %%d -f net7.0 -c Release -o built)
+for /d %%d in (".\iCat.DB\src\*") do (dotnet build %%d -f net7.0 -c Release -o built)
+for /d %%d in (".\iCat.Localization\src\*") do (dotnet build %%d -f net7.0 -c Release -o built)
+for /d %%d in (".\iCat.Logger\src\*") do (dotnet build %%d -f net7.0 -c Release -o built)
+for /d %%d in (".\iCat.RabbitMQ\src\*") do (dotnet build %%d -f net7.0 -c Release -o built)
+for /d %%d in (".\iCat.Token\src\*") do (dotnet build %%d -f net7.0 -c Release -o built)
+for /d %%d in (".\iCat.Worker\src\*") do (dotnet build %%d -f net7.0 -c Release -o built)
