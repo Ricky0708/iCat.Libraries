@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using iCat.DB.Client.Implements;
 
 namespace iCat.DB.Client.Interfaces
 {
@@ -14,6 +15,6 @@ namespace iCat.DB.Client.Interfaces
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        ConnectionData GetConnectionData(string key);
+        IConnectionData<DBClient> GetConnectionData(string key);
     }
 }

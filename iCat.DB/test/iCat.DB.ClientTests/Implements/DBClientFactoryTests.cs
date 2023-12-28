@@ -17,15 +17,13 @@ namespace iCat.DB.Client.Implements.Tests
         public void GetUnitOfWorkTest()
         {
             // arrange
-            var factory = new DBClientFactory(new DefaultConnectionStringProvider(new Dictionary<string, ConnectionData> {
-                { "A", new ConnectionData {
+            var factory = new DBClientFactory(new DefaultConnectionStringProvider(new Dictionary<string, IConnectionData<DBClient>> {
+                { "A", new ConnectionData<iCat.DB.Client.MySQL.DBClient> {
                         ConnectionString = "server=192.168.51.233;port=2883;uid=mgplatform@mgplatform#test;pwd=mg@OB123!;DataBase=MgPlatform;max pool size=5000;",
-                        DBClientType = typeof(iCat.DB.Client.MySQL.DBClient)
                     }
                 },
-                { "B", new ConnectionData {
+                { "B", new ConnectionData<iCat.DB.Client.MSSQL.DBClient> {
                         ConnectionString = "server=192.168.51.233;port=2883;uid=mgplatform@mgplatform#test;pwd=mg@OB123!;DataBase=MgPlatform;max pool size=5000;",
-                        DBClientType = typeof(iCat.DB.Client.MySQL.DBClient)
                     }
                 }
             }));
@@ -42,15 +40,13 @@ namespace iCat.DB.Client.Implements.Tests
         public void RemoveUnitOfWorkTest()
         {
             // arrange
-            var factory = new DBClientFactory(new DefaultConnectionStringProvider(new Dictionary<string, ConnectionData> {
-                { "A", new ConnectionData {
+            var factory = new DBClientFactory(new DefaultConnectionStringProvider(new Dictionary<string, IConnectionData<DBClient>> {
+                { "A", new ConnectionData<iCat.DB.Client.MySQL.DBClient> {
                         ConnectionString = "server=192.168.51.233;port=2883;uid=mgplatform@mgplatform#test;pwd=mg@OB123!;DataBase=MgPlatform;max pool size=5000;",
-                        DBClientType = typeof(iCat.DB.Client.MySQL.DBClient)
                     }
                 },
-                { "B", new ConnectionData {
+                { "B", new ConnectionData<iCat.DB.Client.MySQL.DBClient> {
                         ConnectionString = "server=192.168.51.233;port=2883;uid=mgplatform@mgplatform#test;pwd=mg@OB123!;DataBase=MgPlatform;max pool size=5000;",
-                        DBClientType = typeof(iCat.DB.Client.MySQL.DBClient)
                     }
                 }
             }));

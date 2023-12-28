@@ -14,7 +14,7 @@ namespace iCat.DB.Client.Extension.Web
 {
     public static class IServiceCollectionExtension
     {
-        public static IServiceCollection AddDBClientFactory(this IServiceCollection services, Dictionary<string, ConnectionData> connectionDatas)
+        public static IServiceCollection AddDBClientFactory(this IServiceCollection services, Dictionary<string, IConnectionData<DBClient>> connectionDatas)
         {
             services.AddScoped<IDBClientFactory, DBClientFactory>();
             services.AddSingleton<IConnectionStringProvider>(s => new DefaultConnectionStringProvider(connectionDatas));

@@ -10,13 +10,13 @@ namespace iCat.DB.Client.Implements
 {
     public class DefaultConnectionStringProvider : IConnectionStringProvider
     {
-        private readonly Dictionary<string, ConnectionData> _connectionDatas;
+        private readonly Dictionary<string, IConnectionData<DBClient>> _connectionDatas;
 
-        public DefaultConnectionStringProvider(Dictionary<string, ConnectionData> connectionDatas)
+        public DefaultConnectionStringProvider(Dictionary<string, IConnectionData<DBClient>> connectionDatas)
         {
             _connectionDatas = connectionDatas ?? throw new ArgumentNullException(nameof(connectionDatas));
         }
-        public ConnectionData GetConnectionData(string key)
+        public IConnectionData<DBClient> GetConnectionData(string key)
         {
             return _connectionDatas[key];
         }
