@@ -9,6 +9,9 @@ namespace iCat.RabbitMQ.Interfaces
 {
     public interface ISubscriber : IDisposable
     {
+
+        string Category { get; }
+
         /// <summary>
         /// Subscribe a queue, auto ack
         /// </summary>

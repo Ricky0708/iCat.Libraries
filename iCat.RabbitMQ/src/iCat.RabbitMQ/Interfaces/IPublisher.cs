@@ -22,6 +22,11 @@ namespace iCat.RabbitMQ.Interfaces
         //List<string> GetModelCanBeUsed();
 
         /// <summary>
+        /// Category
+        /// </summary>
+        string Category { get; }
+
+        /// <summary>
         /// Send to mq
         /// </summary>
         /// <typeparam name="T"></typeparam>
