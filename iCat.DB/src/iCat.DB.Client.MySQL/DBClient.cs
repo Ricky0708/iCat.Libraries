@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 using iCat.DB.Client.Implements;
 using static iCat.DB.Client.Constants.ExecuteCommand;
+using iCat.DB.Client.Models;
 
 
 namespace iCat.DB.Client.MySQL
@@ -18,7 +19,7 @@ namespace iCat.DB.Client.MySQL
 
         private readonly MySqlConnection _conn;
 
-        public DBClient(string category, string connectionString) : base(category)
+        public DBClient(DBClientInfo clientInfo, string connectionString) : base(clientInfo)
         {
             _conn = new MySqlConnection(connectionString);
         }

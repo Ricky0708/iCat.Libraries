@@ -26,8 +26,20 @@ namespace iCat.DB.Client.Factory.Implements
         private string GetCategory(Expression<Func<DBClient>>? func)
         {
             var newExpr = func?.Body as NewExpression ?? throw new ArgumentException();
-            var value = (newExpr.Arguments[0] as ConstantExpression)?.Value?.ToString() ?? throw new ArgumentException();
-            return value;
+            if (newExpr != null)
+            {
+                foreach (var arg in newExpr.Arguments)
+                {
+                    newExpr = arg as NewExpression;
+                    if (newExpr != null)
+                    {
+                        var value = (newExpr.Arguments[0] as ConstantExpression)?.Value?.ToString() ?? throw new ArgumentException();
+                        return value;
+                    }
+                }
+            }
+            throw new ArgumentException();
+
         }
 
         public Func<DBClient> GetConnectionData(string category)

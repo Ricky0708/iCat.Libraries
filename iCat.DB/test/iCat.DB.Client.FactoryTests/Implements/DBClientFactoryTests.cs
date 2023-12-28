@@ -16,17 +16,15 @@ namespace iCat.DB.Client.Factory.Implements.Tests
         [TestMethod()]
         public void GetUnitOfWorkTest()
         {
-            var n = typeof(MySQL.DBClient).BaseType;
-
             // arrange
             var factory = new DBClientFactory(new DefaultConnectionStringProvider(new List<ConnectionCreator> {
-                //new ConnectionCreator
-                //{
-                //    ConnectionGenerator = () => new MSSQL.DBClient("A", "server=192.168.51.233;port=2883;uid=mgplatform@mgplatform#test;pwd=mg@OB123!;DataBase=MgPlatform;max pool size=5000;")
-                //},
                 new ConnectionCreator
                 {
-                    ConnectionGenerator = () => new MySQL.DBClient("B", "server=192.168.51.233;port=2883;uid=mgplatform@mgplatform#test;pwd=mg@OB123!;DataBase=MgPlatform;max pool size=5000;")
+                    ConnectionGenerator = () => new MySQL.DBClient(new Client.Models.DBClientInfo("A"), "server=192.168.51.233;port=2883;uid=mgplatform@mgplatform#test;pwd=mg@OB123!;DataBase=MgPlatform;max pool size=5000;")
+                },
+                new ConnectionCreator
+                {
+                    ConnectionGenerator = () => new MySQL.DBClient(new Client.Models.DBClientInfo("B"), "server=192.168.51.233;port=2883;uid=mgplatform@mgplatform#test;pwd=mg@OB123!;DataBase=MgPlatform;max pool size=5000;")
                 }
             }));
 
@@ -45,11 +43,11 @@ namespace iCat.DB.Client.Factory.Implements.Tests
             var factory = new DBClientFactory(new DefaultConnectionStringProvider(new List<ConnectionCreator> {
                 new ConnectionCreator
                 {
-                    ConnectionGenerator = () => new MSSQL.DBClient("A", "server=192.168.51.233;port=2883;uid=mgplatform@mgplatform#test;pwd=mg@OB123!;DataBase=MgPlatform;max pool size=5000;")
+                    ConnectionGenerator = () => new MySQL.DBClient(new Client.Models.DBClientInfo("A"), "server=192.168.51.233;port=2883;uid=mgplatform@mgplatform#test;pwd=mg@OB123!;DataBase=MgPlatform;max pool size=5000;")
                 },
                 new ConnectionCreator
                 {
-                    ConnectionGenerator = () => new MySQL.DBClient("B", "server=192.168.51.233;port=2883;uid=mgplatform@mgplatform#test;pwd=mg@OB123!;DataBase=MgPlatform;max pool size=5000;")
+                    ConnectionGenerator = () => new MySQL.DBClient(new Client.Models.DBClientInfo("B"), "server=192.168.51.233;port=2883;uid=mgplatform@mgplatform#test;pwd=mg@OB123!;DataBase=MgPlatform;max pool size=5000;")
                 }
             }));
 
@@ -59,6 +57,7 @@ namespace iCat.DB.Client.Factory.Implements.Tests
             {
 
             }
+
             var b = factory.GetConnection("B");
             // assert
             Assert.IsTrue(!a.Equals(b));

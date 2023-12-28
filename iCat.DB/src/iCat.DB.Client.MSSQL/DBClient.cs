@@ -1,4 +1,5 @@
 ﻿using iCat.DB.Client.Implements;
+using iCat.DB.Client.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -18,7 +19,7 @@ namespace iCat.DB.Client.MSSQL
 
         private readonly SqlConnection _conn;
 
-        public DBClient(string category, string connectionString) : base(category)
+        public DBClient(DBClientInfo info, string connectionString) : base(info)
         {
             _conn = new SqlConnection(connectionString);
         }
