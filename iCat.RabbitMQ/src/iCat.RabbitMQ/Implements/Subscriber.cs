@@ -17,15 +17,19 @@ namespace iCat.RabbitMQ.Implements
     public class Subscriber : ISubscriber
     {
         private readonly IConnection _connection;
+        private readonly string _category;
         private readonly string _prefix;
 
         private delegate T delgExecuter<T>(string message);
         private readonly ConcurrentDictionary<string, IModel> _models;
         private readonly ConcurrentDictionary<string, string> _consumeTags;
 
-        public Subscriber(IConnection connection, string prefix)
+        public string Category => _category;
+
+        public Subscriber(IConnection connection, string category, string prefix)
         {
             this._connection = connection ?? throw new ArgumentNullException(nameof(connection));
+            _category = category ?? throw new ArgumentNullException(nameof(category));
             this._prefix = prefix;
             _models = new ConcurrentDictionary<string, IModel>();
             _consumeTags = new ConcurrentDictionary<string, string>();

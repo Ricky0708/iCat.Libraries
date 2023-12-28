@@ -14,9 +14,16 @@ namespace iCat.RabbitMQ.Implements
 {
     public class Publisher : IPublisher
     {
+        #region property
+
+        public string Category => _category;
+
+        #endregion
+
         #region fields
 
         private readonly IConnection _connection;
+        private readonly string _category;
         private readonly string _prefix;
         private delegate void delgExecuter(IModel channel, string exchange, ReadOnlyMemory<byte> body);
         private readonly delgExecuter? _sender;
@@ -25,9 +32,10 @@ namespace iCat.RabbitMQ.Implements
         #endregion
 
 
-        public Publisher(IConnection connection, string prefix)
+        public Publisher(IConnection connection, string category, string prefix)
         {
             _connection = connection ?? throw new ArgumentNullException(nameof(_connection));
+            _category = category ?? throw new ArgumentNullException(nameof(category));
             _prefix = prefix ?? throw new ArgumentNullException(nameof(prefix));
             _channelManager = new ChannelManager(_connection);
 
