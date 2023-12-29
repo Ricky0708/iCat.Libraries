@@ -11,15 +11,15 @@ using System.Linq.Expressions;
 
 namespace iCat.DB.Client.Factory.Implements
 {
-    public class DefaultConnectionStringProvider : IConnectionStringProvider
+    public class DefaultConnectionProvider : IConnectionProvider
     {
         private readonly Dictionary<string, Func<DBClient>> _connectionDatas;
 
-        public DefaultConnectionStringProvider(List<ConnectionCreator> connectionDatas)
+        public DefaultConnectionProvider(params Expression<Func<DBClient>>[] connectionDatas)
         {
             _connectionDatas = connectionDatas?.ToDictionary(
-                p => GetCategory(p.ConnectionGenerator),
-                p => p.ConnectionGenerator?.Compile() ?? throw new ArgumentNullException(nameof(p)))
+                p => GetCategory(p),
+                p => p?.Compile() ?? throw new ArgumentNullException(nameof(p)))
                 ?? throw new ArgumentNullException(nameof(connectionDatas));
         }
 

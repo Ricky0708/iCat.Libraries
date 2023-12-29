@@ -8,7 +8,7 @@ using iCat.DB.Client.Implements;
 
 namespace iCat.DB.Client.Factory.Interfaces
 {
-    public interface IConnectionStringProvider
+    public interface IConnectionProvider
     {
         /// <summary>
         /// 
