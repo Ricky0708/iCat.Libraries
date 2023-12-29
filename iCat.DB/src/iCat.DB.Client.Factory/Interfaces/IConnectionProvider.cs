@@ -15,6 +15,6 @@ namespace iCat.DB.Client.Factory.Interfaces
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        Func<DBClient> GetDBClientCreateor(string key);
+        Func<DBClient> GetDBClientCreator(string key);
     }
 }

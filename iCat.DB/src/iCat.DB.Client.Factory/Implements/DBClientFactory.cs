@@ -38,7 +38,7 @@ namespace iCat.DB.Client.Factory.Implements
                 {
                     if (!_dbClients.TryGetValue(category, out result))
                     {
-                        var func = _provider.GetDBClientCreateor(category);
+                        var func = _provider.GetDBClientCreator(category);
                         var dbClient = func?.Invoke() ?? throw new NotImplementedException();
                         dbClient.DisposingHandler += RemoveInstance;
                         _dbClients.Add(category, dbClient);
