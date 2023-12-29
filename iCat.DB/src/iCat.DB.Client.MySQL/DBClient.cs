@@ -19,6 +19,11 @@ namespace iCat.DB.Client.MySQL
 
         private readonly MySqlConnection _conn;
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <param name="clientInfo"></param>
+        /// <param name="connectionString"></param>
         public DBClient(DBClientInfo clientInfo, string connectionString) : base(clientInfo)
         {
             _conn = new MySqlConnection(connectionString);

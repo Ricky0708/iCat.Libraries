@@ -15,10 +15,12 @@ namespace iCat.Worker.Models
         /// Is execute job first time when task start
         /// </summary>
         public bool IsExecuteWhenStart { get; set; } = false;
+
         /// <summary>
         /// limit retry times ( -1: forever )
         /// </summary>
         public int RetryTimes { get; set; } = 0;
+
         /// <summary>
         /// millisecond
         /// </summary>

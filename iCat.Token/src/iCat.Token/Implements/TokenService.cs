@@ -41,6 +41,11 @@ namespace iCat.Token.Implements
             _tokenValidator = tokenValidator ?? throw new ArgumentNullException(nameof(tokenValidator));
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <param name="dataModel"></param>
+        /// <returns></returns>
         public string GenerateToken(T dataModel)
         {
             var props = typeof(T).GetProperties();
@@ -81,17 +86,32 @@ namespace iCat.Token.Implements
             return GenerateToken(claims);
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <param name="claims"></param>
+        /// <returns></returns>
         public string GenerateToken(List<Claim> claims)
         {
             return _tokenGenerator.GenerateToken(claims);
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
         public ValidationResult ValidateToken(string token)
         {
             var result = _tokenValidator.Validate(token);
             return result;
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
         public ValidationDataResult<T> ValidateWithReturnData(string token)
         {
             var validateResult = _tokenValidator.Validate(token);

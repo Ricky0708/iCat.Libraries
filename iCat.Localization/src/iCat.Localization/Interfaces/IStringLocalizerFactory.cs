@@ -9,6 +9,10 @@ namespace iCat.Localization.Interfaces
 {
     public interface IStringLocalizerFactory : Microsoft.Extensions.Localization.IStringLocalizerFactory
     {
+        /// <summary>
+        /// Get StringLocalizer
+        /// </summary>
+        /// <returns></returns>
         IStringLocalizer Create();
     }
 }

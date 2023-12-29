@@ -18,18 +18,33 @@ namespace iCat.DB.Client.Implements
 
         #region events
 
+        /// <summary>
+        /// disposing event
+        /// </summary>
         public event EventHandler? DisposingHandler;
 
+        /// <summary>
+        /// event trigger at each commend executed
+        /// </summary>
         public event Handlers.ExectuedCommandHandler? ExecutedEvent;
 
         #endregion
 
         #region properties
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
         public string Category => _category;
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
         public int CommandTimeout { get; set; } = 30;
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
         public abstract DbConnection Connection { get; }
 
         #endregion
@@ -257,6 +272,9 @@ namespace iCat.DB.Client.Implements
 
         #region dispose
 
+        /// <summary>
+        /// Can be removed cache from DBClientFactory
+        /// </summary>
         protected void Disposing()
         {
             DisposingHandler?.Invoke(this, EventArgs.Empty);

@@ -12,8 +12,8 @@ using System.Threading.Tasks;
 
 namespace iCat.DB.Client.Factory.Models
 {
-    public class ConnectionCreator
-    {
-        public Expression<Func<DBClient>>? ConnectionGenerator { get; set; }
-    }
+    //public class ConnectionCreator
+    //{
+    //    public Expression<Func<DBClient>>? ConnectionGenerator { get; set; }
+    //}
 }

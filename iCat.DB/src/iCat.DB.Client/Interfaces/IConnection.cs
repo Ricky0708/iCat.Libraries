@@ -22,15 +22,18 @@ namespace iCat.DB.Client.Interfaces
         #region properties
 
         /// <summary>
-        /// 物件的category
+        /// category
         /// </summary>
         string Category { get; }
 
         /// <summary>
-        /// 执行command的逾时设定(s)
+        /// command timeout seconds
         /// </summary>
         int CommandTimeout { get; set; }
 
+        /// <summary>
+        /// it could be used by dapper
+        /// </summary>
         DbConnection Connection { get; }
 
         #endregion

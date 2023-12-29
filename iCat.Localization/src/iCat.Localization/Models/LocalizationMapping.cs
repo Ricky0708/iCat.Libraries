@@ -9,6 +9,7 @@ namespace iCat.Localization.Models
     public class LocalizationMapping
     {
         public string? CultureName { get; set; }
+
         public Dictionary<string, string>? LanguageData { get; set; }
     }
 }

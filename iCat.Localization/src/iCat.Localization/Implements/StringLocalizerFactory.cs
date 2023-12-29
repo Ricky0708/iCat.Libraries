@@ -19,17 +19,31 @@ namespace iCat.Localization.Implements
             _processor = processor ?? throw new ArgumentNullException(nameof(processor));
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <returns></returns>
         public Interfaces.IStringLocalizer Create()
         {
             return _processor;
         }
 
-
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <param name="resourceSource"></param>
+        /// <returns></returns>
         public Microsoft.Extensions.Localization.IStringLocalizer Create(Type resourceSource)
         {
             return (Microsoft.Extensions.Localization.IStringLocalizer)Create();
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <param name="baseName"></param>
+        /// <param name="location"></param>
+        /// <returns></returns>
         public Microsoft.Extensions.Localization.IStringLocalizer Create(string baseName, string location)
         {
             return (Microsoft.Extensions.Localization.IStringLocalizer)Create();

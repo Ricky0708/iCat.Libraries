@@ -15,7 +15,7 @@ namespace iCat.Token.Interfaces
         string Category { get; }
 
         /// <summary>
-        /// Create JWT token
+        /// Create token
         /// </summary>
         /// <param name="claims"></param>
         /// <returns></returns>

@@ -46,7 +46,7 @@ namespace iCat.Token.JWT
         }
 
         /// <summary>
-        /// <see cref="ITokenValidator.Validate(string)"/>
+        /// <inheritdoc/>
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>

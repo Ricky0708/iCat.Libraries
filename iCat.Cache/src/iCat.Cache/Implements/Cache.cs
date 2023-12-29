@@ -23,6 +23,7 @@ namespace iCat.Cache.Implements
             _cache = distributedCache ?? throw new ArgumentNullException(nameof(distributedCache));
         }
 
+        /// <inheritdoc/>
         public T? Get<T>(string key)
         {
             var cacheValue = _cache.GetString(key);
@@ -40,18 +41,21 @@ namespace iCat.Cache.Implements
             //Marshal.FreeHGlobal(ptr);
         }
 
+        /// <inheritdoc/>
         public string? GetString(string key)
         {
             var cacheValue = _cache.GetString(key);
             return cacheValue;
         }
 
+        /// <inheritdoc/>
         public byte[]? GetBytes(string key)
         {
             var cacheValue = _cache.Get(key);
             return cacheValue;
         }
 
+        /// <inheritdoc/>
         public async Task<T?> GetAsync<T>(string key)
         {
             var cacheValue = await _cache.GetStringAsync(key);
@@ -62,18 +66,21 @@ namespace iCat.Cache.Implements
             return default;
         }
 
+        /// <inheritdoc/>
         public async Task<string?> GetStringAsync(string key)
         {
             var cacheValue = await _cache.GetStringAsync(key);
             return cacheValue;
         }
 
+        /// <inheritdoc/>
         public async Task<byte[]?> GetBytesAsync(string key)
         {
             var cacheValue = await _cache.GetAsync(key);
             return cacheValue;
         }
 
+        /// <inheritdoc/>
         public void Set<T>(string key, T data)
         {
             if (data != null)
@@ -83,6 +90,7 @@ namespace iCat.Cache.Implements
             }
         }
 
+        /// <inheritdoc/>
         public void Set<T>(string key, T data, DistributedCacheEntryOptions options)
         {
             if (data != null)
@@ -92,6 +100,7 @@ namespace iCat.Cache.Implements
             }
         }
 
+        /// <inheritdoc/>
         public void SetString(string key, string data)
         {
             if (!string.IsNullOrEmpty(data))
@@ -100,6 +109,7 @@ namespace iCat.Cache.Implements
             }
         }
 
+        /// <inheritdoc/>
         public void SetString(string key, string data, DistributedCacheEntryOptions options)
         {
             if (!string.IsNullOrEmpty(data))
@@ -108,6 +118,7 @@ namespace iCat.Cache.Implements
             }
         }
 
+        /// <inheritdoc/>
         public async Task SetAsync<T>(string key, T data)
         {
             if (data != null)
@@ -117,6 +128,7 @@ namespace iCat.Cache.Implements
             }
         }
 
+        /// <inheritdoc/>
         public async Task SetAsync<T>(string key, T data, DistributedCacheEntryOptions options)
         {
             if (data != null)
@@ -126,6 +138,7 @@ namespace iCat.Cache.Implements
             }
         }
 
+        /// <inheritdoc/>
         public async Task SetStringAsync(string key, string data)
         {
             if (!string.IsNullOrEmpty(data))
@@ -134,6 +147,7 @@ namespace iCat.Cache.Implements
             }
         }
 
+        /// <inheritdoc/>
         public async Task SetStringAsync(string key, string data, DistributedCacheEntryOptions options)
         {
             if (!string.IsNullOrEmpty(data))
@@ -142,21 +156,25 @@ namespace iCat.Cache.Implements
             }
         }
 
+        /// <inheritdoc/>
         public void Refresh(string key)
         {
             _cache.Refresh(key);
         }
 
+        /// <inheritdoc/>
         public async Task RefreshAsync(string key)
         {
             await _cache.RefreshAsync(key);
         }
 
+        /// <inheritdoc/>
         public void Remove(string key)
         {
             _cache.Remove(key);
         }
 
+        /// <inheritdoc/>
         public async Task RemoveAsync(string key)
         {
             await _cache.RemoveAsync(key);
