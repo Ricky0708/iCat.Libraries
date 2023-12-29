@@ -13,6 +13,9 @@ using static iCat.DB.Client.Constants.ExecuteCommand;
 
 namespace iCat.DB.Client.Implements
 {
+    /// <summary>
+    /// Adapter for DBConnection
+    /// </summary>
     public abstract class DBClient : IConnection, IUnitOfWork
     {
 
@@ -52,6 +55,9 @@ namespace iCat.DB.Client.Implements
         #region fields
 
         private readonly string _category;
+        /// <summary>
+        /// Transaction instance
+        /// </summary>
         protected IDbTransaction? _tran;
         private bool _disposed;
 
@@ -59,6 +65,10 @@ namespace iCat.DB.Client.Implements
 
         #region constructors
 
+        /// <summary>
+        /// Adapter for DBConnection
+        /// </summary>
+        /// <param name="info"></param>
         public DBClient(DBClientInfo info)
         {
             _category = info.Category;
@@ -262,6 +272,12 @@ namespace iCat.DB.Client.Implements
 
         #region protected methods
 
+        /// <summary>
+        /// Call executed event
+        /// </summary>
+        /// <param name="command"></param>
+        /// <param name="script"></param>
+        /// <returns></returns>
         protected async Task CallEvent(Command command, string script)
         {
             ExecutedEvent?.Invoke(Category, command, script);
@@ -280,8 +296,15 @@ namespace iCat.DB.Client.Implements
             DisposingHandler?.Invoke(this, EventArgs.Empty);
         }
 
+        /// <summary>
+        /// Dispose
+        /// </summary>
         public void Dispose() => Dispose(true);
 
+        /// <summary>
+        /// DisposeAsync
+        /// </summary>
+        /// <returns></returns>
         public async ValueTask DisposeAsync()
         {
             Dispose(true);
@@ -306,6 +329,9 @@ namespace iCat.DB.Client.Implements
             _disposed = true;
         }
 
+        /// <summary>
+        /// Deconstructive
+        /// </summary>
         ~DBClient()
         {
             Dispose(false);

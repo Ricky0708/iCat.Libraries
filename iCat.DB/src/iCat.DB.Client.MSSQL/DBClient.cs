@@ -13,6 +13,9 @@ using static iCat.DB.Client.Constants.ExecuteCommand;
 
 namespace iCat.DB.Client.MSSQL
 {
+    /// <summary>
+    /// MSSQL DBConnection
+    /// </summary>
     public class DBClient : iCat.DB.Client.Implements.DBClient
     {
         /// <summary>
@@ -22,9 +25,13 @@ namespace iCat.DB.Client.MSSQL
 
         private readonly SqlConnection _conn;
 
-        public DBClient(DBClientInfo info, string connectionString) : base(info)
+        /// <summary>
+        /// MSSQL DBConnection
+        /// </summary>
+        /// <param name="info"></param>
+        public DBClient(DBClientInfo info) : base(info)
         {
-            _conn = new SqlConnection(connectionString);
+            _conn = new SqlConnection(info.ConnectionString);
         }
 
         #region command executors
@@ -191,7 +198,7 @@ namespace iCat.DB.Client.MSSQL
         }
 
         /// <summary>
-        /// <see cref="ISQLDBManager.ExecuteReaderAsync(string, DbParameter[], Action{DbDataReader})"/>
+        /// <inheritdoc/>
         /// </summary>
         /// <param name="commandString"></param>
         /// <param name="params"></param>

@@ -8,23 +8,41 @@ using System.Threading.Tasks;
 using iCat.DB.Client.Implements;
 namespace iCat.DB.Client.Factory.Implements
 {
+    /// <summary>
+    /// DBClient factory
+    /// </summary>
     public class DBClientFactory : IDBClientFactory
     {
         private readonly IConnectionProvider _provider;
-        private readonly Dictionary<string, DBClient> _dbClients = new Dictionary<string, DBClient>();
+        private readonly Dictionary<string, DBClient> _dbClients = new();
 
 
+        /// <summary>
+        /// DBClient factory
+        /// </summary>
+        /// <param name="provider"></param>
+        /// <exception cref="ArgumentNullException"></exception>
         public DBClientFactory(IConnectionProvider provider)
         {
             _provider = provider ?? throw new ArgumentNullException(nameof(provider));
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <param name="category"></param>
+        /// <returns></returns>
         public IUnitOfWork GetUnitOfWork(string category)
         {
             return (IUnitOfWork)GetInstance(category);
 
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <param name="category"></param>
+        /// <returns></returns>
         public IConnection GetConnection(string category)
         {
             return (IConnection)GetInstance(category);
@@ -51,16 +69,9 @@ namespace iCat.DB.Client.Factory.Implements
         private void RemoveInstance(object? sender, EventArgs e)
         {
             var key = ((DBClient?)sender)!.Category;
-            if (_dbClients.ContainsKey(key))
-            {
-                lock (_dbClients)
-                {
-                    if (_dbClients.ContainsKey(key))
-                    {
-                        _dbClients.Remove(key);
-                    }
-                }
-            }
+
+            // CA1853
+            _dbClients.Remove(key);
         }
 
     }
