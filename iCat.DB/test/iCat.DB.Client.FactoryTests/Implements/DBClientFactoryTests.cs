@@ -17,16 +17,10 @@ namespace iCat.DB.Client.Factory.Implements.Tests
         public void GetUnitOfWorkTest()
         {
             // arrange
-            var factory = new DBClientFactory(new DefaultConnectionStringProvider(new List<ConnectionCreator> {
-                new ConnectionCreator
-                {
-                    ConnectionGenerator = () => new MySQL.DBClient(new Client.Models.DBClientInfo("A"), "server=192.168.51.233;port=2883;uid=mgplatform@mgplatform#test;pwd=mg@OB123!;DataBase=MgPlatform;max pool size=5000;")
-                },
-                new ConnectionCreator
-                {
-                    ConnectionGenerator = () => new MySQL.DBClient(new Client.Models.DBClientInfo("B"), "server=192.168.51.233;port=2883;uid=mgplatform@mgplatform#test;pwd=mg@OB123!;DataBase=MgPlatform;max pool size=5000;")
-                }
-            }));
+            var factory = new DBClientFactory(new DefaultConnectionProvider(
+                    () => new MySQL.DBClient(new Client.Models.DBClientInfo("A"), "server=192.168.51.233;port=2883;uid=mgplatform@mgplatform#test;pwd=mg@OB123!;DataBase=MgPlatform;max pool size=5000;"),
+                    () => new MySQL.DBClient(new Client.Models.DBClientInfo("B"), "server=192.168.51.233;port=2883;uid=mgplatform@mgplatform#test;pwd=mg@OB123!;DataBase=MgPlatform;max pool size=5000;")
+                ));
 
             // action
             var a = factory.GetUnitOfWork("B");
@@ -40,16 +34,10 @@ namespace iCat.DB.Client.Factory.Implements.Tests
         public void RemoveUnitOfWorkTest()
         {
             // arrange
-            var factory = new DBClientFactory(new DefaultConnectionStringProvider(new List<ConnectionCreator> {
-                new ConnectionCreator
-                {
-                    ConnectionGenerator = () => new MySQL.DBClient(new Client.Models.DBClientInfo("A"), "server=192.168.51.233;port=2883;uid=mgplatform@mgplatform#test;pwd=mg@OB123!;DataBase=MgPlatform;max pool size=5000;")
-                },
-                new ConnectionCreator
-                {
-                    ConnectionGenerator = () => new MySQL.DBClient(new Client.Models.DBClientInfo("B"), "server=192.168.51.233;port=2883;uid=mgplatform@mgplatform#test;pwd=mg@OB123!;DataBase=MgPlatform;max pool size=5000;")
-                }
-            }));
+            var factory = new DBClientFactory(new DefaultConnectionProvider(
+                 () => new MySQL.DBClient(new Client.Models.DBClientInfo("A"), "server=192.168.51.233;port=2883;uid=mgplatform@mgplatform#test;pwd=mg@OB123!;DataBase=MgPlatform;max pool size=5000;"),
+                 () => new MySQL.DBClient(new Client.Models.DBClientInfo("B"), "server=192.168.51.233;port=2883;uid=mgplatform@mgplatform#test;pwd=mg@OB123!;DataBase=MgPlatform;max pool size=5000;")
+             ));
 
             // action
             var a = factory.GetUnitOfWork("B");

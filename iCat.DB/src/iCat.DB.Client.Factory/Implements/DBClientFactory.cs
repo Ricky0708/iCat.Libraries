@@ -10,11 +10,11 @@ namespace iCat.DB.Client.Factory.Implements
 {
     public class DBClientFactory : IDBClientFactory
     {
-        private readonly IConnectionStringProvider _provider;
+        private readonly IConnectionProvider _provider;
         private readonly Dictionary<string, DBClient> _dbClients = new Dictionary<string, DBClient>();
 
 
-        public DBClientFactory(IConnectionStringProvider provider)
+        public DBClientFactory(IConnectionProvider provider)
         {
             _provider = provider ?? throw new ArgumentNullException(nameof(provider));
         }

@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,17 +17,27 @@ namespace iCat.DB.Client.Extension.Web
 {
     public static class IServiceCollectionExtension
     {
-        public static IServiceCollection AddDBClientFactory(this IServiceCollection services, List<ConnectionCreator> connectionDatas)
+        public static IServiceCollection AddDBClient(this IServiceCollection services, params DBClient[] dbClients)
         {
-            services.AddScoped<IDBClientFactory, DBClientFactory>();
-            services.AddSingleton<IConnectionStringProvider>(s => new DefaultConnectionStringProvider(connectionDatas));
+            foreach (var dbClient in dbClients)
+            {
+                services.AddScoped<IConnection>(s => dbClient);
+            };
+            services.AddScoped<IEnumerable<IUnitOfWork>>(s => s.GetServices<IConnection>().Select(p => (IUnitOfWork)p));
             return services;
         }
 
-        public static IServiceCollection AddDBClientFactory(this IServiceCollection services, IConnectionStringProvider connectionStringProvider)
+        public static IServiceCollection AddDBClientFactory(this IServiceCollection services, params Expression<Func<DBClient>>[] dbClients)
         {
             services.AddScoped<IDBClientFactory, DBClientFactory>();
-            services.AddSingleton<IConnectionStringProvider>(s => connectionStringProvider);
+            services.AddSingleton<IConnectionProvider>(s => new DefaultConnectionProvider(dbClients));
+            return services;
+        }
+
+        public static IServiceCollection AddDBClientFactory(this IServiceCollection services, IConnectionProvider connectionProvider)
+        {
+            services.AddScoped<IDBClientFactory, DBClientFactory>();
+            services.AddSingleton<IConnectionProvider>(s => connectionProvider);
             return services;
         }
     }
