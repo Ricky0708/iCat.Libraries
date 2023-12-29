@@ -1,6 +1,6 @@
 ﻿using iCat.DB.Client.Factory.Implements;
 using iCat.DB.Client.Factory.Interfaces;
-using iCat.DB.Client.Factory.Models;
+//using iCat.DB.Client.Factory.Models;
 using iCat.DB.Client.Implements;
 using iCat.DB.Client.Interfaces;
 using Microsoft.AspNetCore.Builder;
@@ -17,6 +17,14 @@ namespace iCat.DB.Client.Extension.Web
 {
     public static class IServiceCollectionExtension
     {
+
+        /// <summary>
+        /// Register IConnection and IUnitOfWork in ServiceProvider
+        /// Instances of them are different from those created by factory
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="dbClients"></param>
+        /// <returns></returns>
         public static IServiceCollection AddDBClient(this IServiceCollection services, params DBClient[] dbClients)
         {
             foreach (var dbClient in dbClients)
@@ -27,6 +35,13 @@ namespace iCat.DB.Client.Extension.Web
             return services;
         }
 
+        /// <summary>
+        /// Register the factory with a ServiceProvider using default connection provider
+        /// IConnection and IUnitOfWork created by the factory are different from throse created by ServiceProvider
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="dbClients"></param>
+        /// <returns></returns>
         public static IServiceCollection AddDBClientFactory(this IServiceCollection services, params Expression<Func<DBClient>>[] dbClients)
         {
             services.AddScoped<IDBClientFactory, DBClientFactory>();
@@ -34,6 +49,13 @@ namespace iCat.DB.Client.Extension.Web
             return services;
         }
 
+        /// <summary>
+        /// Register the factory with a ServiceProvider using custom connection provider
+        /// IConnection and IUnitOfWork created by the factory are different from throse created by ServiceProvider
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="connectionProvider"></param>
+        /// <returns></returns>
         public static IServiceCollection AddDBClientFactory(this IServiceCollection services, IConnectionProvider connectionProvider)
         {
             services.AddScoped<IDBClientFactory, DBClientFactory>();

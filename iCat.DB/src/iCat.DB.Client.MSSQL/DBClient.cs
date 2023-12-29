@@ -15,6 +15,9 @@ namespace iCat.DB.Client.MSSQL
 {
     public class DBClient : iCat.DB.Client.Implements.DBClient
     {
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
         public override DbConnection Connection => _conn;
 
         private readonly SqlConnection _conn;

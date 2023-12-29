@@ -25,27 +25,27 @@ namespace iCat.Token.JWT.Models
         internal IEnumerable<Claim>? Subject { get; set; }
 
         /// <summary>
-        /// 發行對像
+        /// Audience
         /// </summary>
         public string? Audience { get; set; }
 
         /// <summary>
-        /// 發行者
+        /// Issuer
         /// </summary>
         public string? Issuer { get; set; }
 
         /// <summary>
-        /// 發行時間
+        /// IssuedAt
         /// </summary>
         public DateTime? IssuedAt { get; set; }
 
         /// <summary>
-        /// 在此時間前無效
+        /// NotBefore
         /// </summary>
         public DateTime? NotBefore { get; set; }
 
         /// <summary>
-        /// 每次發佈更新發行日期
+        /// AlwaysResetIssuedDate
         /// </summary>
         public bool AlwaysResetIssuedDate { get; set; }
     }

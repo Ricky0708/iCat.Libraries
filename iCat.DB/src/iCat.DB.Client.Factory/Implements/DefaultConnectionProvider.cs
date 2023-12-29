@@ -42,7 +42,7 @@ namespace iCat.DB.Client.Factory.Implements
 
         }
 
-        public Func<DBClient> GetConnectionData(string category)
+        public Func<DBClient> GetDBClientCreateor(string category)
         {
             return _connectionDatas[category];
         }

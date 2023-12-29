@@ -18,12 +18,21 @@ namespace iCat.Localization.Implements
         /// Call NotifyRefresh to notify the Localizer to update the cache
         public event IStringLocalizationDataProvider.UpdateHandler? NotifyUpdate;
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <param name="localizationMappings"></param>
+        /// <exception cref="ArgumentNullException"></exception>
         public DefaultiCatLocalizationDataProvider(IEnumerable<LocalizationMapping> localizationMappings)
         {
             _localizationMappings = localizationMappings ?? throw new ArgumentNullException(nameof(localizationMappings));
             NotifyUpdate?.Invoke();
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<LocalizationMapping> GetLanguageMappingData()
         {
             var result = _localizationMappings;

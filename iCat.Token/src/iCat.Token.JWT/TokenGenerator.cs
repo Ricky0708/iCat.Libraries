@@ -45,7 +45,7 @@ namespace iCat.Token.JWT
         }
 
         /// <summary>
-        /// <see cref="ITokenGenerator.GenerateToken(List{Claim})"/>
+        /// <inheritdoc/>
         /// </summary>
         /// <param name="claims"></param>
         /// <returns></returns>

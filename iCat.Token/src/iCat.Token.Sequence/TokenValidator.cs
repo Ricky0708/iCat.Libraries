@@ -22,6 +22,11 @@ namespace iCat.Token.Sequence
             _cryptor = cryptor ?? throw new ArgumentNullException(nameof(cryptor));
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
         public ValidationResult Validate(string token)
         {
             var type = typeof(T);

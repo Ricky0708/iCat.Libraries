@@ -12,10 +12,13 @@ namespace iCat.DB.Client.Interfaces
     public interface IUnitOfWork : IDisposable
     {
         /// <summary>
-        /// 物件的category
+        /// category
         /// </summary>
         string Category { get; }
 
+        /// <summary>
+        /// Export connection, it could be used by dapper
+        /// </summary>
         DbConnection Connection { get; }
 
         #region operators

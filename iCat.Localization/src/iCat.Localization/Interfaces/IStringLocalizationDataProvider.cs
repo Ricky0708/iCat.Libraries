@@ -9,8 +9,20 @@ namespace iCat.Localization.Interfaces
 {
     public interface IStringLocalizationDataProvider
     {
+        /// <summary>
+        /// Notify StringLocalizer to update cache data
+        /// </summary>
         delegate void UpdateHandler();
+
+        /// <summary>
+        /// Notify StringLocalizer update event
+        /// </summary>
         event UpdateHandler? NotifyUpdate;
+
+        /// <summary>
+        /// Provide new mapping data
+        /// </summary>
+        /// <returns></returns>
         IEnumerable<LocalizationMapping> GetLanguageMappingData();
     }
 }

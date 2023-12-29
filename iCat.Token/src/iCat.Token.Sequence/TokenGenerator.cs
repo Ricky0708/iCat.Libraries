@@ -16,6 +16,11 @@ namespace iCat.Token.Sequence
 
         public string Category => "Sequence";
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <param name="cryptor"></param>
+        /// <exception cref="ArgumentNullException"></exception>
         public TokenGenerator(ICryptor cryptor)
         {
             _cryptor = cryptor ?? throw new ArgumentNullException(nameof(cryptor));

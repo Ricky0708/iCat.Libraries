@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace iCat.RabbitMQ.Implements
 {
+    /// <summary>
+    /// Channel Pool
+    /// </summary>
     internal class ChannelManager
     {
         //private readonly ConcurrentQueue<IModel> _channelPool_Queue;
