@@ -13,8 +13,14 @@ using iCat.DB.Client.Models;
 
 namespace iCat.DB.Client.MySQL
 {
+    /// <summary>
+    /// MySQL DBConnection
+    /// </summary>
     public class DBClient : iCat.DB.Client.Implements.DBClient
     {
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
         public override DbConnection Connection => _conn;
 
         private readonly MySqlConnection _conn;

@@ -15,6 +15,9 @@ using System.Threading.Tasks;
 
 namespace iCat.DB.Client.Extension.Web
 {
+    /// <summary>
+    /// extension
+    /// </summary>
     public static class IServiceCollectionExtension
     {
 

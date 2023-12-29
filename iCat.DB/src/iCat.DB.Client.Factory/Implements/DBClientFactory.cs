@@ -8,12 +8,20 @@ using System.Threading.Tasks;
 using iCat.DB.Client.Implements;
 namespace iCat.DB.Client.Factory.Implements
 {
+    /// <summary>
+    /// DBClient factory
+    /// </summary>
     public class DBClientFactory : IDBClientFactory
     {
         private readonly IConnectionProvider _provider;
-        private readonly Dictionary<string, DBClient> _dbClients = new Dictionary<string, DBClient>();
+        private readonly Dictionary<string, DBClient> _dbClients = new();
 
 
+        /// <summary>
+        /// DBClient factory
+        /// </summary>
+        /// <param name="provider"></param>
+        /// <exception cref="ArgumentNullException"></exception>
         public DBClientFactory(IConnectionProvider provider)
         {
             _provider = provider ?? throw new ArgumentNullException(nameof(provider));
@@ -61,16 +69,9 @@ namespace iCat.DB.Client.Factory.Implements
         private void RemoveInstance(object? sender, EventArgs e)
         {
             var key = ((DBClient?)sender)!.Category;
-            if (_dbClients.ContainsKey(key))
-            {
-                lock (_dbClients)
-                {
-                    if (_dbClients.ContainsKey(key))
-                    {
-                        _dbClients.Remove(key);
-                    }
-                }
-            }
+
+            // CA1853
+            _dbClients.Remove(key);
         }
 
     }

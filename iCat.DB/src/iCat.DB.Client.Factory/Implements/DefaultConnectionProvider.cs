@@ -11,10 +11,18 @@ using System.Linq.Expressions;
 
 namespace iCat.DB.Client.Factory.Implements
 {
+    /// <summary>
+    /// Connection info provider
+    /// </summary>
     public class DefaultConnectionProvider : IConnectionProvider
     {
         private readonly Dictionary<string, Func<DBClient>> _connectionDatas;
 
+        /// <summary>
+        /// Connection info provider
+        /// </summary>
+        /// <param name="connectionDatas"></param>
+        /// <exception cref="ArgumentNullException"></exception>
         public DefaultConnectionProvider(params Expression<Func<DBClient>>[] connectionDatas)
         {
             _connectionDatas = connectionDatas?.ToDictionary(
@@ -25,7 +33,7 @@ namespace iCat.DB.Client.Factory.Implements
 
         private string GetCategory(Expression<Func<DBClient>>? func)
         {
-            var newExpr = func?.Body as NewExpression ?? throw new ArgumentException();
+            var newExpr = func?.Body as NewExpression ?? throw new ArgumentException("");
             if (newExpr != null)
             {
                 foreach (var arg in newExpr.Arguments)
@@ -33,15 +41,20 @@ namespace iCat.DB.Client.Factory.Implements
                     newExpr = arg as NewExpression;
                     if (newExpr != null)
                     {
-                        var value = (newExpr.Arguments[0] as ConstantExpression)?.Value?.ToString() ?? throw new ArgumentException();
+                        var value = (newExpr.Arguments[0] as ConstantExpression)?.Value?.ToString() ?? throw new ArgumentException("");
                         return value;
                     }
                 }
             }
-            throw new ArgumentException();
+            throw new ArgumentException("");
 
         }
 
+        /// <summary>
+        /// Get db client
+        /// </summary>
+        /// <param name="category"></param>
+        /// <returns></returns>
         public Func<DBClient> GetDBClientCreator(string category)
         {
             return _connectionDatas[category];
