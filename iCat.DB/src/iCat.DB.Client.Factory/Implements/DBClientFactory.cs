@@ -19,12 +19,22 @@ namespace iCat.DB.Client.Factory.Implements
             _provider = provider ?? throw new ArgumentNullException(nameof(provider));
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <param name="category"></param>
+        /// <returns></returns>
         public IUnitOfWork GetUnitOfWork(string category)
         {
             return (IUnitOfWork)GetInstance(category);
 
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <param name="category"></param>
+        /// <returns></returns>
         public IConnection GetConnection(string category)
         {
             return (IConnection)GetInstance(category);
