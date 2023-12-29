@@ -29,10 +29,9 @@ namespace iCat.DB.Client.MySQL
         /// <inheritdoc/>
         /// </summary>
         /// <param name="clientInfo"></param>
-        /// <param name="connectionString"></param>
-        public DBClient(DBClientInfo clientInfo, string connectionString) : base(clientInfo)
+        public DBClient(DBClientInfo clientInfo) : base(clientInfo)
         {
-            _conn = new MySqlConnection(connectionString);
+            _conn = new MySqlConnection(clientInfo.ConnectionString);
         }
 
         #region command executors

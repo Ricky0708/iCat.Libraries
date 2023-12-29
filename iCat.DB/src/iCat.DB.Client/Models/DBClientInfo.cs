@@ -17,12 +17,19 @@ namespace iCat.DB.Client.Models
         public string Category { get; }
 
         /// <summary>
+        /// Connection string
+        /// </summary>
+        public string ConnectionString { get; }
+
+        /// <summary>
         /// DBClient info
         /// </summary>
         /// <param name="category"></param>
-        public DBClientInfo(string category)
+        /// <param name="connectionString"></param>
+        public DBClientInfo(string category, string connectionString)
         {
             Category = category;
+            ConnectionString = connectionString;
         }
     }
 }

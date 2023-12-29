@@ -29,10 +29,9 @@ namespace iCat.DB.Client.MSSQL
         /// MSSQL DBConnection
         /// </summary>
         /// <param name="info"></param>
-        /// <param name="connectionString"></param>
-        public DBClient(DBClientInfo info, string connectionString) : base(info)
+        public DBClient(DBClientInfo info) : base(info)
         {
-            _conn = new SqlConnection(connectionString);
+            _conn = new SqlConnection(info.ConnectionString);
         }
 
         #region command executors
