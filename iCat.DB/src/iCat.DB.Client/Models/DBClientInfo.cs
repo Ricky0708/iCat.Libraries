@@ -14,12 +14,22 @@ namespace iCat.DB.Client.Models
         /// <summary>
         /// Category of DBClient
         /// </summary>
-        public string Category { get; }
+        public string Category { get; init; }
 
         /// <summary>
         /// Connection string
         /// </summary>
-        public string ConnectionString { get; }
+        public string ConnectionString { get; init; }
+
+        /// <summary>
+        /// Do not use
+        /// </summary>
+        [Obsolete("Use DBClientInfo(string category, string connectionString) for init this", true)]
+        public DBClientInfo()
+        {
+            Category = "";
+            ConnectionString = "";
+        }
 
         /// <summary>
         /// DBClient info
