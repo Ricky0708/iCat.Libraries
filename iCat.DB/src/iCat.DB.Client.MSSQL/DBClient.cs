@@ -180,21 +180,27 @@ namespace iCat.DB.Client.MSSQL
         /// <returns></returns>
         public override IEnumerable<V> ExecuteReader<V>(string commandString, DbParameter[] @params, Func<DbDataReader, V> func)
         {
-            using (var cmd = new SqlCommand(commandString, _conn))
+
+            foreach (var dr in ExecuteReader(commandString, @params))
             {
-                cmd.CommandTimeout = CommandTimeout;
-                if (_tran != null) cmd.Transaction = _tran as SqlTransaction;
-                AssignParameters(cmd, @params);
-                if (_tran == null && _conn.State == ConnectionState.Closed) _conn.Open();
-                var dr = cmd.ExecuteReader();
-                while (dr.Read())
-                {
-                    yield return func.Invoke(dr);
-                }
-                dr.Close();
-                base.CallEvent(Command.Executed, commandString).Wait();
-                if (_tran == null && _conn.State == ConnectionState.Open) _conn.Close();
+                yield return func.Invoke(dr);
             }
+
+            //using (var cmd = new SqlCommand(commandString, _conn))
+            //{
+            //    cmd.CommandTimeout = CommandTimeout;
+            //    if (_tran != null) cmd.Transaction = _tran as SqlTransaction;
+            //    AssignParameters(cmd, @params);
+            //    if (_tran == null && _conn.State == ConnectionState.Closed) _conn.Open();
+            //    var dr = cmd.ExecuteReader();
+            //    while (dr.Read())
+            //    {
+            //        yield return func.Invoke(dr);
+            //    }
+            //    dr.Close();
+            //    base.CallEvent(Command.Executed, commandString).Wait();
+            //    if (_tran == null && _conn.State == ConnectionState.Open) _conn.Close();
+            //}
         }
 
         /// <summary>
