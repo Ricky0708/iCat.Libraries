@@ -48,7 +48,7 @@ namespace iCat.DB.Client.Extension.Web
         public static IServiceCollection AddDBClientFactory(this IServiceCollection services, params Expression<Func<DBClient>>[] dbClients)
         {
             services.AddScoped<IDBClientFactory, DBClientFactory>();
-            services.AddSingleton<IConnectionProvider>(s => new DefaultConnectionProvider(dbClients));
+            services.AddSingleton<IDBClientProvider>(s => new DefaultConnectionProvider(dbClients));
             return services;
         }
 
@@ -59,10 +59,10 @@ namespace iCat.DB.Client.Extension.Web
         /// <param name="services"></param>
         /// <param name="connectionProvider"></param>
         /// <returns></returns>
-        public static IServiceCollection AddDBClientFactory(this IServiceCollection services, IConnectionProvider connectionProvider)
+        public static IServiceCollection AddDBClientFactory(this IServiceCollection services, IDBClientProvider connectionProvider)
         {
             services.AddScoped<IDBClientFactory, DBClientFactory>();
-            services.AddSingleton<IConnectionProvider>(s => connectionProvider);
+            services.AddSingleton<IDBClientProvider>(s => connectionProvider);
             return services;
         }
     }

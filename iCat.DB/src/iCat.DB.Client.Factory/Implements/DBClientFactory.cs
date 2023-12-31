@@ -13,7 +13,7 @@ namespace iCat.DB.Client.Factory.Implements
     /// </summary>
     public class DBClientFactory : IDBClientFactory
     {
-        private readonly IConnectionProvider _provider;
+        private readonly IDBClientProvider _provider;
         private readonly Dictionary<string, DBClient> _dbClients = new();
 
 
@@ -22,7 +22,7 @@ namespace iCat.DB.Client.Factory.Implements
         /// </summary>
         /// <param name="provider"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public DBClientFactory(IConnectionProvider provider)
+        public DBClientFactory(IDBClientProvider provider)
         {
             _provider = provider ?? throw new ArgumentNullException(nameof(provider));
         }

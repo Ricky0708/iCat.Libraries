@@ -14,7 +14,7 @@ namespace iCat.DB.Client.Factory.Implements
     /// <summary>
     /// Connection info provider
     /// </summary>
-    public class DefaultConnectionProvider : IConnectionProvider
+    public class DefaultConnectionProvider : IDBClientProvider
     {
         private readonly Dictionary<string, Func<DBClient>> _connectionDatas;
 
