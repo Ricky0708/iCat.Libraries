@@ -14,7 +14,7 @@ namespace iCat.DB.Client.Factory.Implements
     /// <summary>
     /// Connection info provider
     /// </summary>
-    public class DefaultConnectionProvider : IDBClientProvider
+    public class DefaultDBClientProvider : IDBClientProvider
     {
         private readonly Dictionary<string, Func<DBClient>> _connectionDatas;
 
@@ -23,7 +23,7 @@ namespace iCat.DB.Client.Factory.Implements
         /// </summary>
         /// <param name="connectionDatas"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public DefaultConnectionProvider(params Expression<Func<DBClient>>[] connectionDatas)
+        public DefaultDBClientProvider(params Expression<Func<DBClient>>[] connectionDatas)
         {
             _connectionDatas = connectionDatas?.ToDictionary(
                 p => GetCategory(p),

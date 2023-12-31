@@ -17,7 +17,7 @@ namespace iCat.DB.Client.Factory.Implements.Tests
         public void GetUnitOfWorkTest()
         {
             // arrange
-            var factory = new DBClientFactory(new DefaultConnectionProvider(
+            var factory = new DBClientFactory(new DefaultDBClientProvider(
                     () => new MySQL.DBClient(new Client.Models.DBClientInfo("A", "server=192.168.51.233;port=2883;uid=mgplatform@mgplatform#test;pwd=mg@OB123!;DataBase=MgPlatform;max pool size=5000;")),
                     () => new MySQL.DBClient(new Client.Models.DBClientInfo("B", "server=192.168.51.233;port=2883;uid=mgplatform@mgplatform#test;pwd=mg@OB123!;DataBase=MgPlatform;max pool size=5000;"))
                 ));
@@ -34,7 +34,7 @@ namespace iCat.DB.Client.Factory.Implements.Tests
         public void RemoveUnitOfWorkTest()
         {
             // arrange
-            var factory = new DBClientFactory(new DefaultConnectionProvider(
+            var factory = new DBClientFactory(new DefaultDBClientProvider(
                  () => new MySQL.DBClient(new Client.Models.DBClientInfo("A", "server=192.168.51.233;port=2883;uid=mgplatform@mgplatform#test;pwd=mg@OB123!;DataBase=MgPlatform;max pool size=5000;")),
                  () => new MySQL.DBClient(new Client.Models.DBClientInfo("B", "server=192.168.51.233;port=2883;uid=mgplatform@mgplatform#test;pwd=mg@OB123!;DataBase=MgPlatform;max pool size=5000;"))
              ));

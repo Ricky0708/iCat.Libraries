@@ -9,7 +9,7 @@ The library provides two way for registering IUnitOfWork and IConnection.
 IUnitOfWork and IConnection export the DBConnection property, which can also used in dapper.net.
 
 1. General fixed connection registration, registered when the application started, can't be modified.
-2. Through factory registration, programers can implement "IConnectionProvider" to provide IUnitOfWork/IConnection,
+2. Through factory registration, programers can implement "IDBClientProvider" to provide IUnitOfWork/IConnection,
 
 As a reminder, the IUnitOfWork/IConnection obtained from "General Fixed Connection Registration" and "Factory" are different instances.
 
@@ -139,7 +139,7 @@ dotnet add package iCat.DB.Client.MySQL
             // Add services to the container.
             var services = builder.Services;
             services
-                .AddDBClientFactory( // DefaultConnectionProvider ( you can custom 
+                .AddDBClientFactory( // DefaultDBClientProvider ( you can custom IDBClientProvider here )
                     () => new MySQL.DBClient(new DBClientInfo("MainDB", "mysql connection string")),
                     () => new MSSQL.DBClient(new DBClientInfo("CompanyA", "mssql connection string A")),
                     () => new MSSQL.DBClient(new DBClientInfo("CompanyB", "mssql connection string B"))
