@@ -57,12 +57,12 @@ namespace iCat.DB.Client.Extension.Web
         /// IConnection and IUnitOfWork created by the factory are different from throse created by ServiceProvider
         /// </summary>
         /// <param name="services"></param>
-        /// <param name="connectionProvider"></param>
+        /// <param name="implementationDBClientProvider"></param>
         /// <returns></returns>
-        public static IServiceCollection AddDBClientFactory(this IServiceCollection services, IDBClientProvider connectionProvider)
+        public static IServiceCollection AddDBClientFactory<TService>(this IServiceCollection services, Func<IServiceProvider, IDBClientProvider> implementationDBClientProvider) where TService : IDBClientProvider
         {
             services.AddScoped<IDBClientFactory, DBClientFactory>();
-            services.AddSingleton<IDBClientProvider>(s => connectionProvider);
+            services.AddSingleton<IDBClientProvider>(implementationDBClientProvider);
             return services;
         }
     }
