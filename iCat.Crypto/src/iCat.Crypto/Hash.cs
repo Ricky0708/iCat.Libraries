@@ -7,9 +7,18 @@ using System.Threading.Tasks;
 
 namespace iCat.Crypto
 {
+    /// <summary>
+    /// Hasher
+    /// </summary>
     public static class Hash
     {
-        public static string MD5(string message, string key)
+        /// <summary>
+        /// MD5
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public static string MD5(string key, string message)
         {
             var encoding = new UTF8Encoding();
             byte[] keyByte = encoding.GetBytes(key);
@@ -21,7 +30,13 @@ namespace iCat.Crypto
             }
         }
 
-        public static string SHA1(string message, string key)
+        /// <summary>
+        /// SHA1
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public static string SHA1(string key, string message)
         {
             var encoding = new UTF8Encoding();
             byte[] keyByte = encoding.GetBytes(key);
@@ -33,7 +48,13 @@ namespace iCat.Crypto
             }
         }
 
-        public static string SHA256(string message, string key)
+        /// <summary>
+        /// SHA256
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public static string SHA256(string key, string message)
         {
             var encoding = new UTF8Encoding();
             byte[] keyByte = encoding.GetBytes(key);
@@ -45,7 +66,13 @@ namespace iCat.Crypto
             }
         }
 
-        public static string SHA384(string message, string key)
+        /// <summary>
+        /// SHA384
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public static string SHA384(string key, string message)
         {
             var encoding = new UTF8Encoding();
             byte[] keyByte = encoding.GetBytes(key);
@@ -57,7 +84,13 @@ namespace iCat.Crypto
             }
         }
 
-        public static string SHA512(string message, string key)
+        /// <summary>
+        /// SHA512
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public static string SHA512(string key, string message)
         {
             var encoding = new UTF8Encoding();
             byte[] keyByte = encoding.GetBytes(key);

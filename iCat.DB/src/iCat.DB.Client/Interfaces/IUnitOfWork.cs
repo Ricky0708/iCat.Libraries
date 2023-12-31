@@ -11,6 +11,8 @@ namespace iCat.DB.Client.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {
+        event ExectuedCommandHandler? ExecutedEvent;
+
         /// <summary>
         /// category
         /// </summary>

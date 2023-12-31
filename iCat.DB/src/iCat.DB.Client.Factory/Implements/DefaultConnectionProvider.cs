@@ -31,6 +31,16 @@ namespace iCat.DB.Client.Factory.Implements
                 ?? throw new ArgumentNullException(nameof(connectionDatas));
         }
 
+        /// <summary>
+        /// Get db client
+        /// </summary>
+        /// <param name="category"></param>
+        /// <returns></returns>
+        public Func<DBClient> GetDBClientCreator(string category)
+        {
+            return _connectionDatas[category];
+        }
+
         private string GetCategory(Expression<Func<DBClient>>? func)
         {
             var newExpr = func?.Body as NewExpression ?? throw new ArgumentException("");
@@ -47,17 +57,6 @@ namespace iCat.DB.Client.Factory.Implements
                 }
             }
             throw new ArgumentException("");
-
-        }
-
-        /// <summary>
-        /// Get db client
-        /// </summary>
-        /// <param name="category"></param>
-        /// <returns></returns>
-        public Func<DBClient> GetDBClientCreator(string category)
-        {
-            return _connectionDatas[category];
         }
     }
 }
