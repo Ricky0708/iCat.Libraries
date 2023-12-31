@@ -48,7 +48,7 @@ namespace iCat.DB.Client.Extension.Web
         public static IServiceCollection AddDBClientFactory(this IServiceCollection services, params Expression<Func<DBClient>>[] dbClients)
         {
             services.AddScoped<IDBClientFactory, DBClientFactory>();
-            services.AddSingleton<IDBClientProvider>(s => new DefaultConnectionProvider(dbClients));
+            services.AddSingleton<IDBClientProvider>(s => new DefaultDBClientProvider(dbClients));
             return services;
         }
 
