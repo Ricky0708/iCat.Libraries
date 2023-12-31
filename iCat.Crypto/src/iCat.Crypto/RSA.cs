@@ -7,8 +7,17 @@ using System.Threading.Tasks;
 
 namespace iCat.Crypto
 {
+    /// <summary>
+    /// RSA
+    /// </summary>
     public static class RSA
     {
+        /// <summary>
+        /// RSA Encrypt
+        /// </summary>
+        /// <param name="publicKey"></param>
+        /// <param name="plaintext"></param>
+        /// <returns></returns>
         public static string Encrypt(string publicKey, string plaintext)
         {
             using (var rsaPublic = new RSACryptoServiceProvider())
@@ -21,6 +30,12 @@ namespace iCat.Crypto
             }
         }
 
+        /// <summary>
+        /// RSA Decrypt
+        /// </summary>
+        /// <param name="privateKey"></param>
+        /// <param name="cipherText"></param>
+        /// <returns></returns>
         public static string Decrypt(string privateKey, string cipherText)
         {
             using (var rsaPrivate = new RSACryptoServiceProvider())
@@ -40,6 +55,12 @@ namespace iCat.Crypto
             }
         }
 
+        /// <summary>
+        /// Private key to sign
+        /// </summary>
+        /// <param name="privateKey"></param>
+        /// <param name="plaintext"></param>
+        /// <returns></returns>
         public static string Sign(string privateKey, string plaintext)
         {
             using (var rsa = new RSACryptoServiceProvider())
@@ -53,6 +74,13 @@ namespace iCat.Crypto
             }
         }
 
+        /// <summary>
+        /// PublicKey to verify
+        /// </summary>
+        /// <param name="publicKey"></param>
+        /// <param name="sign"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
         public static bool Verify(string publicKey, string sign, string data)
         {
             using (var rsa = new RSACryptoServiceProvider())

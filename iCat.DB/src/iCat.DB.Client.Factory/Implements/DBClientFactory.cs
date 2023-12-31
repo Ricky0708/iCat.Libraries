@@ -41,11 +41,31 @@ namespace iCat.DB.Client.Factory.Implements
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
+        /// <returns></returns>
+        public IEnumerable<IUnitOfWork> GetUnitOfWorks()
+        {
+            return _dbClients.Select(p => p.Value);
+
+        }
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
         /// <param name="category"></param>
         /// <returns></returns>
         public IConnection GetConnection(string category)
         {
             return (IConnection)GetInstance(category);
+        }
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<IConnection> GetConnections()
+        {
+            return _dbClients.Select(p => p.Value);
+
         }
 
         private DBClient GetInstance(string category)

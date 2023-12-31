@@ -9,8 +9,17 @@ using System.Threading.Tasks;
 
 namespace iCat.Crypto
 {
+    /// <summary>
+    /// DES Encrypto
+    /// </summary>
     public static class DES
     {
+        /// <summary>
+        /// DES Encrypt
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="plaintext"></param>
+        /// <returns></returns>
         public static string Encrypt(string key, string plaintext)
         {
             if (plaintext.Length > 92160)
@@ -24,6 +33,12 @@ namespace iCat.Crypto
             return Convert.ToBase64String(cipher.DoFinal(rbData));
         }
 
+        /// <summary>
+        /// DES Decrypt
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="ciphertext"></param>
+        /// <returns></returns>
         public static string Decrypt(string key, string ciphertext)
         {
 
