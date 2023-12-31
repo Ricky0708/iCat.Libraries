@@ -5,6 +5,21 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+		<Title>iCat.DB.Client.Factory</Title>
+		<Authors>Ricky0708</Authors>
+		<Description>Factory for iCat.DB.Client</Description>
+		<PackageProjectUrl>https://github.com/Ricky0708/iCat.Libraries/tree/main/iCat.DB</PackageProjectUrl>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<RepositoryUrl>https://github.com/Ricky0708/iCat.Libraries/tree/main/iCat.DB</RepositoryUrl>
+		<PackageTags>UnitOfWork, DB Client</PackageTags>
+		<PackageReleaseNotes>Version 1.0.0</PackageReleaseNotes>
+		<PackAsTool>False</PackAsTool>
+		<NeutralLanguage>zh-TW</NeutralLanguage>
+		<AssemblyVersion>1.0.0</AssemblyVersion>
+		<FileVersion>1.0.0</FileVersion>
+		<Version>1.0.0</Version>
+		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
 	</PropertyGroup>
 
 	<ItemGroup>
