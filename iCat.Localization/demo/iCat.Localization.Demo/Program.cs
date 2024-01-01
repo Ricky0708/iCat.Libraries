@@ -34,10 +34,10 @@ namespace iCat.Localization.Demo
                 new LocalizationMapping {
                     CultureName = "zh-TW",
                     LanguageData = new Dictionary<string, string>{
-                        {"Error.Required", "{0} ²»ÄÜé¿Õ"},
-                        {"Error.MaxLength", "³¬ß^ {1}£¬™ÚÎ»{0}"},
-                        {"Name", "°¬Èğ¿Ë"},
-                        {"TestSentence","{#Name} ÊÇÎÒµÄÃû×Ö" }
+                        {"Error.Required", "{0} ä¸èƒ½ç‚ºç©º"},
+                        {"Error.MaxLength", "è¶…é {1}ï¼Œæ¬„ä½{0}"},
+                        {"Name", "è‰¾ç‘å…‹"},
+                        {"TestSentence","{#Name} æ˜¯æˆ‘çš„åå­—" }
                     }
                 }
             }, new Options { EnableKeyNotFoundException = false });
