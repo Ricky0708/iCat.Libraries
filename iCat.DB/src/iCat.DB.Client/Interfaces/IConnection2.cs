@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Text;
@@ -48,40 +49,45 @@ namespace iCat.DB.Client.Interfaces
         /// </summary>
         /// <param name="commandString"></param>
         /// <param name="params"></param>
+        /// <param name="commandType"></param>
         /// <returns></returns>
-        int ExecuteNonQuery(string commandString, DbParameter[] @params);
+        int ExecuteNonQuery(string commandString, DbParameter[] @params, CommandType? commandType);
 
         /// <summary>
         /// Execute command asynchronous
         /// </summary>
         /// <param name="commandString"></param>
         /// <param name="params"></param>
+        /// <param name="commandType"></param>
         /// <returns></returns>
-        Task<int> ExecuteNonQueryAsync(string commandString, DbParameter[] @params);
+        Task<int> ExecuteNonQueryAsync(string commandString, DbParameter[] @params, CommandType? commandType);
 
         /// <summary>
         /// Execute command scalar
         /// </summary>
         /// <param name="commandString"></param>
         /// <param name="params"></param>
+        /// <param name="commandType"></param>
         /// <returns></returns>
-        object ExecuteScalar(string commandString, DbParameter[] @params);
+        object ExecuteScalar(string commandString, DbParameter[] @params, CommandType? commandType);
 
         /// <summary>
         /// Execute command scalar asynchronous
         /// </summary>
         /// <param name="commandString"></param>
         /// <param name="params"></param>
+        /// <param name="commandType"></param>
         /// <returns></returns>
-        Task<object> ExecuteScalarAsync(string commandString, DbParameter[] @params);
+        Task<object> ExecuteScalarAsync(string commandString, DbParameter[] @params, CommandType? commandType);
 
         /// <summary>
         /// Execute command reader
         /// </summary>
         /// <param name="commandString"></param>
         /// <param name="params"></param>
+        /// <param name="commandType"></param>
         /// <param name="action"></param>
-        void ExecuteReader(string commandString, DbParameter[] @params, Action<DbDataReader> action);
+        void ExecuteReader(string commandString, DbParameter[] @params, CommandType? commandType, Action<DbDataReader> action);
 
         /// <summary>
         /// Execute command reader
@@ -89,8 +95,9 @@ namespace iCat.DB.Client.Interfaces
         /// <typeparam name="T"></typeparam>
         /// <param name="commandString"></param>
         /// <param name="params"></param>
+        /// <param name="commandType"></param>
         /// <returns></returns>
-        IEnumerable<DbDataReader> ExecuteReader(string commandString, DbParameter[] @params);
+        IEnumerable<DbDataReader> ExecuteReader(string commandString, DbParameter[] @params, CommandType? commandType);
 
         /// <summary>
         /// Execute command reader
@@ -98,18 +105,20 @@ namespace iCat.DB.Client.Interfaces
         /// <typeparam name="T"></typeparam>
         /// <param name="commandString"></param>
         /// <param name="params"></param>
+        /// <param name="commandType"></param>
         /// <param name="action"></param>
         /// <returns></returns>
-        IEnumerable<V> ExecuteReader<V>(string commandString, DbParameter[] @params, Func<DbDataReader, V> action);
+        IEnumerable<V> ExecuteReader<V>(string commandString, DbParameter[] @params, CommandType? commandType, Func<DbDataReader, V> action);
 
         /// <summary>
         /// Execute command reader asynchronous
         /// </summary>
         /// <param name="commandString"></param>
         /// <param name="params"></param>
+        /// <param name="commandType"></param>
         /// <param name="executedAction"></param>
         /// <returns></returns>
-        ValueTask ExecuteReaderAsync(string commandString, DbParameter[] @params, Action<DbDataReader> executedAction);
+        ValueTask ExecuteReaderAsync(string commandString, DbParameter[] @params, CommandType? commandType, Action<DbDataReader> executedAction);
 
         #endregion
     }

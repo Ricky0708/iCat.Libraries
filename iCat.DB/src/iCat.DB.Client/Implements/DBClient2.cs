@@ -26,7 +26,7 @@ namespace iCat.DB.Client.Implements
         public DbConnection Connection => _conn;
 
         /// <inheritdoc/>
-        public int CommandTimeout { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public int CommandTimeout { get; set; }
 
         /// <inheritdoc/>
         public IDbTransaction? Transaction => _tran;
@@ -38,7 +38,6 @@ namespace iCat.DB.Client.Implements
         private IDbTransaction? _tran;
         private DbConnection _conn;
         private string? _category;
-
 
         #endregion
 
@@ -163,62 +162,85 @@ namespace iCat.DB.Client.Implements
         #region Connection
 
         /// <inheritdoc/>
-        public int ExecuteNonQuery(string commandString, DbParameter[] @params)
+        public int ExecuteNonQuery(string commandString, DbParameter[] @params, CommandType? commandType = null)
         {
-            var dif = new CommandDefinition(commandString, @params, _tran, CommandTimeout, CommandType.Text, true);
-            var cmd = dif.SetupCommand(_conn, null);
+            var commandDefinition = new CommandDefinition(commandString, @params, _tran, CommandTimeout, commandType);
+            var cmd = commandDefinition.SetupCommand(_conn);
 
-            using (var cmd = new SqlCommand(commandString, _conn))
-            {
-                cmd.CommandTimeout = CommandTimeout;
-                if (_tran != null) cmd.Transaction = _tran as SqlTransaction;
-                AssignParameters(cmd, @params);
-                if (_tran == null && _conn.State == ConnectionState.Closed) _conn.Open();
-                var result = cmd.ExecuteNonQuery();
-                base.CallEvent(Command.Executed, commandString).Wait();
-                if (_tran == null && _conn.State == ConnectionState.Open) _conn.Close();
-                return result;
-            }
+            if (_conn.State == ConnectionState.Closed) _conn.Open();
+
+            var result = cmd.ExecuteNonQuery();
+
+            if (_tran == null && _conn.State == ConnectionState.Open) _conn.Close();
+
+            return result;
         }
 
         /// <inheritdoc/>
-        public Task<int> ExecuteNonQueryAsync(string commandString, DbParameter[] @params)
+        public async Task<int> ExecuteNonQueryAsync(string commandString, DbParameter[] @params, CommandType? commandType)
+        {
+            var commandDefinition = new CommandDefinition(commandString, @params, _tran, CommandTimeout, commandType);
+            var cmd = commandDefinition.SetupCommand(_conn);
+
+            if (_conn.State == ConnectionState.Closed) await _conn.OpenAsync();
+
+            var result = cmd.ExecuteNonQuery();
+
+            if (_tran == null && _conn.State == ConnectionState.Open) await _conn.CloseAsync();
+
+            return result;
+        }
+
+        /// <inheritdoc/>
+        public object ExecuteScalar(string commandString, DbParameter[] @params, CommandType? commandType)
+        {
+            var commandDefinition = new CommandDefinition(commandString, @params, _tran, CommandTimeout, commandType);
+            var cmd = commandDefinition.SetupCommand(_conn);
+
+            if (_conn.State == ConnectionState.Closed) _conn.Open();
+
+            var result = cmd.ExecuteScalar();
+
+            if (_tran == null && _conn.State == ConnectionState.Open) _conn.Close();
+
+            return result;
+        }
+
+        /// <inheritdoc/>
+        public async Task<object> ExecuteScalarAsync(string commandString, DbParameter[] @params, CommandType? commandType)
+        {
+            var commandDefinition = new CommandDefinition(commandString, @params, _tran, CommandTimeout, commandType);
+            var cmd = commandDefinition.SetupCommand(_conn);
+
+            if (_conn.State == ConnectionState.Closed) await _conn.OpenAsync();
+
+            var result = cmd.ExecuteScalar();
+
+            if (_tran == null && _conn.State == ConnectionState.Open) await _conn.CloseAsync();
+
+            return result;
+        }
+
+        /// <inheritdoc/>
+        public void ExecuteReader(string commandString, DbParameter[] @params, CommandType? commandType, Action<DbDataReader> action)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public object ExecuteScalar(string commandString, DbParameter[] @params)
+        public IEnumerable<DbDataReader> ExecuteReader(string commandString, DbParameter[] @params, CommandType? commandType)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Task<object> ExecuteScalarAsync(string commandString, DbParameter[] @params)
+        public IEnumerable<V> ExecuteReader<V>(string commandString, DbParameter[] @params, CommandType? commandType, Func<DbDataReader, V> action)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public void ExecuteReader(string commandString, DbParameter[] @params, Action<DbDataReader> action)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public IEnumerable<DbDataReader> ExecuteReader(string commandString, DbParameter[] @params)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public IEnumerable<V> ExecuteReader<V>(string commandString, DbParameter[] @params, Func<DbDataReader, V> action)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public ValueTask ExecuteReaderAsync(string commandString, DbParameter[] @params, Action<DbDataReader> executedAction)
+        public ValueTask ExecuteReaderAsync(string commandString, DbParameter[] @params, CommandType? commandType, Action<DbDataReader> executedAction)
         {
             throw new NotImplementedException();
         }
@@ -247,10 +269,7 @@ namespace iCat.DB.Client.Implements
 
         #region Private Methods
 
-        private DbCommand SetCommandParameter(DbCommand command, DbParameter parameter)
-        {
 
-        }
 
         #endregion
 

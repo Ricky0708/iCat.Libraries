@@ -6,14 +6,15 @@ using System.Reflection.Emit;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data.Common;
 
 namespace iCat.DB.Client.Implements
 {
     internal struct CommandDefinition
     {
         private readonly string _commandText;
-        private readonly object _parameters;
-        private readonly IDbTransaction _transaction;
+        private readonly DbParameter[]? _parameters;
+        private readonly IDbTransaction? _transaction;
         private readonly int? _commandTimeout;
         private readonly CommandType? _commandType;
         private readonly bool _buffered;
@@ -28,11 +29,11 @@ namespace iCat.DB.Client.Implements
         /// <summary>
         /// The parameters associated with the command
         /// </summary>
-        public object Parameters => _parameters;
+        public DbParameter[]? Parameters => _parameters;
         /// <summary>
         /// The active transaction for the command
         /// </summary>
-        public IDbTransaction Transaction => _transaction;
+        public IDbTransaction? Transaction => _transaction;
         /// <summary>
         /// The effective timeout for the command
         /// </summary>
@@ -43,15 +44,10 @@ namespace iCat.DB.Client.Implements
         public CommandType? CommandType => _commandType;
 
         /// <summary>
-        /// Should data be buffered before returning?
-        /// </summary>
-        public bool Buffered => _buffered;
-
-        /// <summary>
         /// Initialize the command definition
         /// </summary>
-        public CommandDefinition(string commandText, object parameters = null, IDbTransaction transaction = null, int? commandTimeout = null,
-            CommandType? commandType = null, bool buffered = true
+        public CommandDefinition(string commandText, DbParameter[]? parameters, IDbTransaction? transaction, int? commandTimeout = null,
+            CommandType? commandType = System.Data.CommandType.Text
             , CancellationToken cancellationToken = default(CancellationToken))
         {
             this._commandText = commandText;
@@ -59,20 +55,23 @@ namespace iCat.DB.Client.Implements
             this._transaction = transaction;
             this._commandTimeout = commandTimeout;
             this._commandType = commandType;
-            this._buffered = buffered;
             this._cancellationToken = cancellationToken;
         }
 
-        internal IDbCommand SetupCommand(IDbConnection conn, Action<IDbCommand, object> paramReader)
+        internal IDbCommand SetupCommand(IDbConnection conn, Action<IDbCommand, DbParameter[]?>? paramReader = null)
         {
             var cmd = conn.CreateCommand();
-            if (_transaction != null)
-                cmd.Transaction = _transaction;
             cmd.CommandText = _commandText;
-            if (_commandTimeout.HasValue)
-                cmd.CommandTimeout = _commandTimeout.Value;
-            if (_commandType.HasValue)
-                cmd.CommandType = _commandType.Value;
+            if (_transaction != null) cmd.Transaction = _transaction;
+            if (_commandTimeout.HasValue) cmd.CommandTimeout = _commandTimeout.Value;
+            if (_commandType.HasValue) cmd.CommandType = _commandType.Value;
+
+            if (_parameters != null)
+                foreach (var parameter in _parameters)
+                {
+                    cmd.Parameters.Add(parameter);
+                }
+
             if (paramReader != null)
             {
                 paramReader(cmd, _parameters);
