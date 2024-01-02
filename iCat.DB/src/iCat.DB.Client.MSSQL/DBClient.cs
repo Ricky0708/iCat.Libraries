@@ -34,7 +34,7 @@ namespace iCat.DB.Client.MSSQL
             _conn = new SqlConnection(info.ConnectionString);
         }
 
-        #region command executors
+        #region execute
 
         /// <summary>
         /// <inheritdoc/>
@@ -119,6 +119,10 @@ namespace iCat.DB.Client.MSSQL
                 return result!;
             }
         }
+
+        #endregion
+
+        #region reader
 
         /// <summary>
         /// <inheritdoc/>

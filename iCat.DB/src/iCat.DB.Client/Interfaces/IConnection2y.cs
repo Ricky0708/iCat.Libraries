@@ -11,7 +11,7 @@ namespace iCat.DB.Client.Interfaces
     /// <summary>
     /// Connection Operator
     /// </summary>
-    public interface IConnection : IDisposable
+    public interface IConnection2 : IDisposable
     {
         #region events
 
@@ -27,7 +27,7 @@ namespace iCat.DB.Client.Interfaces
         /// <summary>
         /// category
         /// </summary>
-        string Category { get; }
+        string? Category { get; }
 
         /// <summary>
         /// command timeout seconds

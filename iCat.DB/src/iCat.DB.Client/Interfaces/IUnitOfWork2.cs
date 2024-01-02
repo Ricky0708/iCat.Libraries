@@ -12,7 +12,7 @@ namespace iCat.DB.Client.Interfaces
     /// <summary>
     /// UnitOfWork
     /// </summary>
-    public interface IUnitOfWork : IDisposable
+    public interface IUnitOfWork2 : IDisposable
     {
         /// <summary>
         /// Executed event
@@ -22,12 +22,17 @@ namespace iCat.DB.Client.Interfaces
         /// <summary>
         /// Category
         /// </summary>
-        string Category { get; }
+        string? Category { get; }
 
         /// <summary>
         /// Export connection, it could be used by dapper
         /// </summary>
         DbConnection Connection { get; }
+
+        /// <summary>
+        /// Transaction
+        /// </summary>
+        IDbTransaction? Transaction { get; }
 
         #region operators
 
