@@ -27,9 +27,10 @@ namespace iCat.Cache.demo.Controllers
                     unitOfWork.BeginTransaction();
                     var connection = _factory.GetConnection("MainDB");
 
-                    foreach (var dr in connection.ExecuteReader("SELECT * FROM YourTable", new DbParameter[] { }))
+                    foreach (var dr in connection.ExecuteReader("SELECT * FROM UnsbscribeMember", new DbParameter[] { }))
                     {
-                        var filed = dr["fieldName"];
+                        var filed = dr["MemberId"];
+                        break;
                     };
 
                     unitOfWork.Commit();
