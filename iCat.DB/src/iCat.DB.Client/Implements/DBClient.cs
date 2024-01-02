@@ -186,11 +186,11 @@ namespace iCat.DB.Client.Implements
 
             var isClose = _conn.State == ConnectionState.Closed;
 
-            if (!isClose) _conn.Open();
+            if (isClose) _conn.Open();
 
             var result = cmd.ExecuteNonQuery();
 
-            if (!isClose) _conn.Close();
+            if (isClose) _conn.Close();
 
             cmd.Dispose();
 
@@ -208,11 +208,11 @@ namespace iCat.DB.Client.Implements
 
             var isClose = _conn.State == ConnectionState.Closed;
 
-            if (!isClose) await _conn.OpenAsync();
+            if (isClose) await _conn.OpenAsync();
 
             var result = cmd.ExecuteNonQuery();
 
-            if (!isClose) await _conn.CloseAsync();
+            if (isClose) await _conn.CloseAsync();
 
             cmd.Dispose();
 
@@ -230,11 +230,11 @@ namespace iCat.DB.Client.Implements
 
             var isClose = _conn.State == ConnectionState.Closed;
 
-            if (!isClose) _conn.Open();
+            if (isClose) _conn.Open();
 
             var result = cmd.ExecuteScalar();
 
-            if (!isClose) _conn.Close();
+            if (isClose) _conn.Close();
 
             cmd.Dispose();
 
@@ -252,11 +252,11 @@ namespace iCat.DB.Client.Implements
 
             var isClose = _conn.State == ConnectionState.Closed;
 
-            if (!isClose) await _conn.OpenAsync();
+            if (isClose) await _conn.OpenAsync();
 
             var result = cmd.ExecuteScalar();
 
-            if (!isClose) await _conn.CloseAsync();
+            if (isClose) await _conn.CloseAsync();
 
             cmd.Dispose();
 
@@ -274,7 +274,7 @@ namespace iCat.DB.Client.Implements
 
             var isClose = _conn.State == ConnectionState.Closed;
 
-            if (!isClose) _conn.Open();
+            if (isClose) _conn.Open();
 
             var dr = cmd.ExecuteReader();
             var guid = Guid.NewGuid().ToString();
@@ -294,7 +294,7 @@ namespace iCat.DB.Client.Implements
 
             var isClose = _conn.State == ConnectionState.Closed;
 
-            if (!isClose) _conn.Open();
+            if (isClose) _conn.Open();
 
             var dr = cmd.ExecuteReader();
             var guid = Guid.NewGuid().ToString();
@@ -307,7 +307,7 @@ namespace iCat.DB.Client.Implements
 
             dr.Close();
             _readerCache.TryRemove(guid, out dr);
-            if (!isClose) _conn.Close();
+            if (isClose) _conn.Close();
 
             cmd.Dispose();
         }
@@ -332,7 +332,7 @@ namespace iCat.DB.Client.Implements
 
             var isClose = _conn.State == ConnectionState.Closed;
 
-            if (!isClose) await _conn.OpenAsync();
+            if (isClose) await _conn.OpenAsync();
 
             var dr = cmd.ExecuteReader();
             var guid = Guid.NewGuid().ToString();
