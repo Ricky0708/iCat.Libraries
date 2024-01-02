@@ -1,7 +1,7 @@
 using iCat.DB.Client.Extension.Web;
-using iCat.DB.Client.Factory.Interfaces;
-using iCat.DB.Client.Interfaces;
+using iCat.DB.Client.Implements;
 using iCat.DB.Client.Models;
+using Microsoft.Data.SqlClient;
 namespace iCat.DB.Client.demo
 {
     public class Program
@@ -13,33 +13,17 @@ namespace iCat.DB.Client.demo
             // Add services to the container.
             var services = builder.Services;
             services
-                .AddDBClientFactory( // DefaultConnectionProvider ( you can custom 
-                    () => new MySQL.DBClient(new DBClientInfo("MainDB", "mysql connection string")),
-                    () => new MSSQL.DBClient(new DBClientInfo("CompanyA", "mssql connection string A")),
-                    () => new MSSQL.DBClient(new DBClientInfo("CompanyB", "mssql connection string B"))
+                .AddDBClientFactory(
+                    () => new DBClient(new DBClientInfo("MainDB", new SqlConnection("server=192.168.1.3\\SQL2019;user id=sa;password= P@ssw0rd;initial catalog=AgentEventManagement"))),
+                    () => new DBClient(new DBClientInfo("Company", new SqlConnection("server=192.168.1.3\\SQL2019;user id=sa;password= P@ssw0rd;initial catalog=AgentEventManagement")))
                 );
-
+            services.AddControllers();
 
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
 
-            app.UseAuthorization();
             app.MapControllers();
-
-            foreach (var factory in app.Services.GetServices<IDBClientFactory>())
-            {
-                foreach (var connection in factory.GetConnections())
-                {
-                    connection.ExecutedEvent += (category, command, script) =>
-                    {
-                        // category: MainDB, CompanyA, CompanyB..etc
-                        // command: enum (Opened,  Closed, TransactionBegined, Commited, Rollbacked, Executed) 
-                        // script: sql statements run by the application
-                    };
-                }
-
-            }
 
             app.Run();
         }

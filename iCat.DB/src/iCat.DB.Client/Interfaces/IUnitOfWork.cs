@@ -9,19 +9,30 @@ using static iCat.DB.Client.Delegates.Handlers;
 
 namespace iCat.DB.Client.Interfaces
 {
+    /// <summary>
+    /// UnitOfWork
+    /// </summary>
     public interface IUnitOfWork : IDisposable
     {
-        event ExectuedCommandHandler? ExecutedEvent;
+        /// <summary>
+        /// Executed event
+        /// </summary>
+        event ExectuedCommandHandler2? ExecutedEvent;
 
         /// <summary>
-        /// category
+        /// Category
         /// </summary>
-        string Category { get; }
+        string? Category { get; }
 
         /// <summary>
         /// Export connection, it could be used by dapper
         /// </summary>
-        DbConnection Connection { get; }
+        IDbConnection Connection { get; }
+
+        /// <summary>
+        /// Transaction
+        /// </summary>
+        IDbTransaction? Transaction { get; }
 
         #region operators
 

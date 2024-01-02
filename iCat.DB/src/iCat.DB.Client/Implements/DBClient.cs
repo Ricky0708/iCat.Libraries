@@ -2,271 +2,348 @@
 using iCat.DB.Client.Interfaces;
 using iCat.DB.Client.Models;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
-using System.Linq.Expressions;
+using System.Runtime.InteropServices.ObjectiveC;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using static iCat.DB.Client.Constants.ExecuteCommand;
 
 namespace iCat.DB.Client.Implements
 {
-    /// <summary>
-    /// Adapter for DBConnection
-    /// </summary>
-    public abstract class DBClient : IConnection, IUnitOfWork
+    /// <inheritdoc/>
+    public class DBClient : IConnection, IUnitOfWork
     {
 
-        #region events
+        #region Property
+
+        /// <inheritdoc/>
+        public string? Category => _category;
+
+        /// <inheritdoc/>
+        public IDbConnection Connection => _conn;
+
+        /// <inheritdoc/>
+        public int CommandTimeout { get; set; }
+
+        /// <inheritdoc/>
+        public IDbTransaction? Transaction => _tran;
+
+        #endregion
+
+        #region Field
+
+        private IDbTransaction? _tran;
+        private readonly DbConnection _conn;
+        private readonly string? _category;
+        private readonly ConcurrentDictionary<string, IDataReader> _readerCache;
+        private bool _disposed = false;
+
+        #endregion
+
+        #region Event
+
+        /// <inheritdoc/>
+        public event Handlers.ExectuedCommandHandler2? ExecutedEvent;
 
         /// <summary>
         /// disposing event
         /// </summary>
         public event EventHandler? DisposingHandler;
 
-        /// <summary>
-        /// event trigger at each commend executed
-        /// </summary>
-        public event Handlers.ExectuedCommandHandler? ExecutedEvent;
-
         #endregion
 
-        #region properties
+        #region Constructor
 
-        /// <summary>
         /// <inheritdoc/>
-        /// </summary>
-        public string Category => _category;
+        public DBClient(DbConnection connection) : this(new DBClientInfo("default", connection))
+        {
+        }
 
-        /// <summary>
         /// <inheritdoc/>
-        /// </summary>
-        public int CommandTimeout { get; set; } = 30;
-
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
-        public abstract DbConnection Connection { get; }
-
-        #endregion
-
-        #region fields
-
-        private readonly string _category;
-        /// <summary>
-        /// Transaction instance
-        /// </summary>
-        protected IDbTransaction? _tran;
-        private bool _disposed;
-
-        #endregion
-
-        #region constructors
-
-        /// <summary>
-        /// Adapter for DBConnection
-        /// </summary>
-        /// <param name="info"></param>
         public DBClient(DBClientInfo info)
         {
             _category = info.Category;
+            _conn = info.Connection;
+            _readerCache = new ConcurrentDictionary<string, IDataReader>();
         }
 
         #endregion
 
-        #region IUnitOfWork
+        #region UnitOfWork
 
-        /// <summary>
         /// <inheritdoc/>
-        /// </summary>
-        /// <returns></returns>
-        public IDbConnection Open()
-        {
-            Connection.Open();
-            CallEvent(Command.Opened, "").Wait();
-            return Connection;
-        }
-
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
-        /// <returns></returns>
-        public async Task<IDbConnection> OpenAsync()
-        {
-            await Connection.OpenAsync();
-            await CallEvent(Command.Opened, "");
-            return Connection;
-        }
-
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
-        public void Close()
-        {
-            _tran?.Dispose();
-            _tran = null;
-            Connection.Close();
-
-            CallEvent(Command.Closed, "").Wait();
-        }
-
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
-        /// <returns></returns>
-        public async ValueTask CloseAsync()
-        {
-            _tran?.Dispose();
-            _tran = null;
-            Connection.Close();
-            await CallEvent(Command.Closed, "");
-            await Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
-        /// <param name="isolationLevel"></param>
-        /// <returns></returns>
         public IDbTransaction BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.Unspecified)
         {
             _tran = Connection.BeginTransaction(isolationLevel);
-            CallEvent(Command.TransactionBegined, "").Wait();
+            CallEvent(CommandKind.TransactionBegined, null, null).Wait();
             return _tran;
         }
 
-        /// <summary>
         /// <inheritdoc/>
-        /// </summary>
-        /// <param name="isolationLevel"></param>
-        /// <returns></returns>
         public async Task<IDbTransaction> BeginTransactionAsync(IsolationLevel isolationLevel = IsolationLevel.Unspecified)
         {
-            _tran = await Connection.BeginTransactionAsync(isolationLevel);
-            await CallEvent(Command.TransactionBegined, "");
+            _tran = Connection.BeginTransaction(isolationLevel);
+            await CallEvent(CommandKind.TransactionBegined, null, null);
             return _tran;
         }
 
-        /// <summary>
         /// <inheritdoc/>
-        /// </summary>
+        public void Close()
+        {
+            foreach (var dr in _readerCache) if (!dr.Value.IsClosed) dr.Value.Close();
+            _tran?.Dispose();
+            _tran = null;
+            _conn.Close();
+            CallEvent(CommandKind.Closed, null, null).Wait();
+        }
+
+        /// <inheritdoc/>
+        public async ValueTask CloseAsync()
+        {
+            foreach (var dr in _readerCache) if (!dr.Value.IsClosed) dr.Value.Close();
+            _tran?.Dispose();
+            _tran = null;
+            await _conn.CloseAsync();
+            await CallEvent(CommandKind.Closed, null, null);
+            await Task.CompletedTask;
+        }
+
+        /// <inheritdoc/>
         public void Commit()
         {
+            foreach (var dr in _readerCache) if (!dr.Value.IsClosed) dr.Value.Close();
             _tran?.Commit();
             _tran?.Dispose();
             _tran = null;
-            CallEvent(Command.Commited, "").Wait();
+            CallEvent(CommandKind.Commited, null, null).Wait();
         }
 
-        /// <summary>
         /// <inheritdoc/>
-        /// </summary>
-        /// <returns></returns>
         public async ValueTask CommitAsync()
         {
+            foreach (var dr in _readerCache) if (!dr.Value.IsClosed) dr.Value.Close();
             _tran?.Commit();
             _tran?.Dispose();
             _tran = null;
-            await CallEvent(Command.Commited, "");
-            await Task.CompletedTask;
+            await CallEvent(CommandKind.Commited, null, null);
         }
 
-        /// <summary>
         /// <inheritdoc/>
-        /// </summary>
+        public IDbConnection Open()
+        {
+            foreach (var dr in _readerCache) if (!dr.Value.IsClosed) dr.Value.Close();
+            _conn.Open();
+            CallEvent(CommandKind.Opened, null, null).Wait();
+            return _conn;
+        }
+
+        /// <inheritdoc/>
+        public async Task<IDbConnection> OpenAsync()
+        {
+            foreach (var dr in _readerCache) if (!dr.Value.IsClosed) dr.Value.Close();
+            await _conn.OpenAsync();
+            await CallEvent(CommandKind.Opened, null, null);
+            return _conn;
+        }
+
+        /// <inheritdoc/>
         public void Rollback()
         {
+            foreach (var dr in _readerCache) if (!dr.Value.IsClosed) dr.Value.Close();
             _tran?.Rollback();
             _tran?.Dispose();
             _tran = null;
-            CallEvent(Command.Rollbacked, "").Wait();
+            CallEvent(CommandKind.Rollbacked, null, null).Wait();
         }
 
-        /// <summary>
         /// <inheritdoc/>
-        /// </summary>
-        /// <returns></returns>
         public async ValueTask RollbackAsync()
         {
+            foreach (var dr in _readerCache) if (!dr.Value.IsClosed) dr.Value.Close();
             _tran?.Rollback();
             _tran?.Dispose();
             _tran = null;
-            await CallEvent(Command.Rollbacked, "");
-            await Task.CompletedTask;
+            await CallEvent(CommandKind.Rollbacked, null, null);
         }
 
         #endregion
 
-        #region IConnection
+        #region Connection
 
-        /// <summary>
         /// <inheritdoc/>
-        /// </summary>
-        /// <param name="commandString"></param>
-        /// <param name="params"></param>
-        /// <returns></returns>
-        public abstract int ExecuteNonQuery(string commandString, DbParameter[] @params);
+        public int ExecuteNonQuery(string commandString, DbParameter[] @params, CommandType? commandType = CommandType.Text)
+        {
+            var commandDefinition = new CommandDefinition(commandString, @params, _tran, CommandTimeout, commandType);
+            var cmd = commandDefinition.SetupCommand(_conn, (command, parameters) =>
+            {
+                CallEvent(CommandKind.Executing, command, parameters).Wait();
+            });
 
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
-        /// <param name="commandString"></param>
-        /// <param name="params"></param>
-        /// <returns></returns>
-        public abstract Task<int> ExecuteNonQueryAsync(string commandString, DbParameter[] @params);
+            var isClose = _conn.State == ConnectionState.Closed;
 
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
-        /// <param name="commandString"></param>
-        /// <param name="params"></param>
-        /// <param name="action"></param>
-        public abstract void ExecuteReader(string commandString, DbParameter[] @params, Action<DbDataReader> action);
+            if (!isClose) _conn.Open();
 
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
-        /// <param name="commandString"></param>
-        /// <param name="params"></param>
-        /// <returns></returns>
-        public abstract IEnumerable<DbDataReader> ExecuteReader(string commandString, DbParameter[] @params);
+            var result = cmd.ExecuteNonQuery();
 
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
-        /// <typeparam name="V"></typeparam>
-        /// <param name="commandString"></param>
-        /// <param name="params"></param>
-        /// <param name="action"></param>
-        /// <returns></returns>
-        public abstract IEnumerable<V> ExecuteReader<V>(string commandString, DbParameter[] @params, Func<DbDataReader, V> action);
+            if (!isClose) _conn.Close();
 
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
-        /// <param name="commandString"></param>
-        /// <param name="params"></param>
-        /// <param name="executedAction"></param>
-        /// <returns></returns>
-        public abstract ValueTask ExecuteReaderAsync(string commandString, DbParameter[] @params, Action<DbDataReader> executedAction);
+            cmd.Dispose();
 
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
-        /// <param name="commandString"></param>
-        /// <param name="params"></param>
-        /// <returns></returns>
-        public abstract object ExecuteScalar(string commandString, DbParameter[] @params);
+            return result;
+        }
 
-        /// <summary>
         /// <inheritdoc/>
-        /// </summary>
-        /// <param name="commandString"></param>
-        /// <param name="params"></param>
-        /// <returns></returns>
-        public abstract Task<object> ExecuteScalarAsync(string commandString, DbParameter[] @params);
+        public async Task<int> ExecuteNonQueryAsync(string commandString, DbParameter[] @params, CommandType? commandType = CommandType.Text)
+        {
+            var commandDefinition = new CommandDefinition(commandString, @params, _tran, CommandTimeout, commandType);
+            var cmd = commandDefinition.SetupCommand(_conn, async (command, parameters) =>
+            {
+                await CallEvent(CommandKind.Executing, command, parameters);
+            });
+
+            var isClose = _conn.State == ConnectionState.Closed;
+
+            if (!isClose) await _conn.OpenAsync();
+
+            var result = cmd.ExecuteNonQuery();
+
+            if (!isClose) await _conn.CloseAsync();
+
+            cmd.Dispose();
+
+            return result;
+        }
+
+        /// <inheritdoc/>
+        public object? ExecuteScalar(string commandString, DbParameter[] @params, CommandType? commandType = CommandType.Text)
+        {
+            var commandDefinition = new CommandDefinition(commandString, @params, _tran, CommandTimeout, commandType);
+            var cmd = commandDefinition.SetupCommand(_conn, (command, parameters) =>
+            {
+                CallEvent(CommandKind.Executing, command, parameters).Wait();
+            });
+
+            var isClose = _conn.State == ConnectionState.Closed;
+
+            if (!isClose) _conn.Open();
+
+            var result = cmd.ExecuteScalar();
+
+            if (!isClose) _conn.Close();
+
+            cmd.Dispose();
+
+            return result;
+        }
+
+        /// <inheritdoc/>
+        public async Task<object?> ExecuteScalarAsync(string commandString, DbParameter[] @params, CommandType? commandType = CommandType.Text)
+        {
+            var commandDefinition = new CommandDefinition(commandString, @params, _tran, CommandTimeout, commandType);
+            var cmd = commandDefinition.SetupCommand(_conn, async (command, parameters) =>
+            {
+                await CallEvent(CommandKind.Executing, command, parameters);
+            });
+
+            var isClose = _conn.State == ConnectionState.Closed;
+
+            if (!isClose) await _conn.OpenAsync();
+
+            var result = cmd.ExecuteScalar();
+
+            if (!isClose) await _conn.CloseAsync();
+
+            cmd.Dispose();
+
+            return result;
+        }
+
+        /// <inheritdoc/>
+        public IDataReader ExecuteOriginalReader(string commandString, DbParameter[] @params, CommandType? commandType = CommandType.Text)
+        {
+            var commandDefinition = new CommandDefinition(commandString, @params, _tran, CommandTimeout, commandType);
+            var cmd = commandDefinition.SetupCommand(_conn, (command, parameters) =>
+            {
+                CallEvent(CommandKind.Executing, command, parameters).Wait();
+            });
+
+            var isClose = _conn.State == ConnectionState.Closed;
+
+            if (!isClose) _conn.Open();
+
+            var dr = cmd.ExecuteReader();
+            var guid = Guid.NewGuid().ToString();
+            _readerCache.TryAdd(guid, dr);
+
+            return dr;
+        }
+
+        /// <inheritdoc/>
+        public IEnumerable<IDataReader> ExecuteReader(string commandString, DbParameter[] @params, CommandType? commandType = CommandType.Text)
+        {
+            var commandDefinition = new CommandDefinition(commandString, @params, _tran, CommandTimeout, commandType);
+            var cmd = commandDefinition.SetupCommand(_conn, (command, parameters) =>
+            {
+                CallEvent(CommandKind.Executing, command, parameters).Wait();
+            });
+
+            var isClose = _conn.State == ConnectionState.Closed;
+
+            if (!isClose) _conn.Open();
+
+            var dr = cmd.ExecuteReader();
+            var guid = Guid.NewGuid().ToString();
+            _readerCache.TryAdd(guid, dr);
+
+            while (dr.Read())
+            {
+                yield return dr;
+            }
+
+            dr.Close();
+            _readerCache.TryRemove(guid, out dr);
+            if (!isClose) _conn.Close();
+
+            cmd.Dispose();
+        }
+
+        /// <inheritdoc/>
+        public IEnumerable<V> ExecuteReader<V>(string commandString, DbParameter[] @params, Func<IDataReader, V> action, CommandType? commandType = CommandType.Text)
+        {
+            foreach (var item in ExecuteReader(commandString, @params, commandType))
+            {
+                yield return action(item);
+            }
+        }
+
+        /// <inheritdoc/>
+        public async Task<IDataReader> ExecuteOriginalReaderAsync(string commandString, DbParameter[] @params, CommandType? commandType = CommandType.Text)
+        {
+            var commandDefinition = new CommandDefinition(commandString, @params, _tran, CommandTimeout, commandType);
+            var cmd = commandDefinition.SetupCommand(_conn, async (command, parameters) =>
+            {
+                await CallEvent(CommandKind.Executing, command, parameters);
+            });
+
+            var isClose = _conn.State == ConnectionState.Closed;
+
+            if (!isClose) await _conn.OpenAsync();
+
+            var dr = cmd.ExecuteReader();
+            var guid = Guid.NewGuid().ToString();
+            _readerCache.TryAdd(guid, dr);
+
+            return dr;
+        }
+
+        #endregion
+
+        #region Protected Methods
 
         #endregion
 
@@ -275,43 +352,37 @@ namespace iCat.DB.Client.Implements
         /// <summary>
         /// Call executed event
         /// </summary>
+        /// <param name="commandKind"></param>
         /// <param name="command"></param>
-        /// <param name="script"></param>
+        /// <param name="dbDataParameter"></param>
         /// <returns></returns>
-        protected async Task CallEvent(Command command, string script)
+        protected async Task CallEvent(CommandKind commandKind, IDbCommand? command, IDbDataParameter[]? dbDataParameter)
         {
-            ExecutedEvent?.Invoke(Category, command, script);
+            ExecutedEvent?.Invoke(Category, commandKind, command, dbDataParameter);
             await Task.CompletedTask;
         }
+
 
         #endregion
 
-        #region dispose
+        #region Private Methods
 
-        /// <summary>
-        /// Can be removed cache from DBClientFactory
-        /// </summary>
-        protected void Disposing()
+        #endregion
+
+        #region Dispose
+
+        /// <inheritdoc/>
+        public void Dispose()
         {
-            DisposingHandler?.Invoke(this, EventArgs.Empty);
-        }
-
-        /// <summary>
-        /// Dispose
-        /// </summary>
-        public void Dispose() => Dispose(true);
-
-        /// <summary>
-        /// DisposeAsync
-        /// </summary>
-        /// <returns></returns>
-        public async ValueTask DisposeAsync()
-        {
+            // Dispose of unmanaged resources.
             Dispose(true);
-            await Task.CompletedTask;
+            // Suppress finalization.
+            GC.SuppressFinalize(this);
         }
 
-        private void Dispose(bool disposing)
+
+        /// <inheritdoc/>
+        protected virtual void Dispose(bool disposing)
         {
             if (_disposed)
             {
@@ -320,21 +391,14 @@ namespace iCat.DB.Client.Implements
 
             if (disposing)
             {
-                Connection.Close();
+                DisposingHandler?.Invoke(this, EventArgs.Empty);
+                foreach (var dr in _readerCache) if (!dr.Value.IsClosed) dr.Value.Close();
                 _tran?.Dispose();
-                Connection.Dispose();
-                Disposing();
+                _conn.Close();
+                _conn.Dispose();
             }
 
             _disposed = true;
-        }
-
-        /// <summary>
-        /// Deconstructive
-        /// </summary>
-        ~DBClient()
-        {
-            Dispose(false);
         }
 
         #endregion
