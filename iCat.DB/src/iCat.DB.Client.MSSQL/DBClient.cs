@@ -51,7 +51,7 @@ namespace iCat.DB.Client.MSSQL
                 AssignParameters(cmd, @params);
                 if (_tran == null && _conn.State == ConnectionState.Closed) _conn.Open();
                 var result = cmd.ExecuteNonQuery();
-                base.CallEvent(Command.Executed, commandString).Wait();
+                base.CallEvent(CommandKind.Executing, commandString).Wait();
                 if (_tran == null && _conn.State == ConnectionState.Open) _conn.Close();
                 return result;
             }
@@ -72,7 +72,7 @@ namespace iCat.DB.Client.MSSQL
                 AssignParameters(cmd, @params);
                 if (_tran == null && _conn.State == ConnectionState.Closed) _conn.Open();
                 var result = await cmd.ExecuteNonQueryAsync();
-                await base.CallEvent(Command.Executed, commandString);
+                await base.CallEvent(CommandKind.Executing, commandString);
                 if (_tran == null && _conn.State == ConnectionState.Open) _conn.Close();
                 return result;
             }
@@ -93,7 +93,7 @@ namespace iCat.DB.Client.MSSQL
                 AssignParameters(cmd, @params);
                 if (_tran == null && _conn.State == ConnectionState.Closed) _conn.Open();
                 var result = cmd.ExecuteScalar();
-                base.CallEvent(Command.Executed, commandString).Wait();
+                base.CallEvent(CommandKind.Executing, commandString).Wait();
                 if (_tran == null && _conn.State == ConnectionState.Open) _conn.Close();
                 return result;
             }
@@ -114,7 +114,7 @@ namespace iCat.DB.Client.MSSQL
                 AssignParameters(cmd, @params);
                 if (_tran == null && _conn.State == ConnectionState.Closed) _conn.Open();
                 var result = await cmd.ExecuteScalarAsync();
-                await base.CallEvent(Command.Executed, commandString);
+                await base.CallEvent(CommandKind.Executing, commandString);
                 if (_tran == null && _conn.State == ConnectionState.Open) _conn.Close();
                 return result!;
             }
@@ -144,7 +144,7 @@ namespace iCat.DB.Client.MSSQL
                     action.Invoke(dr);
                 }
                 dr.Close();
-                base.CallEvent(Command.Executed, commandString).Wait();
+                base.CallEvent(CommandKind.Executing, commandString).Wait();
                 if (_tran == null && _conn.State == ConnectionState.Open) _conn.Close();
             }
         }
@@ -169,7 +169,7 @@ namespace iCat.DB.Client.MSSQL
                     yield return dr;
                 }
                 dr.Close();
-                base.CallEvent(Command.Executed, commandString).Wait();
+                base.CallEvent(CommandKind.Executing, commandString).Wait();
                 if (_tran == null && _conn.State == ConnectionState.Open) _conn.Close();
             }
         }
@@ -228,7 +228,7 @@ namespace iCat.DB.Client.MSSQL
                     executedAction.Invoke(dr);
                 }
                 dr.Close();
-                await base.CallEvent(Command.Executed, commandString);
+                await base.CallEvent(CommandKind.Executing, commandString);
                 if (_tran == null && _conn.State == ConnectionState.Open) _conn.Close();
             }
         }

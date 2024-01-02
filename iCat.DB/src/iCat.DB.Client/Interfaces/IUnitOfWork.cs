@@ -17,17 +17,22 @@ namespace iCat.DB.Client.Interfaces
         /// <summary>
         /// Executed event
         /// </summary>
-        event ExectuedCommandHandler? ExecutedEvent;
+        event ExectuedCommandHandler2? ExecutedEvent;
 
         /// <summary>
         /// Category
         /// </summary>
-        string Category { get; }
+        string? Category { get; }
 
         /// <summary>
         /// Export connection, it could be used by dapper
         /// </summary>
-        DbConnection Connection { get; }
+        IDbConnection Connection { get; }
+
+        /// <summary>
+        /// Transaction
+        /// </summary>
+        IDbTransaction? Transaction { get; }
 
         #region operators
 

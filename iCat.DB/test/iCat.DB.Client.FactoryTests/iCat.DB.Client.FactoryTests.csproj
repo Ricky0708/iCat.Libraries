@@ -10,16 +10,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.2" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.0" />
     <PackageReference Include="MSTest.TestAdapter" Version="3.0.4" />
     <PackageReference Include="MSTest.TestFramework" Version="3.0.4" />
     <PackageReference Include="coverlet.collector" Version="6.0.0" />
+    <PackageReference Include="MySql.Data" Version="8.2.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\iCat.DB.Client.Factory\iCat.DB.Client.Factory.csproj" />
-    <ProjectReference Include="..\..\src\iCat.DB.Client.MSSQL\iCat.DB.Client.MSSQL.csproj" />
-    <ProjectReference Include="..\..\src\iCat.DB.Client.MySQL\iCat.DB.Client.MySQL.csproj" />
   </ItemGroup>
 
 </Project>

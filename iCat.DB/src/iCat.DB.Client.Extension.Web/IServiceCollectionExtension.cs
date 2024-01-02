@@ -3,8 +3,10 @@ using iCat.DB.Client.Factory.Interfaces;
 //using iCat.DB.Client.Factory.Models;
 using iCat.DB.Client.Implements;
 using iCat.DB.Client.Interfaces;
+using iCat.DB.Client.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -26,13 +28,31 @@ namespace iCat.DB.Client.Extension.Web
         /// Instances of them are different from those created by factory
         /// </summary>
         /// <param name="services"></param>
+        /// <param name="dbClient"></param>
+        /// <returns></returns>
+        public static IServiceCollection AddDBClient(this IServiceCollection services, Func<IServiceProvider, DBClient> dbClient)
+        {
+            services.TryAddScoped<IConnection>(dbClient);
+            services.TryAddScoped<IUnitOfWork>(s => (IUnitOfWork)s.GetRequiredService<IConnection>());
+            return services;
+        }
+
+        /// <summary>
+        /// Register IConnection and IUnitOfWork in ServiceProvider
+        /// Instances of them are different from those created by factory
+        /// </summary>
+        /// <param name="services"></param>
         /// <param name="dbClients"></param>
         /// <returns></returns>
-        public static IServiceCollection AddDBClient(this IServiceCollection services, params DBClient[] dbClients)
+        public static IServiceCollection AddDBClients(this IServiceCollection services, params Expression<Func<IServiceProvider, DBClient>>[] dbClients)
         {
             foreach (var dbClient in dbClients)
             {
-                services.AddScoped<IConnection>(s => dbClient);
+                var newExpr = dbClient.Body as NewExpression;
+                if (newExpr == null) throw new ArgumentException(nameof(DBClient));
+                foreach (var arg in newExpr.Arguments)
+                    if (!(arg.Type == typeof(DBClientInfo))) throw new ArgumentException($"{nameof(DBClient)} must use the constructor of DBClientInfo");
+                services.AddScoped<IConnection>(dbClient.Compile());
             };
             services.AddScoped<IEnumerable<IUnitOfWork>>(s => s.GetServices<IConnection>().Select(p => (IUnitOfWork)p));
             return services;

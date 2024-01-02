@@ -10,14 +10,14 @@ using System.Data.Common;
 
 namespace iCat.DB.Client.Implements
 {
-    internal struct CommandDefinition
+    internal readonly struct CommandDefinition
     {
         private readonly string _commandText;
         private readonly DbParameter[]? _parameters;
         private readonly IDbTransaction? _transaction;
         private readonly int? _commandTimeout;
         private readonly CommandType? _commandType;
-        private readonly bool _buffered;
+        //private readonly bool _buffered;
         private readonly CancellationToken _cancellationToken;
         public CancellationToken CancellationToken => _cancellationToken;
 
@@ -48,7 +48,7 @@ namespace iCat.DB.Client.Implements
         /// </summary>
         public CommandDefinition(string commandText, DbParameter[]? parameters, IDbTransaction? transaction, int? commandTimeout = null,
             CommandType? commandType = System.Data.CommandType.Text
-            , CancellationToken cancellationToken = default(CancellationToken))
+            , CancellationToken cancellationToken = default)
         {
             this._commandText = commandText;
             this._parameters = parameters;
@@ -58,7 +58,7 @@ namespace iCat.DB.Client.Implements
             this._cancellationToken = cancellationToken;
         }
 
-        internal IDbCommand SetupCommand(IDbConnection conn, Action<IDbCommand, DbParameter[]?>? paramReader = null)
+        internal IDbCommand SetupCommand(IDbConnection conn, Action<IDbCommand, IDbDataParameter[]?>? paramReader = null)
         {
             var cmd = conn.CreateCommand();
             cmd.CommandText = _commandText;
@@ -72,10 +72,7 @@ namespace iCat.DB.Client.Implements
                     cmd.Parameters.Add(parameter);
                 }
 
-            if (paramReader != null)
-            {
-                paramReader(cmd, _parameters);
-            }
+            paramReader?.Invoke(cmd, _parameters);
             return cmd;
         }
     }

@@ -18,19 +18,97 @@ As a reminder, the IUnitOfWork/IConnection obtained from "General Fixed Connecti
 dotnet add package iCat.DB.Client
 dotnet add package iCat.DB.Client.Extension.Web
 dotnet add package iCat.DB.Client.Factory
-dotnet add package iCat.DB.Client.MSSQL
-dotnet add package iCat.DB.Client.MySQL
 ```
 
-## Sample ( General Fixed Connection Registration )
+## Sample ( Single database )
 
 ### Program.cs
 ```C#
     using iCat.DB.Client.Extension.Web;
-    using iCat.DB.Client.Interfaces;
+    using iCat.DB.Client.Implements;
     using iCat.DB.Client.Models;
-    using MSSQL = iCat.DB.Client.MSSQL;
-    using MySQL = iCat.DB.Client.MSSQL;
+```
+```C#
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            var builder = WebApplication.CreateBuilder(args);
+
+            // Add services to the container.
+            var services = builder.Services;
+            services.AddDBClient((s) => new DBClient(new SqlConnection("Your connection string")));
+            services.AddControllers();
+
+            var app = builder.Build();
+
+            // Configure the HTTP request pipeline.
+
+            app.MapControllers();
+
+
+            app.Run();
+        }
+    }
+```
+### Controller
+```C#
+    using iCat.DB.Client.Interfaces;
+```
+```C#
+    [ApiController]
+    [Route("[controller]")]
+    public class DemoController : ControllerBase
+    {
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IConnection _connection;
+
+        public DemoController(IUnitOfWork unitOfWork, IConnection connection)
+        {
+            _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+            _connection = connection ?? throw new ArgumentNullException(nameof(connection));
+        }
+
+        [HttpGet]
+        public IActionResult Get()
+        {
+
+            using (_unitOfWork)
+            {
+                try
+                {
+                    _unitOfWork.Open();
+                    _unitOfWork.BeginTransaction();
+
+                    foreach (var dr in _connection.ExecuteReader("SELECT * FROM YourTable", new DbParameter[] { }))
+                    {
+                        var filed = dr["fieldName"];
+                    };
+
+                    _unitOfWork.Commit();
+                }
+                catch (Exception)
+                {
+                    _unitOfWork.Rollback();
+                }
+                finally
+                {
+                    _unitOfWork.Close();
+                }
+            }
+
+            return Ok();
+        }
+    }
+```
+
+## Sample ( General Fixed Connections Registration )
+
+### Program.cs
+```C#
+using iCat.DB.Client.Extension.Web;
+using iCat.DB.Client.Implements;
+using iCat.DB.Client.Models;
 ```
 ```C#
     public class Program
@@ -42,28 +120,17 @@ dotnet add package iCat.DB.Client.MySQL
             // Add services to the container.
             var services = builder.Services;
             services
-                .AddDBClient(
-                    new MySQL.DBClient(new DBClientInfo("MainDB", "mysql connection string")),
-                    new MSSQL.DBClient(new DBClientInfo("CompanyA", "mssql connection string A")),
-                    new MSSQL.DBClient(new DBClientInfo("CompanyB", "mssql connection string B"))
+                .AddDBClients(
+                    (s) => new DBClient(new DBClientInfo("MainDB", new SqlConnection("Your connection string"))),
+                    (s) => new DBClient(new DBClientInfo("Company", new SqlConnection("Your connection string")))
                 );
+            services.AddControllers();
 
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
 
-            app.UseAuthorization();
             app.MapControllers();
-
-            foreach (var iConnection in app.Services.GetServices<IConnection>())
-            {
-                iConnection.ExecutedEvent += (category, command, script) =>
-                {
-                    // category: MainDB, CompanyA, CompanyB..etc
-                    // command: enum (Opened,  Closed, TransactionBegined, Commited, Rollbacked, Executed) 
-                    // script: sql statements run by the application
-                };
-            }
 
             app.Run();
         }
@@ -91,27 +158,28 @@ dotnet add package iCat.DB.Client.MySQL
         public IActionResult Get()
         {
 
-            using (var unitOfork = _unitOfWorks.First(p => p.Category == "MainDB"))
+            using (var unitOfWork = _unitOfWorks.First(p => p.Category == "MainDB"))
             {
                 try
                 {
-                    unitOfork.Open();
-                    unitOfork.BeginTransaction();
-
+                    unitOfWork.Open();
+                    unitOfWork.BeginTransaction();
                     var connection = _connections.First(p => p.Category == "MainDB");
-                    foreach (var dr in connection.ExecuteReader("SELECT * FROM YourTable", new DbParameter[] { })){
-                        // write in your logic
-                    }
 
-                    unitOfork.Commit();
+                    foreach (var dr in connection.ExecuteReader("SELECT * FROM YourTable", new DbParameter[] { }))
+                    {
+                        var filed = dr["fieldName"];
+                    };
+
+                    unitOfWork.Commit();
                 }
                 catch (Exception)
                 {
-                    unitOfork.Rollback();
+                    unitOfWork.Rollback();
                 }
                 finally
                 {
-                    unitOfork.Close();
+                    unitOfWork.Close();
                 }
             }
 
@@ -125,9 +193,8 @@ dotnet add package iCat.DB.Client.MySQL
 ### Program.cs
 ```C#
     using iCat.DB.Client.Extension.Web;
-    using iCat.DB.Client.Interfaces;
+    using iCat.DB.Client.Implements;
     using iCat.DB.Client.Models;
-    using iCat.DB.Client.Factory.Interfaces;
 ```
 ```C#
     public class Program
@@ -139,33 +206,17 @@ dotnet add package iCat.DB.Client.MySQL
             // Add services to the container.
             var services = builder.Services;
             services
-                .AddDBClientFactory( // DefaultDBClientProvider ( you can custom IDBClientProvider here )
-                    () => new MySQL.DBClient(new DBClientInfo("MainDB", "mysql connection string")),
-                    () => new MSSQL.DBClient(new DBClientInfo("CompanyA", "mssql connection string A")),
-                    () => new MSSQL.DBClient(new DBClientInfo("CompanyB", "mssql connection string B"))
+                .AddDBClientFactory(
+                    () => new DBClient(new DBClientInfo("MainDB", new SqlConnection("Your connection string"))),
+                    () => new DBClient(new DBClientInfo("Company", new SqlConnection("Your connection string")))
                 );
-
+            services.AddControllers();
 
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
 
-            app.UseAuthorization();
             app.MapControllers();
-
-            foreach (var factory in app.Services.GetServices<IDBClientFactory>())
-            {
-                foreach (var connection in factory.GetConnections())
-                {
-                    connection.ExecutedEvent += (category, command, script) =>
-                    {
-                        // category: MainDB, CompanyA, CompanyB..etc
-                        // command: enum (Opened,  Closed, TransactionBegined, Commited, Rollbacked, Executed) 
-                        // script: sql statements run by the application
-                    };
-                }
-
-            }
 
             app.Run();
         }
@@ -180,39 +231,38 @@ dotnet add package iCat.DB.Client.MySQL
     [Route("[controller]")]
     public class DemoController : ControllerBase
     {
-        private readonly IDBClientFactory _clientFactory;
+        private readonly IDBClientFactory _factory;
 
-        public DemoController(IDBClientFactory clientFactory)
+        public DemoController(IDBClientFactory factory)
         {
-            _clientFactory = clientFactory ?? throw new ArgumentNullException(nameof(clientFactory));
+            _factory = factory ?? throw new ArgumentNullException(nameof(factory));
         }
 
         [HttpGet]
         public IActionResult Get()
         {
-
-            using (var unitOfork = _clientFactory.GetUnitOfWork("MainDB"))
+            using (var unitOfWork = _factory.GetUnitOfWork("MainDB"))
             {
                 try
                 {
-                    unitOfork.Open();
-                    unitOfork.BeginTransaction();
+                    unitOfWork.Open();
+                    unitOfWork.BeginTransaction();
+                    var connection = _factory.GetConnection("MainDB");
 
-                    var connection = _clientFactory.GetConnection("MainDB");
                     foreach (var dr in connection.ExecuteReader("SELECT * FROM YourTable", new DbParameter[] { }))
                     {
                         var filed = dr["fieldName"];
                     };
 
-                    unitOfork.Commit();
+                    unitOfWork.Commit();
                 }
                 catch (Exception)
                 {
-                    unitOfork.Rollback();
+                    unitOfWork.Rollback();
                 }
                 finally
                 {
-                    unitOfork.Close();
+                    unitOfWork.Close();
                 }
             }
 
