@@ -91,7 +91,7 @@ namespace iCat.DB.Client.Factory.Implements
             var key = ((DBClient?)sender)!.Category;
 
             // CA1853
-            _dbClients.Remove(key);
+            _dbClients.Remove(key!);
         }
 
     }

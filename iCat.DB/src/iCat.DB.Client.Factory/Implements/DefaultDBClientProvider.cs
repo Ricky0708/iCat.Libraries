@@ -8,6 +8,7 @@ using iCat.DB.Client.Implements;
 using iCat.DB.Client.Factory.Interfaces;
 using iCat.DB.Client.Factory.Models;
 using System.Linq.Expressions;
+using iCat.DB.Client.Models;
 
 namespace iCat.DB.Client.Factory.Implements
 {
@@ -21,14 +22,22 @@ namespace iCat.DB.Client.Factory.Implements
         /// <summary>
         /// Connection info provider
         /// </summary>
-        /// <param name="connectionDatas"></param>
+        /// <param name="dbClients"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public DefaultDBClientProvider(params Expression<Func<DBClient>>[] connectionDatas)
+        public DefaultDBClientProvider(params Expression<Func<DBClient>>[] dbClients)
         {
-            _connectionDatas = connectionDatas?.ToDictionary(
+            foreach (var dbClient in dbClients)
+            {
+                var newExpr = dbClient.Body as NewExpression;
+                if (newExpr == null) throw new ArgumentException(nameof(DBClient));
+                foreach (var arg in newExpr.Arguments)
+                    if (!(arg.Type == typeof(DBClientInfo))) throw new ArgumentException($"{nameof(DBClient)} must use the constructor of DBClientInfo");
+            };
+
+            _connectionDatas = dbClients?.ToDictionary(
                 p => GetCategory(p),
                 p => p?.Compile() ?? throw new ArgumentNullException(nameof(p)))
-                ?? throw new ArgumentNullException(nameof(connectionDatas));
+                ?? throw new ArgumentNullException(nameof(dbClients));
         }
 
         /// <summary>
@@ -48,12 +57,21 @@ namespace iCat.DB.Client.Factory.Implements
             {
                 foreach (var arg in newExpr.Arguments)
                 {
-                    newExpr = arg as NewExpression;
-                    if (newExpr != null)
+                    if (arg is ConstantExpression)
                     {
-                        var value = (newExpr.Arguments[0] as ConstantExpression)?.Value?.ToString() ?? throw new ArgumentException("");
-                        return value;
+                        return (arg as ConstantExpression)?.Value?.ToString() ?? "default";
                     }
+                    else if (arg is NewExpression)
+                    {
+                        newExpr = arg as NewExpression;
+                        if (newExpr != null)
+                        {
+                            var value = (newExpr.Arguments[0] as ConstantExpression)?.Value?.ToString() ?? throw new ArgumentException("");
+                            return value;
+                        }
+
+                    }
+
                 }
             }
             throw new ArgumentException("");

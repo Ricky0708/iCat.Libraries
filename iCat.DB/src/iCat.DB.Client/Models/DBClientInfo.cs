@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,27 +20,17 @@ namespace iCat.DB.Client.Models
         /// <summary>
         /// Connection string
         /// </summary>
-        public string ConnectionString { get; init; }
-
-        /// <summary>
-        /// Do not use
-        /// </summary>
-        [Obsolete("Use DBClientInfo(string category, string connectionString) for init this", true)]
-        public DBClientInfo()
-        {
-            Category = "";
-            ConnectionString = "";
-        }
+        public DbConnection Connection { get; init; }
 
         /// <summary>
         /// DBClient info
         /// </summary>
         /// <param name="category"></param>
-        /// <param name="connectionString"></param>
-        public DBClientInfo(string category, string connectionString)
+        /// <param name="connection"></param>
+        public DBClientInfo(string category, DbConnection connection)
         {
             Category = category;
-            ConnectionString = connectionString;
+            Connection = connection;
         }
     }
 }

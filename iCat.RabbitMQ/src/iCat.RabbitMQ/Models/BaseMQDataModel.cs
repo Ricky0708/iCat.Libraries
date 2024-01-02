@@ -6,8 +6,14 @@ using System.Threading.Tasks;
 
 namespace iCat.RabbitMQ.Models
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class BaseMQDataModel
     {
+        /// <summary>
+        /// Trace Id
+        /// </summary>
         public string TraceId { get; set; } = "";
     }
 }

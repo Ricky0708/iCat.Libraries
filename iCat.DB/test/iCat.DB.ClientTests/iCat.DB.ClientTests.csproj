@@ -17,8 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\iCat.DB.Client.MSSQL\iCat.DB.Client.MSSQL.csproj" />
-    <ProjectReference Include="..\..\src\iCat.DB.Client.MySQL\iCat.DB.Client.MySQL.csproj" />
     <ProjectReference Include="..\..\src\iCat.DB.Client\iCat.DB.Client.csproj" />
   </ItemGroup>
 
