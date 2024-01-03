@@ -30,14 +30,22 @@ namespace iCat.DB.Client.Factory.Implements
             {
                 var newExpr = dbClient.Body as NewExpression;
                 if (newExpr == null) throw new ArgumentException(nameof(DBClient));
+
+                var hasCategory = false;
+                var hasDBClientInfo = false;
                 foreach (var arg in newExpr.Arguments)
-                    if (!(arg.Type == typeof(DBClientInfo))) throw new ArgumentException($"{nameof(DBClient)} must use the constructor of DBClientInfo");
+                {
+                    if (arg.Type == typeof(DBClientInfo)) hasDBClientInfo = true;
+                    else if (arg.Type == typeof(string)) hasCategory = true;
+
+                }
+                if (!(hasDBClientInfo || hasCategory)) throw new ArgumentException($"{nameof(DBClient)} must have category");
             };
 
             _connectionDatas = dbClients?.ToDictionary(
                 p => GetCategory(p),
-                p => p?.Compile() ?? throw new ArgumentNullException(nameof(p)))
-                ?? throw new ArgumentNullException(nameof(dbClients));
+                p => p?.Compile() ?? throw new ArgumentException(nameof(p)))
+                ?? throw new ArgumentException(nameof(dbClients));
         }
 
         /// <summary>

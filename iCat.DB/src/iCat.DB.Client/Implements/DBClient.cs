@@ -16,7 +16,7 @@ using static iCat.DB.Client.Constants.ExecuteCommand;
 namespace iCat.DB.Client.Implements
 {
     /// <inheritdoc/>
-    public class DBClient : IConnection, IUnitOfWork
+    public sealed class DBClient : IConnection, IUnitOfWork
     {
 
         #region Property
@@ -58,6 +58,12 @@ namespace iCat.DB.Client.Implements
         #endregion
 
         #region Constructor
+
+        /// <inheritdoc/>
+        public DBClient(string category, DbConnection connection):this(new DBClientInfo(category, connection))
+        {
+                    
+        }
 
         /// <inheritdoc/>
         public DBClient(DbConnection connection) : this(new DBClientInfo("default", connection))
@@ -382,7 +388,7 @@ namespace iCat.DB.Client.Implements
 
 
         /// <inheritdoc/>
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_disposed)
             {
