@@ -50,8 +50,15 @@ namespace iCat.DB.Client.Extension.Web
             {
                 var newExpr = dbClient.Body as NewExpression;
                 if (newExpr == null) throw new ArgumentException(nameof(DBClient));
+                var hasCategory = false;
+                var hasDBClientInfo = false;
                 foreach (var arg in newExpr.Arguments)
-                    if (!(arg.Type == typeof(DBClientInfo))) throw new ArgumentException($"{nameof(DBClient)} must use the constructor of DBClientInfo");
+                {
+                    if (arg.Type == typeof(DBClientInfo)) hasDBClientInfo = true;
+                    else if (arg.Type == typeof(string)) hasCategory = true;
+                }
+                if (!(hasDBClientInfo || hasCategory)) throw new ArgumentException($"{nameof(DBClient)} must have category");
+
                 services.AddScoped<IConnection>(dbClient.Compile());
             };
             services.AddScoped<IEnumerable<IUnitOfWork>>(s => s.GetServices<IConnection>().Select(p => (IUnitOfWork)p));
@@ -69,6 +76,20 @@ namespace iCat.DB.Client.Extension.Web
         {
             services.AddScoped<IDBClientFactory, DBClientFactory>();
             services.AddSingleton<IDBClientProvider>(s => new DefaultDBClientProvider(dbClients));
+            return services;
+        }
+
+        /// <summary>
+        /// Register the factory with a ServiceProvider using default connection provider
+        /// IConnection and IUnitOfWork created by the factory are different from throse created by ServiceProvider
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="dbClients"></param>
+        /// <returns></returns>
+        public static IServiceCollection AddDBClientFactory(this IServiceCollection services, Func<IServiceProvider, Expression<Func<DBClient>>[]> dbClients)
+        {
+            services.AddScoped<IDBClientFactory, DBClientFactory>();
+            services.AddSingleton<IDBClientProvider>(s => new DefaultDBClientProvider(dbClients.Invoke(s)));
             return services;
         }
 

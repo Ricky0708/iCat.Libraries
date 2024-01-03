@@ -27,7 +27,7 @@ namespace iCat.DB.Client.Interfaces
         /// <summary>
         /// Export connection, it could be used by dapper
         /// </summary>
-        IDbConnection Connection { get; }
+        DbConnection Connection { get; }
 
         /// <summary>
         /// Transaction
