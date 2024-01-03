@@ -25,7 +25,7 @@ namespace iCat.DB.Client.Implements
         public string? Category => _category;
 
         /// <inheritdoc/>
-        public IDbConnection Connection => _conn;
+        public DbConnection Connection => _conn;
 
         /// <inheritdoc/>
         public int CommandTimeout { get; set; }
