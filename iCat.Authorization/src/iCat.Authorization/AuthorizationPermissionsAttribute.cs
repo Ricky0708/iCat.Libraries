@@ -25,6 +25,7 @@ namespace iCat.Authorization
         }
     }
 
+#if !NET6_0  
     /// <summary>
     /// iCat authorization attribute, 
     /// </summary>
@@ -102,4 +103,5 @@ namespace iCat.Authorization
         {
         }
     }
+#endif
 }

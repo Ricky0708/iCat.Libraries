@@ -8,7 +8,7 @@ namespace iCat.Authorization.Models
 {
     public class PermissionDetail
     {
-        public required string PermissionName { get; set; }
+        public string? PermissionName { get; set; }
         public int Permission { get; set; }
     }
 }
