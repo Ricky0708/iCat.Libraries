@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace iCat.Authorization
 {
-    public class FuncionPermissionParser
+    public sealed class FuncionPermissionParser
     {
         private const string _startWith = "Auth";
         private const string _endWith = "Permission";
