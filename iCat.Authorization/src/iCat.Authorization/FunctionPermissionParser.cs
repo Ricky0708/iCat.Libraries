@@ -11,24 +11,33 @@ using System.Threading.Tasks;
 
 namespace iCat.Authorization
 {
-    public sealed class FuncionPermissionParser
+    public sealed class FunctionPermissionParser
     {
-        private const string _startWith = "Auth";
         private const string _endWith = "Permission";
         private List<FunctionData> _functionDatas;
 
-        public FuncionPermissionParser(Type functionEnum, params Type[] functionPermissionEnums)
+        public FunctionPermissionParser(Type functionEnum, params Type[] functionPermissionEnums)
         {
             if (!CheckNamingDefinition(functionEnum, functionPermissionEnums)) throw new ArgumentException("Needs to be an enum type and must follow naming rules. (the name remove suffix from functionPermission type needs to match function type name)");
-            _functionDatas = GetPermissionDefinitions(functionEnum, functionPermissionEnums);
+            _functionDatas ??= GetPermissionDefinitions(functionEnum, functionPermissionEnums);
         }
 
-        public List<FunctionData> GetPermissionDefinitions()
+        /// <summary>
+        /// Get function and permission mapping
+        /// </summary>
+        /// <returns></returns>
+        public List<FunctionData> GetFunctionPermissionDefinitions()
         {
             return _functionDatas;
         }
 
-        public List<FunctionData> GetAuthorizationPermissionsData(CustomAttributeData[] attributes)
+        /// <summary>
+        /// Get AuthorizationPermissin attribute information
+        /// </summary>
+        /// <param name="attributes"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        public List<FunctionData> GetAuthorizationPermissionsData(params CustomAttributeData[] attributes)
         {
             if (attributes.Any(p => !p.AttributeType.Name.StartsWith(nameof(AuthorizationPermissionsAttribute)))) throw new ArgumentException("All attributes must be AuthorizationPermissionsAttribute.");
 
@@ -42,6 +51,12 @@ namespace iCat.Authorization
             return permissionNeedsData;
         }
 
+        /// <summary>
+        /// Parser AuthorizationPermission constructor
+        /// </summary>
+        /// <param name="arg"></param>
+        /// <param name="permissionNeeds"></param>
+        /// <exception cref="ArgumentException"></exception>
         private void GetAttributePermission(CustomAttributeTypedArgument arg, ref List<FunctionData> permissionNeeds)
         {
             if (arg.ArgumentType.IsArray)
@@ -99,6 +114,13 @@ namespace iCat.Authorization
         }
 
         #region private methods
+
+        /// <summary>
+        /// Parsing function and permission mapping
+        /// </summary>
+        /// <param name="functionEnum"></param>
+        /// <param name="functionPermissionEnums"></param>
+        /// <returns></returns>
         private List<FunctionData> GetPermissionDefinitions(Type functionEnum, params Type[] functionPermissionEnums)
         {
             var functionDatas = new List<FunctionData>();
@@ -127,11 +149,18 @@ namespace iCat.Authorization
             return functionDatas;
         }
 
+        /// <summary>
+        /// Check type and naming rule
+        /// </summary>
+        /// <param name="functionEnum"></param>
+        /// <param name="functionPermissionEnums"></param>
+        /// <returns></returns>
         private bool CheckNamingDefinition(Type functionEnum, params Type[] functionPermissionEnums)
         {
             var result = true;
             if (result) result = functionEnum.IsEnum && functionPermissionEnums.All(p => p.IsEnum);
             if (result) result = functionPermissionEnums.All(p => Enum.GetNames(functionEnum).Contains(p.Name.Replace(_endWith, "")));
+            if (result) result = Enum.GetNames(functionEnum).All(p => functionPermissionEnums.Any(d => d.Name.Replace(_endWith, "") == p));
             return result;
         }
 

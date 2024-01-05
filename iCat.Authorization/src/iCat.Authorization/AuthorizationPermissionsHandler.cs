@@ -1,129 +1,80 @@
-﻿using iCat.Authorization.Models;
+﻿using iCat.Authorization.Constants;
+using iCat.Authorization.Models;
+using iCat.Authorization.Providers;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace iCat.Authorization
 {
-    //public class AuthorizationPermissionsHandler : AuthorizationHandler<AuthorizationPermissionsRequirement>
-    //{
-    //    private const string _startWith = "Auth";
-    //    private const string _endWith = "Permission";
-    //    private static List<Function>? _functions;
-    //    private static ConcurrentDictionary<string, List<PermissionData>> _cache = new ConcurrentDictionary<string, List<PermissionData>>();
+    public class AuthorizationPermissionsHandler : AuthorizationHandler<AuthorizationPermissionsRequirement>
+    {
+        private const string _startWith = "Auth";
+        private const string _endWith = "Permission";
+        private static List<FunctionData>? _functionDatas;
+        private static ConcurrentDictionary<string, List<FunctionData>> _routePermissionCache = new ConcurrentDictionary<string, List<FunctionData>>();
+        private readonly FunctionPermissionParser _parser;
+        private readonly IUserPermissionProvider _userPermissionProvider;
 
-    //    public AuthorizationPermissionsHandler()
-    //    {
-    //        if (_functions == null)
-    //        {
-    //            _functions =
-    //                Enum
-    //                .GetValues(
-    //                    AppDomain.CurrentDomain.GetAssemblies().SelectMany(p => p.GetTypes().Where(t => t.IsEnum && t.IsPublic && t.Name == nameof(Function))).Single())
-    //                .OfType<Function>()
-    //                .ToList();
-    //        }
-    //    }
+        public AuthorizationPermissionsHandler(FunctionPermissionParser parser, IUserPermissionProvider userPermissionProvider)
+        {
+            _parser = parser ?? throw new ArgumentNullException(nameof(parser));
+            _userPermissionProvider = userPermissionProvider ?? throw new ArgumentNullException(nameof(userPermissionProvider));
+            if (_functionDatas == null)
+            {
+                _functionDatas = _parser.GetFunctionPermissionDefinitions();
+            }
+        }
 
-    //    protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, AuthorizationPermissionsRequirement requirement)
-    //    {
-    //        if (context.User.Identity?.IsAuthenticated ?? false)
-    //        {
-    //            if (context.Resource is HttpContext httpContext)
-    //            {
-    //                var endpoint = httpContext.GetEndpoint()!;
-    //                var actionDescriptor = endpoint.Metadata.GetMetadata<ControllerActionDescriptor>()!;
-    //                var cacheKey = $"{actionDescriptor.ControllerName}{actionDescriptor.ActionName}{string.Join("-", actionDescriptor.Parameters.Select(p => p.ParameterType.Name))}";
+        protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, AuthorizationPermissionsRequirement requirement)
+        {
+            if (context.User.Identity?.IsAuthenticated ?? false) { context.Fail(); return; }
 
-    //                if (!_cache.TryGetValue(cacheKey, out var permissionNeedsData))
-    //                {
-    //                    var permissionAttrs = actionDescriptor!.MethodInfo.CustomAttributes.Where(p => p.AttributeType.Name.StartsWith(nameof(AuthorizationPermissionsAttribute)));
-    //                    var args = permissionAttrs.SelectMany(p => p.ConstructorArguments);
-    //                    permissionNeedsData = new List<PermissionData>();
-    //                    foreach (var arg in args)
-    //                    {
-    //                        GetPermisionNeeds(arg, ref permissionNeedsData);
-    //                    }
-    //                    _cache.TryAdd(cacheKey, permissionNeedsData);
-    //                }
+            if (context.Resource is HttpContext httpContext)
+            {
+                var routerPermissions = GetRouterPermissions(httpContext);
+                var userPermissions = _userPermissionProvider.GetUserPermission();
+                foreach (var routerPermission in routerPermissions)
+                {
+                    if (_userPermissionProvider.Validate(userPermissions, routerPermission))
+                    {
+                        context.Succeed(requirement);
+                        await Task.FromResult(0);
+                    }
+                }
+                context.Fail();
+            }
+            else
+            {
+                context.Fail();
+            }
+            await Task.FromResult(0);
+        }
 
-    //                context.Succeed(requirement);
-    //            }
-    //            else
-    //            {
-    //                context.Fail();
-    //            }
-    //        }
-    //        else
-    //        {
-    //            context.Fail();
-    //        }
-    //        await Task.FromResult(0);
-    //    }
+        private List<FunctionData> GetRouterPermissions(HttpContext httpContext)
+        {
 
-    //    private void GetPermisionNeeds(CustomAttributeTypedArgument arg, ref List<PermissionData> permissionNeeds)
-    //    {
-    //        if (arg.ArgumentType.IsArray)
-    //        {
-    //            var values = arg.Value as ReadOnlyCollection<CustomAttributeTypedArgument>;
-    //            if (values != null)
-    //                foreach (var value in values)
-    //                    GetPermisionNeeds(value, ref permissionNeeds);
-    //        }
-    //        else if (arg.ArgumentType.IsEnum && arg.ArgumentType.Name.EndsWith(_endWith))
-    //        {
-    //            // Current arg belongs to the function
-    //            var function = _functions?.Any(p => p.ToString() == arg.ArgumentType.Name.Replace(_endWith, "")) ?? throw new ArgumentException("Permissions is not in the function list.")
-    //                ? _functions.First(p => p.ToString() == arg.ArgumentType.Name.Replace(_endWith, ""))
-    //                : throw new ArgumentException("Permissions is not in the function list.");
+            var endpoint = httpContext.GetEndpoint()!;
+            var actionDescriptor = endpoint.Metadata.GetMetadata<ControllerActionDescriptor>()!;
+            var cacheKey = $"{actionDescriptor.ControllerName}{actionDescriptor.ActionName}{string.Join("-", actionDescriptor.Parameters.Select(p => p.ParameterType.Name))}";
 
-    //            // The function permission list
-    //            var functionPermissions = (IEnumerable<int>)Enum.GetValues(arg.ArgumentType);
+            if (!_routePermissionCache.TryGetValue(cacheKey, out var permissionNeedsData))
+            {
+                var permissionAttrs = actionDescriptor!.MethodInfo.CustomAttributes.Where(p => p.AttributeType.Name.StartsWith(nameof(AuthorizationPermissionsAttribute)));
+                permissionNeedsData = _parser.GetAuthorizationPermissionsData(permissionAttrs.ToArray());
+                _routePermissionCache.TryAdd(cacheKey, permissionNeedsData);
+            }
+            return permissionNeedsData;
+        }
 
-    //            // Function permission data exists
-    //            var permissionNeed = permissionNeeds.FirstOrDefault(p => p.FunctionValue == (int)function);
-
-    //            if (permissionNeed == null)
-    //            {
-    //                permissionNeeds.Add(
-    //                         new PermissionData
-    //                         {
-    //                             FunctionName = function.ToString(),
-    //                             FunctionValue = (int)function,
-    //                             PermissionDetailList = functionPermissions
-    //                                .Where(p => ((int)arg.Value! & p) > 0)
-    //                                .Select(p => new PermissionDetail
-    //                                {
-    //                                    PermissionName = Enum.GetName(arg.ArgumentType, p!)!,
-    //                                    Permission = p
-    //                                }).ToList()
-    //                         });
-    //            }
-    //            else
-    //            {
-    //                var c = functionPermissions.Where(p => ((int)arg.Value! & p) > 0);
-    //                var notExistsPermission = c.Where(p => !permissionNeed.PermissionDetailList.Select(x => x.Permission).Any(y => y == p));
-    //                permissionNeed.PermissionDetailList.AddRange(notExistsPermission.Select(p => new PermissionDetail
-    //                {
-    //                    PermissionName = Enum.GetName(arg.ArgumentType, p)!,
-    //                    Permission = p
-    //                }));
-
-    //            }
-    //        }
-    //        else
-    //        {
-    //            throw new ArgumentException("Constructor parameter type is not an authorization permission type");
-    //        }
-    //    }
-
-
-
-    //}
+    }
 }
