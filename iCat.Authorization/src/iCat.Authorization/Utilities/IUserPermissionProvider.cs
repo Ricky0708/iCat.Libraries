@@ -16,7 +16,7 @@ namespace iCat.Authorization.Utilities
         /// Get current user permissions
         /// </summary>
         /// <returns></returns>
-        IEnumerable<FunctionData> GetUserPermission();
+        IEnumerable<FunctionPermissionData> GetUserPermission();
 
         /// <summary>
         /// Validate FunctionData
@@ -24,6 +24,6 @@ namespace iCat.Authorization.Utilities
         /// <param name="ownPermissions"></param>
         /// <param name="permissionRequired"></param>
         /// <returns></returns>
-        bool Validate(IEnumerable<FunctionData> ownPermissions, FunctionData permissionRequired);
+        bool Validate(IEnumerable<FunctionPermissionData> ownPermissions, FunctionPermissionData permissionRequired);
     }
 }

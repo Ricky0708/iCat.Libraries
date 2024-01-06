@@ -25,7 +25,7 @@ namespace iCat.Authorization.Utilities
         }
 
         /// <inheritdoc/>
-        public IEnumerable<FunctionData> GetUserPermission()
+        public IEnumerable<FunctionPermissionData> GetUserPermission()
         {
             var userPermission = _httpContext.User.Claims.Where(p => p.Type == AuthorizationPermissionClaimTypes.Permission).Select(p =>
             {
@@ -33,7 +33,7 @@ namespace iCat.Authorization.Utilities
                 if (!int.TryParse(functionPermission[0], out var functionValue)) throw new ArgumentException("Invalid Permission claims");
                 if (!int.TryParse(functionPermission[1], out var permissionValue)) throw new ArgumentException("Invalid Permission claims");
                 var function = _parser.GetFunctionPermissionDefinitions().FirstOrDefault(p => p.FunctionValue == functionValue) ?? throw new ArgumentException("Function in claims is not in function list");
-                return new FunctionData
+                return new FunctionPermissionData
                 {
                     FunctionValue = function.FunctionValue,
                     FunctionName = function.FunctionName,
@@ -44,7 +44,7 @@ namespace iCat.Authorization.Utilities
         }
 
         /// <inheritdoc/>
-        public bool Validate(IEnumerable<FunctionData> ownPermissions, FunctionData permissionRequired)
+        public bool Validate(IEnumerable<FunctionPermissionData> ownPermissions, FunctionPermissionData permissionRequired)
         {
             if (ownPermissions.Any(p => p.FunctionValue == permissionRequired.FunctionValue && (p.Permissions & permissionRequired.Permissions) > 0))
             {

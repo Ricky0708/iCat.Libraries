@@ -34,8 +34,8 @@ namespace iCat.Authorization.Providers.Tests
             var accessor = Substitute.For<IHttpContextAccessor>();
             accessor.HttpContext = hc;
 
-            var expeced = new List<FunctionData> {
-                new FunctionData { FunctionName = "UserProfile",
+            var expeced = new List<FunctionPermissionData> {
+                new FunctionPermissionData { FunctionName = "UserProfile",
                     FunctionValue = 1,
                     PermissionDetails = new List<PermissionDetail> {
                         new PermissionDetail{
@@ -48,7 +48,7 @@ namespace iCat.Authorization.Providers.Tests
                         }
                     },
                 },
-                new FunctionData { FunctionName = "Order",
+                new FunctionPermissionData { FunctionName = "Order",
                     FunctionValue = 2,
                     PermissionDetails = new List<PermissionDetail> {
                         new PermissionDetail{
@@ -86,8 +86,8 @@ namespace iCat.Authorization.Providers.Tests
             var parser = new FunctionPermissionParser(typeof(Function), typeof(UserProfilePermission), typeof(OrderPermission), typeof(DepartmentPermission));
             var accessor = Substitute.For<IHttpContextAccessor>();
             var provider = new DefaultUserPermissionProvider(accessor, parser);
-            var userPermission = new List<FunctionData> {
-                new FunctionData {
+            var userPermission = new List<FunctionPermissionData> {
+                new FunctionPermissionData {
                     FunctionValue = (int)userFunction,
                     PermissionDetails = new List<PermissionDetail>
                     {
@@ -99,7 +99,7 @@ namespace iCat.Authorization.Providers.Tests
             };
 
             // action
-            var result = provider.Validate(userPermission, new FunctionData
+            var result = provider.Validate(userPermission, new FunctionPermissionData
             {
                 FunctionValue = (int)Function.UserProfile,
                 PermissionDetails = new List<PermissionDetail> {
