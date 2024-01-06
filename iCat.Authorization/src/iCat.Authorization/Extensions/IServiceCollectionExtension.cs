@@ -26,7 +26,7 @@ namespace iCat.Authorization.Extensions
         public static IServiceCollection AddAuthorizationPermission(this IServiceCollection services, Type functionEnum, params Type[] functionPermissionEnums)
         {
             services.AddSingleton<IAuthorizationHandler, AuthorizationPermissionsHandler>();
-            services.AddSingleton<IUserPermissionProvider, DefaultUserPermissionProvider>();
+            services.AddSingleton<IFunctionPermissionProvider, DefaultFunctionPermissionProvider>();
             services.AddSingleton<FunctionPermissionParser>(p => new FunctionPermissionParser(functionEnum, functionPermissionEnums));
             return services;
         }

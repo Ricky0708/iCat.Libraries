@@ -10,7 +10,7 @@ namespace iCat.Authorization.Utilities
     /// <summary>
     /// Provide user's permission
     /// </summary>
-    public interface IUserPermissionProvider
+    public interface IFunctionPermissionProvider
     {
         /// <summary>
         /// Get current user permissions

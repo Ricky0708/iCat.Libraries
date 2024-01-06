@@ -25,7 +25,7 @@ namespace iCat.Authorization
         private static List<FunctionPermissionData>? _functionDatas;
         private static ConcurrentDictionary<string, List<FunctionPermissionData>> _routePermissionCache = new ConcurrentDictionary<string, List<FunctionPermissionData>>();
         private readonly FunctionPermissionParser _parser;
-        private readonly IUserPermissionProvider _userPermissionProvider;
+        private readonly IFunctionPermissionProvider _userPermissionProvider;
 
         /// <summary>
         /// Authorize AuthorizationPermissionsRequirement
@@ -33,7 +33,7 @@ namespace iCat.Authorization
         /// <param name="parser"></param>
         /// <param name="userPermissionProvider"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public AuthorizationPermissionsHandler(FunctionPermissionParser parser, IUserPermissionProvider userPermissionProvider)
+        public AuthorizationPermissionsHandler(FunctionPermissionParser parser, IFunctionPermissionProvider userPermissionProvider)
         {
             _parser = parser ?? throw new ArgumentNullException(nameof(parser));
             _userPermissionProvider = userPermissionProvider ?? throw new ArgumentNullException(nameof(userPermissionProvider));

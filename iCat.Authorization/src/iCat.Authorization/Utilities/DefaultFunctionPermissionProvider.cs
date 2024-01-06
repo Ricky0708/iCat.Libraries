@@ -10,14 +10,14 @@ using System.Threading.Tasks;
 namespace iCat.Authorization.Utilities
 {
     /// <inheritdoc/>
-    public class DefaultUserPermissionProvider : IUserPermissionProvider
+    public class DefaultFunctionPermissionProvider : IFunctionPermissionProvider
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly FunctionPermissionParser _parser;
         private readonly HttpContext _httpContext;
 
         /// <inheritdoc/>
-        public DefaultUserPermissionProvider(IHttpContextAccessor httpContextAccessor, FunctionPermissionParser parser)
+        public DefaultFunctionPermissionProvider(IHttpContextAccessor httpContextAccessor, FunctionPermissionParser parser)
         {
             _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
             _parser = parser ?? throw new ArgumentNullException(nameof(parser));

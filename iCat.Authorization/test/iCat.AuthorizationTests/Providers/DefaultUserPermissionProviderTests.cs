@@ -63,7 +63,7 @@ namespace iCat.Authorization.Providers.Tests
                 },
             };
 
-            var provider = new DefaultUserPermissionProvider(accessor, parser);
+            var provider = new DefaultFunctionPermissionProvider(accessor, parser);
 
             // action
             var result = provider.GetUserPermission();
@@ -85,7 +85,7 @@ namespace iCat.Authorization.Providers.Tests
             // arrange
             var parser = new FunctionPermissionParser(typeof(Function), typeof(UserProfilePermission), typeof(OrderPermission), typeof(DepartmentPermission));
             var accessor = Substitute.For<IHttpContextAccessor>();
-            var provider = new DefaultUserPermissionProvider(accessor, parser);
+            var provider = new DefaultFunctionPermissionProvider(accessor, parser);
             var userPermission = new List<FunctionPermissionData> {
                 new FunctionPermissionData {
                     FunctionValue = (int)userFunction,
