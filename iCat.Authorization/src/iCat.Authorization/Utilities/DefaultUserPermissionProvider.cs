@@ -9,12 +9,14 @@ using System.Threading.Tasks;
 
 namespace iCat.Authorization.Utilities
 {
+    /// <inheritdoc/>
     public class DefaultUserPermissionProvider : IUserPermissionProvider
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly FunctionPermissionParser _parser;
         private readonly HttpContext _httpContext;
 
+        /// <inheritdoc/>
         public DefaultUserPermissionProvider(IHttpContextAccessor httpContextAccessor, FunctionPermissionParser parser)
         {
             _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
@@ -22,6 +24,7 @@ namespace iCat.Authorization.Utilities
             _httpContext = _httpContextAccessor.HttpContext ?? throw new ArgumentException("Can't find HttpContext.");
         }
 
+        /// <inheritdoc/>
         public IEnumerable<FunctionData> GetUserPermission()
         {
             var userPermission = _httpContext.User.Claims.Where(p => p.Type == AuthorizationPermissionClaimTypes.Permission).Select(p =>
@@ -40,6 +43,7 @@ namespace iCat.Authorization.Utilities
             return userPermission;
         }
 
+        /// <inheritdoc/>
         public bool Validate(IEnumerable<FunctionData> ownPermissions, FunctionData permissionRequired)
         {
             if (ownPermissions.Any(p => p.FunctionValue == permissionRequired.FunctionValue && (p.Permissions & permissionRequired.Permissions) > 0))

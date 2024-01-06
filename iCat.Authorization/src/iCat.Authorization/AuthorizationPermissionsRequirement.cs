@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace iCat.Authorization
 {
+    /// <summary>
+    /// AuthorizationPermissionsRequirement
+    /// </summary>
     public class AuthorizationPermissionsRequirement : IAuthorizationRequirement
     {
 

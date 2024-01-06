@@ -11,6 +11,9 @@ using System.Threading.Tasks;
 
 namespace iCat.Authorization.Extensions
 {
+    /// <summary>
+    /// IServiceCollection extension for AuthorizationPermission
+    /// </summary>
     public static class IServiceCollectionExtension
     {
         /// <summary>

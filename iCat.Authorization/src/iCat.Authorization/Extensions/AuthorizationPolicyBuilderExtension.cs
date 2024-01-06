@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace iCat.Authorization.Extensions
 {
+    /// <summary>
+    /// AuthorizationPolicyBuilder extension for AuthorizationPermissionsRequirement
+    /// </summary>
     public static class AuthorizationPolicyBuilderExtension
     {
         /// <summary>

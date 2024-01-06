@@ -11,11 +11,20 @@ using System.Threading.Tasks;
 
 namespace iCat.Authorization.Utilities
 {
+    /// <summary>
+    /// FunctionPermission enum type parser
+    /// </summary>
     public sealed class FunctionPermissionParser
     {
         private const string _endWith = "Permission";
         private List<FunctionData> _functionDatas;
 
+        /// <summary>
+        /// FunctionPermission enum type parser
+        /// </summary>
+        /// <param name="functionEnum"></param>
+        /// <param name="functionPermissionEnums"></param>
+        /// <exception cref="ArgumentException"></exception>
         public FunctionPermissionParser(Type functionEnum, params Type[] functionPermissionEnums)
         {
             if (!CheckNamingDefinition(functionEnum, functionPermissionEnums)) throw new ArgumentException("Needs to be an enum type and must follow naming rules. (the name remove suffix from functionPermission type needs to match function type name)");

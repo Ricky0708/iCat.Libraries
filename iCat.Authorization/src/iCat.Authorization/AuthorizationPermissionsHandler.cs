@@ -16,6 +16,9 @@ using System.Threading.Tasks;
 
 namespace iCat.Authorization
 {
+    /// <summary>
+    /// Authorize AuthorizationPermissionsRequirement
+    /// </summary>
     public class AuthorizationPermissionsHandler : AuthorizationHandler<AuthorizationPermissionsRequirement>
     {
         private const string _endWith = "Permission";
@@ -24,6 +27,12 @@ namespace iCat.Authorization
         private readonly FunctionPermissionParser _parser;
         private readonly IUserPermissionProvider _userPermissionProvider;
 
+        /// <summary>
+        /// Authorize AuthorizationPermissionsRequirement
+        /// </summary>
+        /// <param name="parser"></param>
+        /// <param name="userPermissionProvider"></param>
+        /// <exception cref="ArgumentNullException"></exception>
         public AuthorizationPermissionsHandler(FunctionPermissionParser parser, IUserPermissionProvider userPermissionProvider)
         {
             _parser = parser ?? throw new ArgumentNullException(nameof(parser));
@@ -34,6 +43,12 @@ namespace iCat.Authorization
             }
         }
 
+        /// <summary>
+        /// handler
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="requirement"></param>
+        /// <returns></returns>
         protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, AuthorizationPermissionsRequirement requirement)
         {
             if (context.User.Identity?.IsAuthenticated ?? false) { context.Fail(); return; }
