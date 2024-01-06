@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace iCat.Authorization.Providers
+namespace iCat.Authorization.Utilities
 {
     public interface IUserPermissionProvider
     {

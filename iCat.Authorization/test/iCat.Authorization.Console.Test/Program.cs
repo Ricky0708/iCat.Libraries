@@ -1,4 +1,5 @@
 ﻿using iCat.Authorization.ConsoleTest.Enum;
+using iCat.Authorization.Utilities;
 using System.Reflection;
 
 namespace iCat.Authorization.ConsoleTest

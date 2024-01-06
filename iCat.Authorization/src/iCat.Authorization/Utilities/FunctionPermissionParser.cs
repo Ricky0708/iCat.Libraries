@@ -9,7 +9,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace iCat.Authorization
+namespace iCat.Authorization.Utilities
 {
     public sealed class FunctionPermissionParser
     {

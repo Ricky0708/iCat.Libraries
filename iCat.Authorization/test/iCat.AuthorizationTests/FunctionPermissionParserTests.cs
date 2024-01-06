@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using iCat.Authorization.Models;
 using System.Text.Json;
 using System.Reflection;
+using iCat.Authorization.Utilities;
 
 namespace iCat.Authorization.Tests
 {

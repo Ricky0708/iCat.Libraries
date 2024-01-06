@@ -11,6 +11,7 @@ using System.Security.Claims;
 using iCat.Authorization.Constants;
 using iCat.Authorization.Models;
 using System.Text.Json;
+using iCat.Authorization.Utilities;
 
 namespace iCat.Authorization.Providers.Tests
 {

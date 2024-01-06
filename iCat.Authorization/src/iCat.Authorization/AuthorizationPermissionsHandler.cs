@@ -1,6 +1,6 @@
 ﻿using iCat.Authorization.Constants;
 using iCat.Authorization.Models;
-using iCat.Authorization.Providers;
+using iCat.Authorization.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Controllers;
@@ -18,7 +18,6 @@ namespace iCat.Authorization
 {
     public class AuthorizationPermissionsHandler : AuthorizationHandler<AuthorizationPermissionsRequirement>
     {
-        private const string _startWith = "Auth";
         private const string _endWith = "Permission";
         private static List<FunctionData>? _functionDatas;
         private static ConcurrentDictionary<string, List<FunctionData>> _routePermissionCache = new ConcurrentDictionary<string, List<FunctionData>>();
