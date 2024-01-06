@@ -77,6 +77,7 @@ namespace iCat.Authorization.Providers.Tests
         [DataRow(Function.UserProfile, UserProfilePermission.Read, false)]
         [DataRow(Function.UserProfile, UserProfilePermission.Delete, false)]
         [DataRow(Function.UserProfile, UserProfilePermission.Delete | UserProfilePermission.Read, false)]
+        [DataRow(Function.UserProfile, UserProfilePermission.Delete | UserProfilePermission.Read | UserProfilePermission.Add, true)]
         [DataRow(Function.Order, OrderPermission.Add, false)]
         [TestMethod()]
         public void ValidateTest_Success(Function userFunction, UserProfilePermission permission, bool expected)
