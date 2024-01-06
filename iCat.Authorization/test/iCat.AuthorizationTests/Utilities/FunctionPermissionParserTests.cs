@@ -10,7 +10,7 @@ using System.Text.Json;
 using System.Reflection;
 using iCat.Authorization.Utilities;
 
-namespace iCat.Authorization.Tests
+namespace iCat.Authorization.Utilities.Tests
 {
     [TestClass()]
     public class FunctionPermissionParserTests
@@ -200,6 +200,12 @@ namespace iCat.Authorization.Tests
             Assert.AreEqual(JsonSerializer.Serialize(validationData), JsonSerializer.Serialize(defintions));
         }
 
+        [TestMethod()]
+        public void GetClaimFromFunctionPermissionDataTest()
+        {
+            Assert.Fail();
+        }
+
 
         [AuthorizationPermissions(
         UserProfilePermission.Add | UserProfilePermission.Read,
@@ -209,6 +215,8 @@ namespace iCat.Authorization.Tests
         {
 
         }
+
+    
     }
 
 

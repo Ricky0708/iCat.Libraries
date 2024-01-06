@@ -1,4 +1,5 @@
-﻿using iCat.Authorization.Models;
+﻿using iCat.Authorization.Constants;
+using iCat.Authorization.Models;
 using System;
 using System.Collections;
 using System.Collections.Concurrent;
@@ -6,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,7 +19,7 @@ namespace iCat.Authorization.Utilities
     public sealed class FunctionPermissionParser
     {
         private const string _endWith = "Permission";
-        private List<FunctionPermissionData> _functionDatas;
+        private readonly List<FunctionPermissionData> _functionDatas;
 
         /// <summary>
         /// FunctionPermission enum type parser
@@ -58,6 +60,17 @@ namespace iCat.Authorization.Utilities
                 GetAttributePermission(arg, ref permissionNeedsData);
             }
             return permissionNeedsData;
+        }
+
+        /// <summary>
+        /// Get claim from function permission data
+        /// </summary>
+        /// <param name="functionPermissionData"></param>
+        /// <returns></returns>
+        public Claim GetClaimFromFunctionPermissionData(FunctionPermissionData functionPermissionData)
+        {
+            var claim = new Claim(AuthorizationPermissionClaimTypes.Permission, $"{functionPermissionData.FunctionValue},{functionPermissionData.Permissions}");
+            return claim;
         }
 
         /// <summary>
