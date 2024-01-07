@@ -25,7 +25,6 @@ namespace iCat.Authorization.ConsoleTest.Enum
         Delete = 8
     }
 
-    [Flags]
     public enum OrderPermission
     {
         Add = 1,
