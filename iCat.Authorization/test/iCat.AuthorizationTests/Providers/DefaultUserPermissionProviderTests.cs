@@ -22,7 +22,7 @@ namespace iCat.Authorization.Providers.Tests
         public void GetUserPermissionTest()
         {
             // arrange
-            var parser = new FunctionPermissionParser(typeof(Function), typeof(UserProfilePermission), typeof(OrderPermission), typeof(DepartmentPermission));
+            var parser = new FunctionPermissionParser(typeof(Function));
             var claims = new List<Claim>() {
                 new Claim(AuthorizationPermissionClaimTypes.Permission, $"{(int)Function.UserProfile},{(int)(UserProfilePermission.Add | UserProfilePermission.Read)}"),
                 new Claim(AuthorizationPermissionClaimTypes.Permission, $"{(int)Function.Order},{(int)(OrderPermission.Add | OrderPermission.Read)}"),
@@ -83,7 +83,7 @@ namespace iCat.Authorization.Providers.Tests
         public void ValidateTest_Success(Function userFunction, UserProfilePermission permission, bool expected)
         {
             // arrange
-            var parser = new FunctionPermissionParser(typeof(Function), typeof(UserProfilePermission), typeof(OrderPermission), typeof(DepartmentPermission));
+            var parser = new FunctionPermissionParser(typeof(Function));
             var accessor = Substitute.For<IHttpContextAccessor>();
             var provider = new DefaultFunctionPermissionProvider(accessor, parser);
             var userPermission = new List<FunctionPermissionData> {
@@ -120,8 +120,11 @@ namespace iCat.Authorization.Providers.Tests
 
     public enum Function
     {
+        [Permission(typeof(UserProfilePermission))]
         UserProfile = 1,
+        [Permission(typeof(OrderPermission))]
         Order = 2,
+        [Permission(typeof(DepartmentPermission))]
         Department = 3
     }
 

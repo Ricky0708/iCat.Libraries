@@ -8,8 +8,11 @@ namespace iCat.Authorization.ConsoleTest.Enum
 {
     public enum Function
     {
+        [Permission(typeof(UserProfilePermission))]
         UserProfile = 1,
+        [Permission(typeof(OrderPermission))]
         Order = 2,
+        [Permission(typeof(DepartmentPermission))]
         Department = 3
     }
 

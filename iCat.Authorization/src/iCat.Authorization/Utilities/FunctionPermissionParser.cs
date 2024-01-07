@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Security.Claims;
@@ -25,13 +26,23 @@ namespace iCat.Authorization.Utilities
         /// FunctionPermission enum type parser
         /// </summary>
         /// <param name="functionEnum"></param>
-        /// <param name="functionPermissionEnums"></param>
         /// <exception cref="ArgumentException"></exception>
-        public FunctionPermissionParser(Type functionEnum, params Type[] functionPermissionEnums)
+        public FunctionPermissionParser(Type functionEnum)
         {
-            if (!CheckNamingDefinition(functionEnum, functionPermissionEnums)) throw new ArgumentException("Needs to be an enum type and must follow naming rules. (the name remove suffix from functionPermission type needs to match function type name)");
-            _functionDatas ??= GetPermissionDefinitions(functionEnum, functionPermissionEnums);
+            _functionDatas ??= GetPermissionDefinitions(functionEnum, GetFunctionPermissinoFromAttribute(functionEnum));
         }
+
+        ///// <summary>
+        ///// FunctionPermission enum type parser
+        ///// </summary>
+        ///// <param name="functionEnum"></param>
+        ///// <param name="functionPermissionEnums"></param>
+        ///// <exception cref="ArgumentException"></exception>
+        //public FunctionPermissionParser(Type functionEnum, params Type[] functionPermissionEnums)
+        //{
+        //    if (!CheckNamingDefinition(functionEnum, functionPermissionEnums)) throw new ArgumentException("Needs to be an enum type and must follow naming rules. (the name remove suffix from functionPermission type needs to match function type name)");
+        //    _functionDatas ??= GetPermissionDefinitions(functionEnum, functionPermissionEnums);
+        //}
 
         /// <summary>
         /// Get function and permission mapping
@@ -71,6 +82,29 @@ namespace iCat.Authorization.Utilities
         {
             var claim = new Claim(AuthorizationPermissionClaimTypes.Permission, $"{functionPermissionData.FunctionValue},{functionPermissionData.Permissions}");
             return claim;
+        }
+
+
+
+        #region private methods
+
+        /// <summary>
+        /// Get the specified permission from the attribute of field in the function
+        /// </summary>
+        /// <param name="functionEnumType"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException"></exception>
+        private Type[] GetFunctionPermissinoFromAttribute(Type functionEnumType)
+        {
+            var permissionList = new List<Type>();
+            foreach (var field in functionEnumType.GetFields().Where(p => p.Name != "value__"))
+            {
+                var permissionAttribute = field.CustomAttributes.SingleOrDefault(p => p.AttributeType == typeof(PermissionAttribute)) ?? throw new ArgumentNullException($"\"{field.Name}\" has no defined permission attribute.");
+                var value = permissionAttribute.ConstructorArguments.FirstOrDefault().Value as Type ?? throw new ArgumentException($"\"{field.Name}\" has no specify permission.");
+                permissionList.Add(value);
+            }
+            return permissionList.ToArray();
         }
 
         /// <summary>
@@ -134,8 +168,6 @@ namespace iCat.Authorization.Utilities
                 throw new ArgumentException("Constructor parameter type is not an authorization permission type");
             }
         }
-
-        #region private methods
 
         /// <summary>
         /// Parsing function and permission mapping
