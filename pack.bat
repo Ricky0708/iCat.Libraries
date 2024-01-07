@@ -1,3 +1,4 @@
+for /d %%d in (".\iCat.Authorization\src\*") do (dotnet pack %%d -c Release -o packed)
 for /d %%d in (".\iCat.Cache\src\*") do (dotnet pack %%d -c Release -o packed)
 for /d %%d in (".\iCat.Crypto\src\*") do (dotnet pack %%d -c Release -o packed)
 for /d %%d in (".\iCat.DB\src\*") do (dotnet pack %%d -c Release -o packed)
