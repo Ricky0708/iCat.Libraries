@@ -1,3 +1,4 @@
+for /d %%d in (".\iCat.Authorization\src\*") do (dotnet publish %%d -f net7.0 -c Release -o released)
 for /d %%d in (".\iCat.Cache\src\*") do (dotnet publish %%d -f net7.0 -c Release -o released)
 for /d %%d in (".\iCat.Crypto\src\*") do (dotnet publish %%d -f net7.0 -c Release -o released)
 for /d %%d in (".\iCat.DB\src\*") do (dotnet publish %%d -f net7.0 -c Release -o released)
