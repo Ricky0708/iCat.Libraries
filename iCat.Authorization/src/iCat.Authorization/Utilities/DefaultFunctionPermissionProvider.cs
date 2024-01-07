@@ -27,7 +27,7 @@ namespace iCat.Authorization.Utilities
         /// <inheritdoc/>
         public IEnumerable<FunctionPermissionData> GetUserPermission()
         {
-            var userPermission = _httpContext.User.Claims.Where(p => p.Type == AuthorizationPermissionClaimTypes.Permission).Select(p =>
+            var userPermission = _httpContextAccessor.HttpContext!.User.Claims.Where(p => p.Type == AuthorizationPermissionClaimTypes.Permission).Select(p =>
             {
                 var functionPermission = p.Value.Split(",");
                 if (!int.TryParse(functionPermission[0], out var functionValue)) throw new ArgumentException("Invalid Permission claims");

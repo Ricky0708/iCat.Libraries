@@ -51,7 +51,7 @@ namespace iCat.Authorization
         /// <returns></returns>
         protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, AuthorizationPermissionsRequirement requirement)
         {
-            if (context.User.Identity?.IsAuthenticated ?? false) { context.Fail(); return; }
+            if (!context.User.Identity?.IsAuthenticated ?? false) { context.Fail(); return; }
 
             if (context.Resource is HttpContext httpContext)
             {
@@ -63,6 +63,7 @@ namespace iCat.Authorization
                     {
                         context.Succeed(requirement);
                         await Task.FromResult(0);
+                        return;
                     }
                 }
                 context.Fail();
