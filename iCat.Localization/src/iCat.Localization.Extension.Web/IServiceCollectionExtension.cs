@@ -16,6 +16,9 @@ using Microsoft.AspNetCore.Localization.Routing;
 
 namespace iCat.Localization.Extension.Web
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class IServiceCollectionExtension
     {
         /// <summary>
