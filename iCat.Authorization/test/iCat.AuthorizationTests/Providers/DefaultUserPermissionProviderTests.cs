@@ -22,7 +22,6 @@ namespace iCat.Authorization.Providers.Tests
         public void GetUserPermissionTest()
         {
             // arrange
-            var parser = new FunctionPermissionParser(typeof(Function));
             var claims = new List<Claim>() {
                 new Claim(AuthorizationPermissionClaimTypes.Permission, $"{(int)Function.UserProfile},{(int)(UserProfilePermission.Add | UserProfilePermission.Read)}"),
                 new Claim(AuthorizationPermissionClaimTypes.Permission, $"{(int)Function.Order},{(int)(OrderPermission.Add | OrderPermission.Read)}"),
@@ -33,6 +32,7 @@ namespace iCat.Authorization.Providers.Tests
             hc.User = principal;
             var accessor = Substitute.For<IHttpContextAccessor>();
             accessor.HttpContext = hc;
+            var provider = new DefaultFunctionPermissionProvider(accessor, typeof(Function));
 
             var expeced = new List<FunctionPermissionData> {
                 new FunctionPermissionData { FunctionName = "UserProfile",
@@ -63,7 +63,6 @@ namespace iCat.Authorization.Providers.Tests
                 },
             };
 
-            var provider = new DefaultFunctionPermissionProvider(accessor, parser);
 
             // action
             var result = provider.GetUserPermission();
@@ -83,9 +82,8 @@ namespace iCat.Authorization.Providers.Tests
         public void ValidateTest_Success(Function userFunction, UserProfilePermission permission, bool expected)
         {
             // arrange
-            var parser = new FunctionPermissionParser(typeof(Function));
             var accessor = Substitute.For<IHttpContextAccessor>();
-            var provider = new DefaultFunctionPermissionProvider(accessor, parser);
+            var provider = new DefaultFunctionPermissionProvider(accessor, typeof(Function));
             var userPermission = new List<FunctionPermissionData> {
                 new FunctionPermissionData {
                     FunctionValue = (int)userFunction,

@@ -17,7 +17,7 @@ namespace iCat.Authorization.Utilities
     /// <summary>
     /// FunctionPermission enum type parser
     /// </summary>
-    public sealed class FunctionPermissionParser
+    internal sealed class FunctionPermissionParser
     {
         private const string _endWith = "Permission";
         private readonly List<FunctionPermissionData> _functionDatas;

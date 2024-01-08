@@ -20,7 +20,7 @@ namespace iCat.Authorization.Utilities.Tests
         public void GetFunctionPermissionDefinitions_Success()
         {
             // arrange
-            var parser = new FunctionPermissionParser(typeof(Function_Success));
+            var parser = new DefaultFunctionPermissionProvider(null, typeof(Function_Success));
             var validationData = new List<FunctionPermissionData> {
                 new FunctionPermissionData {
                     FunctionName = "UserProfile",
@@ -62,7 +62,7 @@ namespace iCat.Authorization.Utilities.Tests
         public void GetFunctionPermissionDefinitions_Fail1()
         {
             // arrange
-            var parser = new FunctionPermissionParser(typeof(Function_Fail));
+            var parser = new DefaultFunctionPermissionProvider(null, typeof(Function_Fail));
             var validationData = new List<FunctionPermissionData> {
                 new FunctionPermissionData {
                     FunctionName = "UserProfile",
@@ -95,7 +95,7 @@ namespace iCat.Authorization.Utilities.Tests
         public void GetFunctionPermissionDefinitions_Fail2()
         {
             // arrange
-            var parser = new FunctionPermissionParser(typeof(Function_Fail));
+            var parser = new DefaultFunctionPermissionProvider(null, typeof(Function_Fail));
             var validationData = new List<FunctionPermissionData> {
                 new FunctionPermissionData {
                     FunctionName = "UserProfile",
@@ -128,7 +128,7 @@ namespace iCat.Authorization.Utilities.Tests
         public void GetAuthorizationPermissionsDataTest_Success()
         {
             // arrange
-            var parser = new FunctionPermissionParser(typeof(Function_Success));
+            var parser = new DefaultFunctionPermissionProvider(null, typeof(Function_Success));
             var method = typeof(FunctionPermissionParserTests).GetMethod(nameof(TestAttributeMethod), BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
 
             var validationData = new List<FunctionPermissionData> {
@@ -161,7 +161,7 @@ namespace iCat.Authorization.Utilities.Tests
         public void GetAuthorizationPermissionsDataTest_Fail()
         {
             // arrange
-            var parser = new FunctionPermissionParser(typeof(Function_Success));
+            var parser = new DefaultFunctionPermissionProvider(null, typeof(Function_Success));
             var method = typeof(FunctionPermissionParserTests).GetMethod(nameof(TestAttributeMethod), BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
 
             var validationData = new List<FunctionPermissionData> {
@@ -194,7 +194,7 @@ namespace iCat.Authorization.Utilities.Tests
         public void GetClaimFromFunctionPermissionDataTest()
         {
             // arrange
-            var parser = new FunctionPermissionParser(typeof(Function_Success));
+            var parser = new DefaultFunctionPermissionProvider(null, typeof(Function_Success));
 
             // action
             var result = parser.GetClaimFromFunctionPermissionData(new FunctionPermissionData

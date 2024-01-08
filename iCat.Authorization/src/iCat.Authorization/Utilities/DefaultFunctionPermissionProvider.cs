@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,22 +14,38 @@ namespace iCat.Authorization.Utilities
     /// <inheritdoc/>
     public class DefaultFunctionPermissionProvider : IFunctionPermissionProvider
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IHttpContextAccessor? _httpContextAccessor;
         private readonly FunctionPermissionParser _parser;
-        private readonly HttpContext _httpContext;
 
         /// <inheritdoc/>
-        public DefaultFunctionPermissionProvider(IHttpContextAccessor httpContextAccessor, FunctionPermissionParser parser)
+        public DefaultFunctionPermissionProvider(IHttpContextAccessor? httpContextAccessor, Type functionEnum)
         {
-            _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
-            _parser = parser ?? throw new ArgumentNullException(nameof(parser));
-            _httpContext = _httpContextAccessor.HttpContext ?? throw new ArgumentException("Can't find HttpContext.");
+            _httpContextAccessor = httpContextAccessor;
+            _parser = new FunctionPermissionParser(functionEnum);
+        }
+
+        /// <inheritdoc/>
+        public List<FunctionPermissionData> GetAuthorizationPermissionsData(params CustomAttributeData[] attributes)
+        {
+            return _parser.GetAuthorizationPermissionsData(attributes);
+        }
+
+        /// <inheritdoc/>
+        public Claim GetClaimFromFunctionPermissionData(FunctionPermissionData functionPermissionData)
+        {
+            return _parser.GetClaimFromFunctionPermissionData(functionPermissionData);
+        }
+
+        /// <inheritdoc/>
+        public List<FunctionPermissionData>? GetFunctionPermissionDefinitions()
+        {
+            return _parser.GetFunctionPermissionDefinitions();
         }
 
         /// <inheritdoc/>
         public IEnumerable<FunctionPermissionData> GetUserPermission()
         {
-            var userPermission = _httpContextAccessor.HttpContext!.User.Claims.Where(p => p.Type == AuthorizationPermissionClaimTypes.Permission).Select(p =>
+            var userPermission = _httpContextAccessor?.HttpContext?.User.Claims.Where(p => p.Type == AuthorizationPermissionClaimTypes.Permission).Select(p =>
             {
                 var functionPermission = p.Value.Split(",");
                 if (!int.TryParse(functionPermission[0], out var functionValue)) throw new ArgumentException("Invalid Permission claims");
@@ -39,7 +57,7 @@ namespace iCat.Authorization.Utilities
                     FunctionName = function.FunctionName,
                     PermissionDetails = function.PermissionDetails.Where(p => (p.Permission & permissionValue) > 0).ToList()
                 };
-            });
+            }) ?? throw new ArgumentNullException(nameof(_httpContextAccessor));
             return userPermission;
         }
 
