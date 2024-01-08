@@ -84,8 +84,6 @@ namespace iCat.Authorization.Utilities
             return claim;
         }
 
-
-
         #region private methods
 
         /// <summary>

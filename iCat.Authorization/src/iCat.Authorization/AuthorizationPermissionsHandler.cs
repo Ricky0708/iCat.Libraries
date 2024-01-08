@@ -77,7 +77,6 @@ namespace iCat.Authorization
 
         private List<FunctionPermissionData> GetRouterPermissions(HttpContext httpContext)
         {
-
             var endpoint = httpContext.GetEndpoint()!;
             var actionDescriptor = endpoint.Metadata.GetMetadata<ControllerActionDescriptor>()!;
             var cacheKey = $"{actionDescriptor.ControllerName}{actionDescriptor.ActionName}{string.Join("-", actionDescriptor.Parameters.Select(p => p.ParameterType.Name))}";
