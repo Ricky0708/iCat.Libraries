@@ -8,9 +8,10 @@ namespace iCat.Authorization.ConsoleTest
     {
         static void Main(string[] args)
         {
-            var a = new FunctionPermissionParser(typeof(Function), typeof(UserProfilePermission), typeof(OrderPermission), typeof(DepartmentPermission));
-            var method = typeof(Program).GetMethod("ss", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
-            a.GetAuthorizationPermissionsData(method!.CustomAttributes.ToArray());
+
+            //var a = new FunctionPermissionParser(typeof(Function));
+            //var method = typeof(Program).GetMethod("ss", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+            //a.GetAuthorizationPermissionsData(method!.CustomAttributes.ToArray());
             Console.WriteLine("Hello, World!");
         }
 

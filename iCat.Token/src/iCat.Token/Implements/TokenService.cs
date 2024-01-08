@@ -82,6 +82,10 @@ namespace iCat.Token.Implements
                     var result = GetGetDelg(_dicGetLong, prop).Invoke(dataModel);
                     claims.Add(new Claim(prop.Name, result.ToString()));
                 }
+                else
+                {
+                    throw new ArgumentException("The method can not process class in property, plese use \"GenerateToken(List<Claim> claims)\" to generate token");
+                }
             }
             return GenerateToken(claims);
         }
@@ -157,6 +161,10 @@ namespace iCat.Token.Implements
                     var n = GetAddDelg(_dicAddList, prop);
                     n.Invoke(tokenData, value);
                 }
+            }
+            else
+            {
+                throw new ArgumentException("The method can not process class in property, plese use \"ValidateToken(string token)\" to process token");
             }
         }
 

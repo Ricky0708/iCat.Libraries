@@ -21,13 +21,12 @@ namespace iCat.Authorization.Extensions
         /// </summary>
         /// <param name="services"></param>
         /// <param name="functionEnum"></param>
-        /// <param name="functionPermissionEnums"></param>
         /// <returns></returns>
-        public static IServiceCollection AddAuthorizationPermission(this IServiceCollection services, Type functionEnum, params Type[] functionPermissionEnums)
+        public static IServiceCollection AddAuthorizationPermission(this IServiceCollection services, Type functionEnum)
         {
             services.AddSingleton<IAuthorizationHandler, AuthorizationPermissionsHandler>();
             services.AddSingleton<IFunctionPermissionProvider, DefaultFunctionPermissionProvider>();
-            services.AddSingleton<FunctionPermissionParser>(p => new FunctionPermissionParser(functionEnum, functionPermissionEnums));
+            services.AddSingleton<FunctionPermissionParser>(p => new FunctionPermissionParser(functionEnum));
             return services;
         }
     }
