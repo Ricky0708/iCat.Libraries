@@ -1,6 +1,7 @@
 ﻿using iCat.Authorization.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -25,8 +26,7 @@ namespace iCat.Authorization.Extensions
         public static IServiceCollection AddAuthorizationPermission(this IServiceCollection services, Type functionEnum)
         {
             services.AddSingleton<IAuthorizationHandler, AuthorizationPermissionsHandler>();
-            services.AddSingleton<IFunctionPermissionProvider, DefaultFunctionPermissionProvider>();
-            services.AddSingleton<FunctionPermissionParser>(p => new FunctionPermissionParser(functionEnum));
+            services.AddSingleton<IFunctionPermissionProvider>(s => new DefaultFunctionPermissionProvider(s.GetRequiredService<IHttpContextAccessor>(), functionEnum));
             return services;
         }
     }
