@@ -20,19 +20,19 @@ namespace iCat.Authorization.Utilities
         /// <param name="attributes"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        List<FunctionPermissionData> GetAuthorizationPermissionsData(params CustomAttributeData[] attributes);
+        List<Function> GetAuthorizationPermissionsData(params CustomAttributeData[] attributes);
 
         /// <summary>
         /// Get function and permission mapping
         /// </summary>
         /// <returns></returns>
-        List<FunctionPermissionData>? GetFunctionPermissionDefinitions();
+        List<Function>? GetFunctionPermissionDefinitions();
 
         /// <summary>
         /// Get current user permissions
         /// </summary>
         /// <returns></returns>
-        IEnumerable<FunctionPermissionData> GetUserPermission();
+        IEnumerable<Function> GetUserPermission();
 
         /// <summary>
         /// Validate FunctionData
@@ -40,13 +40,13 @@ namespace iCat.Authorization.Utilities
         /// <param name="ownPermissions"></param>
         /// <param name="permissionRequired"></param>
         /// <returns></returns>
-        bool Validate(IEnumerable<FunctionPermissionData> ownPermissions, FunctionPermissionData permissionRequired);
+        bool Validate(IEnumerable<Function> ownPermissions, Function permissionRequired);
 
         /// <summary>
         /// Get claim from function permission data
         /// </summary>
         /// <param name="functionPermissionData"></param>
         /// <returns></returns>
-        Claim GetClaimFromFunctionPermissionData(FunctionPermissionData functionPermissionData);
+        Claim GetClaimFromFunctionPermissionData(Function functionPermissionData);
     }
 }

@@ -22,8 +22,8 @@ namespace iCat.Authorization
     public class AuthorizationPermissionsHandler : AuthorizationHandler<AuthorizationPermissionsRequirement>
     {
         private const string _endWith = "Permission";
-        private static List<FunctionPermissionData>? _functionDatas;
-        private static ConcurrentDictionary<string, List<FunctionPermissionData>> _routePermissionCache = new ConcurrentDictionary<string, List<FunctionPermissionData>>();
+        private static List<Function>? _functionDatas;
+        private static ConcurrentDictionary<string, List<Function>> _routePermissionCache = new ConcurrentDictionary<string, List<Function>>();
         private readonly IFunctionPermissionProvider _provider;
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace iCat.Authorization
             await Task.FromResult(0);
         }
 
-        private List<FunctionPermissionData> GetRouterPermissions(HttpContext httpContext)
+        private List<Function> GetRouterPermissions(HttpContext httpContext)
         {
             var endpoint = httpContext.GetEndpoint()!;
             var actionDescriptor = endpoint.Metadata.GetMetadata<ControllerActionDescriptor>()!;

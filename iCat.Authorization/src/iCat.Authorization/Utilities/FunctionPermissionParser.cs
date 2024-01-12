@@ -20,7 +20,7 @@ namespace iCat.Authorization.Utilities
     internal sealed class FunctionPermissionParser
     {
         private const string _endWith = "Permission";
-        private readonly List<FunctionPermissionData> _functionDatas;
+        private readonly List<Function> _functionDatas;
 
         /// <summary>
         /// FunctionPermission enum type parser
@@ -48,7 +48,7 @@ namespace iCat.Authorization.Utilities
         /// Get function and permission mapping
         /// </summary>
         /// <returns></returns>
-        public List<FunctionPermissionData> GetFunctionPermissionDefinitions()
+        public List<Function> GetFunctionPermissionDefinitions()
         {
             return _functionDatas;
         }
@@ -59,13 +59,13 @@ namespace iCat.Authorization.Utilities
         /// <param name="attributes"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        public List<FunctionPermissionData> GetAuthorizationPermissionsData(params CustomAttributeData[] attributes)
+        public List<Function> GetAuthorizationPermissionsData(params CustomAttributeData[] attributes)
         {
             if (attributes.Any(p => !p.AttributeType.Name.StartsWith(nameof(AuthorizationPermissionsAttribute)))) throw new ArgumentException("All attributes must be AuthorizationPermissionsAttribute.");
 
             var permissionAttrs = attributes.Where(p => p.AttributeType.Name.StartsWith(nameof(AuthorizationPermissionsAttribute)));
             var args = permissionAttrs.SelectMany(p => p.ConstructorArguments);
-            var permissionNeedsData = new List<FunctionPermissionData>();
+            var permissionNeedsData = new List<Function>();
             foreach (var arg in args)
             {
                 GetAttributePermission(arg, ref permissionNeedsData);
@@ -78,9 +78,9 @@ namespace iCat.Authorization.Utilities
         /// </summary>
         /// <param name="functionPermissionData"></param>
         /// <returns></returns>
-        public Claim GetClaimFromFunctionPermissionData(FunctionPermissionData functionPermissionData)
+        public Claim GetClaimFromFunctionPermissionData(Function functionPermissionData)
         {
-            var claim = new Claim(AuthorizationPermissionClaimTypes.Permission, $"{functionPermissionData.FunctionValue},{functionPermissionData.Permissions}");
+            var claim = new Claim(AuthorizationPermissionClaimTypes.Permission, $"{functionPermissionData.Value},{functionPermissionData.Permissions}");
             return claim;
         }
 
@@ -112,7 +112,7 @@ namespace iCat.Authorization.Utilities
         /// <param name="arg"></param>
         /// <param name="permissionNeeds"></param>
         /// <exception cref="ArgumentException"></exception>
-        private void GetAttributePermission(CustomAttributeTypedArgument arg, ref List<FunctionPermissionData> permissionNeeds)
+        private void GetAttributePermission(CustomAttributeTypedArgument arg, ref List<Function> permissionNeeds)
         {
             if (arg.ArgumentType.IsArray)
             {
@@ -124,40 +124,40 @@ namespace iCat.Authorization.Utilities
             else if (arg.ArgumentType.IsEnum && arg.ArgumentType.Name.EndsWith(_endWith))
             {
                 // Current arg belongs to the function
-                var function = _functionDatas.Any(p => p.FunctionName == arg.ArgumentType.Name.Replace(_endWith, "")) ?
-                    _functionDatas.First(p => p.FunctionName == arg.ArgumentType.Name.Replace(_endWith, ""))
+                var function = _functionDatas.Any(p => p.Name == arg.ArgumentType.Name.Replace(_endWith, "")) ?
+                    _functionDatas.First(p => p.Name == arg.ArgumentType.Name.Replace(_endWith, ""))
                     : throw new ArgumentException("Permissions is not in the function list.");
 
                 // The function permission list
                 var functionPermissions = (IEnumerable<int>)Enum.GetValues(arg.ArgumentType);
 
                 // Function permission data exists
-                var permissionNeed = permissionNeeds.FirstOrDefault(p => p.FunctionValue == function.FunctionValue);
+                var permissionNeed = permissionNeeds.FirstOrDefault(p => p.Value == function.Value);
 
                 if (permissionNeed == null)
                 {
                     permissionNeeds.Add(
-                             new FunctionPermissionData
+                             new Function
                              {
-                                 FunctionName = function.FunctionName,
-                                 FunctionValue = function.FunctionValue,
-                                 PermissionDetails = functionPermissions
+                                 Name = function.Name,
+                                 Value = function.Value,
+                                 PermissionsData = functionPermissions
                                     .Where(p => ((int)arg.Value! & p) > 0)
-                                    .Select(p => new PermissionDetail
+                                    .Select(p => new Permission
                                     {
-                                        PermissionName = Enum.GetName(arg.ArgumentType, p!)!,
-                                        Permission = p
+                                        Name = Enum.GetName(arg.ArgumentType, p!)!,
+                                        Value = p
                                     }).ToList()
                              });
                 }
                 else
                 {
                     var c = functionPermissions.Where(p => ((int)arg.Value! & p) > 0);
-                    var notExistsPermission = c.Where(p => !permissionNeed.PermissionDetails.Select(x => x.Permission).Any(y => y == p));
-                    permissionNeed.PermissionDetails.AddRange(notExistsPermission.Select(p => new PermissionDetail
+                    var notExistsPermission = c.Where(p => !permissionNeed.PermissionsData.Select(x => x.Value).Any(y => y == p));
+                    permissionNeed.PermissionsData.AddRange(notExistsPermission.Select(p => new Permission
                     {
-                        PermissionName = Enum.GetName(arg.ArgumentType, p)!,
-                        Permission = p
+                        Name = Enum.GetName(arg.ArgumentType, p)!,
+                        Value = p
                     }));
 
                 }
@@ -174,25 +174,25 @@ namespace iCat.Authorization.Utilities
         /// <param name="functionEnum"></param>
         /// <param name="functionPermissionEnums"></param>
         /// <returns></returns>
-        private List<FunctionPermissionData> GetPermissionDefinitions(Type functionEnum, params Type[] functionPermissionEnums)
+        private List<Function> GetPermissionDefinitions(Type functionEnum, params Type[] functionPermissionEnums)
         {
-            var functionDatas = new List<FunctionPermissionData>();
+            var functionDatas = new List<Function>();
             foreach (var functionItem in Enum.GetValues(functionEnum))
             {
-                var functionData = new FunctionPermissionData
+                var functionData = new Function
                 {
-                    FunctionName = Enum.GetName(functionEnum, functionItem),
-                    FunctionValue = (int)Enum.Parse(functionEnum, Enum.GetName(functionEnum, functionItem)!),
+                    Name = Enum.GetName(functionEnum, functionItem),
+                    Value = (int)Enum.Parse(functionEnum, Enum.GetName(functionEnum, functionItem)!),
                 };
 
-                foreach (var permissionType in functionPermissionEnums.Where(p => p.Name.Replace(_endWith, "") == functionData.FunctionName))
+                foreach (var permissionType in functionPermissionEnums.Where(p => p.Name.Replace(_endWith, "") == functionData.Name))
                 {
                     foreach (var PermissionItem in Enum.GetValues(permissionType))
                     {
-                        functionData.PermissionDetails.Add(new PermissionDetail
+                        functionData.PermissionsData.Add(new Permission
                         {
-                            PermissionName = Enum.GetName(permissionType, PermissionItem),
-                            Permission = (int)Enum.Parse(permissionType, Enum.GetName(permissionType, PermissionItem)!),
+                            Name = Enum.GetName(permissionType, PermissionItem),
+                            Value = (int)Enum.Parse(permissionType, Enum.GetName(permissionType, PermissionItem)!),
                         });
                     }
                 }

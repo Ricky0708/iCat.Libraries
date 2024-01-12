@@ -34,30 +34,30 @@ namespace iCat.Authorization.Providers.Tests
             accessor.HttpContext = hc;
             var provider = new DefaultFunctionPermissionProvider(accessor, typeof(Function));
 
-            var expeced = new List<FunctionPermissionData> {
-                new FunctionPermissionData { FunctionName = "UserProfile",
-                    FunctionValue = 1,
-                    PermissionDetails = new List<PermissionDetail> {
-                        new PermissionDetail{
-                            PermissionName = "Add",
-                            Permission = 1,
+            var expeced = new List<Models.Function> {
+                new Models.Function { Name = "UserProfile",
+                    Value = 1,
+                    PermissionsData = new List<Permission> {
+                        new Permission{
+                            Name = "Add",
+                            Value = 1,
                         },
-                        new PermissionDetail {
-                            PermissionName = "Read",
-                            Permission = 4,
+                        new Permission {
+                            Name = "Read",
+                            Value = 4,
                         }
                     },
                 },
-                new FunctionPermissionData { FunctionName = "Order",
-                    FunctionValue = 2,
-                    PermissionDetails = new List<PermissionDetail> {
-                        new PermissionDetail{
-                            PermissionName = "Add",
-                            Permission = 1,
+                new Models.Function { Name = "Order",
+                    Value = 2,
+                    PermissionsData = new List<Permission> {
+                        new Permission{
+                            Name = "Add",
+                            Value = 1,
                         },
-                        new PermissionDetail {
-                            PermissionName = "Read",
-                            Permission = 2,
+                        new Permission {
+                            Name = "Read",
+                            Value = 2,
                         }
                     },
                 },
@@ -84,28 +84,28 @@ namespace iCat.Authorization.Providers.Tests
             // arrange
             var accessor = Substitute.For<IHttpContextAccessor>();
             var provider = new DefaultFunctionPermissionProvider(accessor, typeof(Function));
-            var userPermission = new List<FunctionPermissionData> {
-                new FunctionPermissionData {
-                    FunctionValue = (int)userFunction,
-                    PermissionDetails = new List<PermissionDetail>
+            var userPermission = new List<Models.Function> {
+                new Models.Function {
+                    Value = (int)userFunction,
+                    PermissionsData = new List<Permission>
                     {
-                        new PermissionDetail{
-                            Permission = (int)permission
+                        new Permission{
+                            Value = (int)permission
                         }
                     }
                 }
             };
 
             // action
-            var result = provider.Validate(userPermission, new FunctionPermissionData
+            var result = provider.Validate(userPermission, new Models.Function
             {
-                FunctionValue = (int)Function.UserProfile,
-                PermissionDetails = new List<PermissionDetail> {
-                    new PermissionDetail{
-                        Permission = (int)UserProfilePermission.Add,
+                Value = (int)Function.UserProfile,
+                PermissionsData = new List<Permission> {
+                    new Permission{
+                        Value = (int)UserProfilePermission.Add,
                     },
-                    new PermissionDetail{
-                        Permission = (int)UserProfilePermission.Edit,
+                    new Permission{
+                        Value = (int)UserProfilePermission.Edit,
                     }
                 }
             });

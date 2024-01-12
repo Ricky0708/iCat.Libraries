@@ -21,33 +21,33 @@ namespace iCat.Authorization.Utilities.Tests
         {
             // arrange
             var parser = new DefaultFunctionPermissionProvider(null, typeof(Function_Success));
-            var validationData = new List<FunctionPermissionData> {
-                new FunctionPermissionData {
-                    FunctionName = "UserProfile",
-                    FunctionValue = 1,
-                    PermissionDetails = new List<PermissionDetail> {
-                        new PermissionDetail { PermissionName = "Add", Permission = 1 },
-                        new PermissionDetail { PermissionName = "Edit", Permission = 2 },
-                        new PermissionDetail { PermissionName = "Read", Permission = 4 },
-                        new PermissionDetail { PermissionName = "Delete", Permission = 8 },
+            var validationData = new List<Function> {
+                new Function {
+                    Name = "UserProfile",
+                    Value = 1,
+                    PermissionsData = new List<Permission> {
+                        new Permission { Name = "Add", Value = 1 },
+                        new Permission { Name = "Edit", Value = 2 },
+                        new Permission { Name = "Read", Value = 4 },
+                        new Permission { Name = "Delete", Value = 8 },
                 }},
-                new FunctionPermissionData {
-                    FunctionName = "Order",
-                    FunctionValue = 2,
-                    PermissionDetails = new List<PermissionDetail> {
-                        new PermissionDetail { PermissionName = "Add", Permission = 1 },
-                        new PermissionDetail { PermissionName = "Read", Permission = 2 },
-                        new PermissionDetail { PermissionName = "Edit", Permission = 4 },
-                        new PermissionDetail { PermissionName = "Delete", Permission = 8 },
+                new Function {
+                    Name = "Order",
+                    Value = 2,
+                    PermissionsData = new List<Permission> {
+                        new Permission { Name = "Add", Value = 1 },
+                        new Permission { Name = "Read", Value = 2 },
+                        new Permission { Name = "Edit", Value = 4 },
+                        new Permission { Name = "Delete", Value = 8 },
                 }},
-                new FunctionPermissionData {
-                    FunctionName = "Department",
-                    FunctionValue = 3,
-                    PermissionDetails = new List<PermissionDetail> {
-                        new PermissionDetail { PermissionName = "Add", Permission = 1 },
-                        new PermissionDetail { PermissionName = "Edit", Permission = 2 },
-                        new PermissionDetail { PermissionName = "Read", Permission = 4 },
-                        new PermissionDetail { PermissionName = "Delete", Permission = 8 },
+                new Function {
+                    Name = "Department",
+                    Value = 3,
+                    PermissionsData = new List<Permission> {
+                        new Permission { Name = "Add", Value = 1 },
+                        new Permission { Name = "Edit", Value = 2 },
+                        new Permission { Name = "Read", Value = 4 },
+                        new Permission { Name = "Delete", Value = 8 },
                 }},
             };
 
@@ -63,24 +63,24 @@ namespace iCat.Authorization.Utilities.Tests
         {
             // arrange
             var parser = new DefaultFunctionPermissionProvider(null, typeof(Function_Fail));
-            var validationData = new List<FunctionPermissionData> {
-                new FunctionPermissionData {
-                    FunctionName = "UserProfile",
-                    FunctionValue = 1,
-                    PermissionDetails = new List<PermissionDetail> {
-                        new PermissionDetail { PermissionName = "Add", Permission = 1 },
-                        new PermissionDetail { PermissionName = "Edit", Permission = 2 },
-                        new PermissionDetail { PermissionName = "Read", Permission = 4 },
-                        new PermissionDetail { PermissionName = "Delete", Permission = 8 },
+            var validationData = new List<Function> {
+                new Function {
+                    Name = "UserProfile",
+                    Value = 1,
+                    PermissionsData = new List<Permission> {
+                        new Permission { Name = "Add", Value = 1 },
+                        new Permission { Name = "Edit", Value = 2 },
+                        new Permission { Name = "Read", Value = 4 },
+                        new Permission { Name = "Delete", Value = 8 },
                 }},
-                new FunctionPermissionData {
-                    FunctionName = "Department",
-                    FunctionValue = 3,
-                    PermissionDetails = new List<PermissionDetail> {
-                        new PermissionDetail { PermissionName = "Add", Permission = 1 },
-                        new PermissionDetail { PermissionName = "Edit", Permission = 2 },
-                        new PermissionDetail { PermissionName = "Read", Permission = 4 },
-                        new PermissionDetail { PermissionName = "Delete", Permission = 8 },
+                new Function {
+                    Name = "Department",
+                    Value = 3,
+                    PermissionsData = new List<Permission> {
+                        new Permission { Name = "Add", Value = 1 },
+                        new Permission { Name = "Edit", Value = 2 },
+                        new Permission { Name = "Read", Value = 4 },
+                        new Permission { Name = "Delete", Value = 8 },
                 }},
             };
 
@@ -96,24 +96,24 @@ namespace iCat.Authorization.Utilities.Tests
         {
             // arrange
             var parser = new DefaultFunctionPermissionProvider(null, typeof(Function_Fail));
-            var validationData = new List<FunctionPermissionData> {
-                new FunctionPermissionData {
-                    FunctionName = "UserProfile",
-                    FunctionValue = 1,
-                    PermissionDetails = new List<PermissionDetail> {
-                        new PermissionDetail { PermissionName = "Add", Permission = 1 },
-                        new PermissionDetail { PermissionName = "Edit", Permission = 2 },
-                        new PermissionDetail { PermissionName = "Read", Permission = 4 },
-                        new PermissionDetail { PermissionName = "Delete", Permission = 8 },
+            var validationData = new List<Function> {
+                new Function {
+                    Name = "UserProfile",
+                    Value = 1,
+                    PermissionsData = new List<Permission> {
+                        new Permission { Name = "Add", Value = 1 },
+                        new Permission { Name = "Edit", Value = 2 },
+                        new Permission { Name = "Read", Value = 4 },
+                        new Permission { Name = "Delete", Value = 8 },
                 }},
-                new FunctionPermissionData {
-                    FunctionName = "Department",
-                    FunctionValue = 3,
-                    PermissionDetails = new List<PermissionDetail> {
-                        new PermissionDetail { PermissionName = "Add", Permission = 1 },
-                        new PermissionDetail { PermissionName = "Edit", Permission = 2 },
-                        new PermissionDetail { PermissionName = "Read", Permission = 4 },
-                        new PermissionDetail { PermissionName = "Delete", Permission = 8 },
+                new Function {
+                    Name = "Department",
+                    Value = 3,
+                    PermissionsData = new List<Permission> {
+                        new Permission { Name = "Add", Value = 1 },
+                        new Permission { Name = "Edit", Value = 2 },
+                        new Permission { Name = "Read", Value = 4 },
+                        new Permission { Name = "Delete", Value = 8 },
                 }},
             };
 
@@ -131,22 +131,22 @@ namespace iCat.Authorization.Utilities.Tests
             var parser = new DefaultFunctionPermissionProvider(null, typeof(Function_Success));
             var method = typeof(FunctionPermissionParserTests).GetMethod(nameof(TestAttributeMethod), BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
 
-            var validationData = new List<FunctionPermissionData> {
-                new FunctionPermissionData {
-                    FunctionName = "UserProfile",
-                    FunctionValue = 1,
-                    PermissionDetails = new List<PermissionDetail> {
-                        new PermissionDetail { PermissionName = "Add", Permission = 1 },
-                        new PermissionDetail { PermissionName = "Read", Permission = 4 },
-                        new PermissionDetail { PermissionName = "Edit", Permission = 2 },
-                        new PermissionDetail { PermissionName = "Delete", Permission = 8 },
+            var validationData = new List<Function> {
+                new Function {
+                    Name = "UserProfile",
+                    Value = 1,
+                    PermissionsData = new List<Permission> {
+                        new Permission { Name = "Add", Value = 1 },
+                        new Permission { Name = "Read", Value = 4 },
+                        new Permission { Name = "Edit", Value = 2 },
+                        new Permission { Name = "Delete", Value = 8 },
                 }},
-                new FunctionPermissionData {
-                    FunctionName = "Order",
-                    FunctionValue = 2,
-                    PermissionDetails = new List<PermissionDetail> {
-                        new PermissionDetail { PermissionName = "Edit", Permission = 4 },
-                        new PermissionDetail { PermissionName = "Delete", Permission = 8 },
+                new Function {
+                    Name = "Order",
+                    Value = 2,
+                    PermissionsData = new List<Permission> {
+                        new Permission { Name = "Edit", Value = 4 },
+                        new Permission { Name = "Delete", Value = 8 },
                 }},
             };
 
@@ -164,22 +164,22 @@ namespace iCat.Authorization.Utilities.Tests
             var parser = new DefaultFunctionPermissionProvider(null, typeof(Function_Success));
             var method = typeof(FunctionPermissionParserTests).GetMethod(nameof(TestAttributeMethod), BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
 
-            var validationData = new List<FunctionPermissionData> {
-                new FunctionPermissionData {
-                    FunctionName = "UserProfile",
-                    FunctionValue = 1,
-                    PermissionDetails = new List<PermissionDetail> {
-                        new PermissionDetail { PermissionName = "Add", Permission = 1 },
-                        new PermissionDetail { PermissionName = "Read", Permission = 4 },
-                        new PermissionDetail { PermissionName = "Edit", Permission = 2 },
-                        new PermissionDetail { PermissionName = "Delete", Permission = 8 },
+            var validationData = new List<Function> {
+                new Function {
+                    Name = "UserProfile",
+                    Value = 1,
+                    PermissionsData = new List<Permission> {
+                        new Permission { Name = "Add", Value = 1 },
+                        new Permission { Name = "Read", Value = 4 },
+                        new Permission { Name = "Edit", Value = 2 },
+                        new Permission { Name = "Delete", Value = 8 },
                 }},
-                new FunctionPermissionData {
-                    FunctionName = "Order",
-                    FunctionValue = 2,
-                    PermissionDetails = new List<PermissionDetail> {
-                        new PermissionDetail { PermissionName = "Edit", Permission = 4 },
-                        new PermissionDetail { PermissionName = "Delete", Permission = 8 },
+                new Function {
+                    Name = "Order",
+                    Value = 2,
+                    PermissionsData = new List<Permission> {
+                        new Permission { Name = "Edit", Value = 4 },
+                        new Permission { Name = "Delete", Value = 8 },
                 }},
             };
 
@@ -197,13 +197,13 @@ namespace iCat.Authorization.Utilities.Tests
             var parser = new DefaultFunctionPermissionProvider(null, typeof(Function_Success));
 
             // action
-            var result = parser.GetClaimFromFunctionPermissionData(new FunctionPermissionData
+            var result = parser.GetClaimFromFunctionPermissionData(new Function
             {
-                FunctionName = "A",
-                FunctionValue = 1,
-                PermissionDetails = new List<PermissionDetail>
+                Name = "A",
+                Value = 1,
+                PermissionsData = new List<Permission>
                 {
-                    new PermissionDetail { PermissionName = "Add", Permission = 1}
+                    new Permission { Name = "Add", Value = 1}
                 }
             });
 
