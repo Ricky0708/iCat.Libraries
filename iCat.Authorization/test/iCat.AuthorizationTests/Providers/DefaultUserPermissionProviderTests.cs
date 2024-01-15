@@ -23,8 +23,8 @@ namespace iCat.Authorization.Providers.Tests
         {
             // arrange
             var claims = new List<Claim>() {
-                new Claim(AuthorizationPermissionClaimTypes.Permission, $"{(int)Function.UserProfile},{(int)(UserProfilePermission.Add | UserProfilePermission.Read)}"),
-                new Claim(AuthorizationPermissionClaimTypes.Permission, $"{(int)Function.Order},{(int)(OrderPermission.Add | OrderPermission.Read)}"),
+                new (AuthorizationPermissionClaimTypes.Permit, $"{(int)Permit.UserProfile},{(int)(UserProfileQQ.Add | UserProfileQQ.Read)}"),
+                new (AuthorizationPermissionClaimTypes.Permit, $"{(int)Permit.Order},{(int)(OrderPe.Add | OrderPe.Read)}"),
             };
             var claimIdentity = new ClaimsIdentity(claims);
             var principal = new ClaimsPrincipal(claimIdentity);
@@ -32,32 +32,33 @@ namespace iCat.Authorization.Providers.Tests
             hc.User = principal;
             var accessor = Substitute.For<IHttpContextAccessor>();
             accessor.HttpContext = hc;
-            var provider = new DefaultFunctionPermissionProvider(accessor, typeof(Function));
+            var permissionProvider = new DefaultPermissionProvider(typeof(Permit));
+            var permitProvider = new DefaultPermitProvider(accessor, permissionProvider);
 
-            var expeced = new List<FunctionPermissionData> {
-                new FunctionPermissionData { FunctionName = "UserProfile",
-                    FunctionValue = 1,
-                    PermissionDetails = new List<PermissionDetail> {
-                        new PermissionDetail{
-                            PermissionName = "Add",
-                            Permission = 1,
+            var expeced = new List<Models.Permit> {
+                new() { Name = nameof(UserProfileQQ),
+                    Value = 1,
+                    PermissionsData = new List<Permission> {
+                        new() {
+                            Name = "Add",
+                            Value = 1,
                         },
-                        new PermissionDetail {
-                            PermissionName = "Read",
-                            Permission = 4,
+                        new() {
+                            Name = "Read",
+                            Value = 4,
                         }
                     },
                 },
-                new FunctionPermissionData { FunctionName = "Order",
-                    FunctionValue = 2,
-                    PermissionDetails = new List<PermissionDetail> {
-                        new PermissionDetail{
-                            PermissionName = "Add",
-                            Permission = 1,
+                new() { Name = nameof(OrderPe),
+                    Value = 2,
+                    PermissionsData = new List<Permission> {
+                        new(){
+                            Name = "Add",
+                            Value = 1,
                         },
-                        new PermissionDetail {
-                            PermissionName = "Read",
-                            Permission = 2,
+                        new() {
+                            Name = "Read",
+                            Value = 2,
                         }
                     },
                 },
@@ -65,47 +66,60 @@ namespace iCat.Authorization.Providers.Tests
 
 
             // action
-            var result = provider.GetUserPermission();
+            var result = permitProvider.GetPermit();
 
             // assert
             Assert.AreEqual(JsonSerializer.Serialize(expeced), JsonSerializer.Serialize(result));
         }
 
-        [DataRow(Function.UserProfile, UserProfilePermission.Add, true)]
-        [DataRow(Function.UserProfile, UserProfilePermission.Edit, true)]
-        [DataRow(Function.UserProfile, UserProfilePermission.Read, false)]
-        [DataRow(Function.UserProfile, UserProfilePermission.Delete, false)]
-        [DataRow(Function.UserProfile, UserProfilePermission.Delete | UserProfilePermission.Read, false)]
-        [DataRow(Function.UserProfile, UserProfilePermission.Delete | UserProfilePermission.Read | UserProfilePermission.Add, true)]
-        [DataRow(Function.Order, OrderPermission.Add, false)]
         [TestMethod()]
-        public void ValidateTest_Success(Function userFunction, UserProfilePermission permission, bool expected)
+        [ExpectedException(typeof(ArgumentException))]
+        public void GetUserPermission_Duplicate_Test()
+        {
+            // arrange
+
+            // action
+            var permissionProvider = new DefaultPermissionProvider(typeof(Permit_Duplicate));
+
+            // assert
+        }
+
+        [DataRow(Permit.UserProfile, UserProfileQQ.Add, true)]
+        [DataRow(Permit.UserProfile, UserProfileQQ.Edit, true)]
+        [DataRow(Permit.UserProfile, UserProfileQQ.Read, false)]
+        [DataRow(Permit.UserProfile, UserProfileQQ.Delete, false)]
+        [DataRow(Permit.UserProfile, UserProfileQQ.Delete | UserProfileQQ.Read, false)]
+        [DataRow(Permit.UserProfile, UserProfileQQ.Delete | UserProfileQQ.Read | UserProfileQQ.Add, true)]
+        [DataRow(Permit.Order, OrderPe.Add, false)]
+        [TestMethod()]
+        public void ValidateTest_Success(Permit permit, UserProfileQQ permission, bool expected)
         {
             // arrange
             var accessor = Substitute.For<IHttpContextAccessor>();
-            var provider = new DefaultFunctionPermissionProvider(accessor, typeof(Function));
-            var userPermission = new List<FunctionPermissionData> {
-                new FunctionPermissionData {
-                    FunctionValue = (int)userFunction,
-                    PermissionDetails = new List<PermissionDetail>
+            var permissionProvider = new DefaultPermissionProvider(typeof(Permit));
+            var permitProvider = new DefaultPermitProvider(accessor, permissionProvider);
+            var userPermission = new List<Models.Permit> {
+                new() {
+                    Value = (int)permit,
+                    PermissionsData = new List<Permission>
                     {
-                        new PermissionDetail{
-                            Permission = (int)permission
+                        new(){
+                            Value = (int)permission
                         }
                     }
                 }
             };
 
             // action
-            var result = provider.Validate(userPermission, new FunctionPermissionData
+            var result = permitProvider.Validate(userPermission, new Models.Permit
             {
-                FunctionValue = (int)Function.UserProfile,
-                PermissionDetails = new List<PermissionDetail> {
-                    new PermissionDetail{
-                        Permission = (int)UserProfilePermission.Add,
+                Value = (int)Permit.UserProfile,
+                PermissionsData = new List<Permission> {
+                    new(){
+                        Value = (int)UserProfileQQ.Add,
                     },
-                    new PermissionDetail{
-                        Permission = (int)UserProfilePermission.Edit,
+                    new(){
+                        Value = (int)UserProfileQQ.Edit,
                     }
                 }
             });
@@ -116,18 +130,28 @@ namespace iCat.Authorization.Providers.Tests
         }
     }
 
-    public enum Function
+    public enum Permit_Duplicate
     {
-        [Permission(typeof(UserProfilePermission))]
+        [Permission(typeof(UserProfileQQ))]
         UserProfile = 1,
-        [Permission(typeof(OrderPermission))]
+        [Permission(typeof(UserProfileQQ))]
         Order = 2,
-        [Permission(typeof(DepartmentPermission))]
+        [Permission(typeof(DepartmentPP))]
+        Department = 3
+    }
+
+    public enum Permit
+    {
+        [Permission(typeof(UserProfileQQ))]
+        UserProfile = 1,
+        [Permission(typeof(OrderPe))]
+        Order = 2,
+        [Permission(typeof(DepartmentPP))]
         Department = 3
     }
 
     [Flags]
-    public enum UserProfilePermission
+    public enum UserProfileQQ
     {
         Add = 1,
         Edit = 2,
@@ -136,7 +160,7 @@ namespace iCat.Authorization.Providers.Tests
     }
 
     [Flags]
-    public enum OrderPermission
+    public enum OrderPe
     {
         Add = 1,
         Read = 2,
@@ -145,7 +169,7 @@ namespace iCat.Authorization.Providers.Tests
     }
 
     [Flags]
-    public enum DepartmentPermission
+    public enum DepartmentPP
     {
         Add = 1,
         Edit = 2,

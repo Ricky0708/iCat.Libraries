@@ -7,28 +7,28 @@ using System.Threading.Tasks;
 namespace iCat.Authorization.Models
 {
     /// <summary>
-    /// Function - Permission information
+    /// Permit - Permission information
     /// </summary>
-    public class FunctionPermissionData
+    public class Permit
     {
         /// <summary>
-        /// Function name
+        /// Permit name
         /// </summary>
-        public string? FunctionName { get; set; }
+        public string? Name { get; set; }
 
         /// <summary>
-        /// Function value
+        /// Permit value
         /// </summary>
-        public int? FunctionValue { get; set; }
+        public int? Value { get; set; }
 
         /// <summary>
         /// permission detail
         /// </summary>
-        public List<PermissionDetail> PermissionDetails { get; set; } = new List<PermissionDetail>();
+        public List<Permission> PermissionsData { get; set; } = new List<Permission>();
 
         /// <summary>
         /// Permissions
         /// </summary>
-        public int Permissions => PermissionDetails?.Sum(p => p.Permission) ?? 0;
+        public int Permissions => PermissionsData?.Sum(p => p.Value) ?? 0;
     }
 }

@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using iCat.Authorization;
 
-namespace iCat.Authorization.ConsoleTest.Enum
+namespace iCat.Authorization.demo.Enums
 {
-    public enum Permit
+    public enum PermitEnum
     {
         [Permission(typeof(UserProfilePermission))]
         UserProfile = 1,
@@ -21,10 +22,12 @@ namespace iCat.Authorization.ConsoleTest.Enum
     {
         Add = 1,
         Edit = 2,
-        Read = 4,
-        Delete = 8
+        ReadPartialDetail = 4,
+        Delete = 8,
+        ReadAllDetail = 16,
     }
 
+    [Flags]
     public enum OrderPermission
     {
         Add = 1,

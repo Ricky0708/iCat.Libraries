@@ -14,7 +14,7 @@ namespace iCat.DB.Client.Factory.Implements
     public class DBClientFactory : IDBClientFactory
     {
         private readonly IDBClientProvider _provider;
-        private readonly Dictionary<string, DBClient> _dbClients = new();
+        private readonly Dictionary<string, DBClient> _dbClients = new Dictionary<string, DBClient>();
 
 
         /// <summary>

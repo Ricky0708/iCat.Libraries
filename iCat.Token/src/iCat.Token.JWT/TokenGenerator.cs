@@ -12,8 +12,10 @@ using System.Threading.Tasks;
 
 namespace iCat.Token.JWT
 {
+    /// <inheritdoc/>
     public class TokenGenerator : ITokenGenerator
     {
+    /// <inheritdoc/>
         public string Category => "JWT";
         private GenerateOption _options;
 

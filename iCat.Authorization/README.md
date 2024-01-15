@@ -10,20 +10,19 @@ dotnet add package iCat.Authorization
 
 ## Configuration
 
-### Define functions and permissions enums mapping
+### Define permits and permissions enums mapping
 
-The defination of functions and permissions need to follow these rules.
+The defination of permits and permissions need to follow these rules.
 
-1. Permission enum name must end with `Permission`.
-2. Permission needs to use bit wises value and set `Flags` attribute on the class.
-3. Use the `Permission` attribute to specify the function's permission.
+1. Permission needs to use bit wises value and set `Flags` attribute on the class.
+2. Use the `Permission` attribute to specify the permit's permission.
 
 ```C#
     using iCat.Authorization;
 ```
 
 ```C#
-    public enum MyFunction
+    public enum PermitEnum
     {
         [Permission(typeof(UserProfilePermission))]
         UserProfile = 1,
@@ -64,8 +63,8 @@ The defination of functions and permissions need to follow these rules.
 
 ### Configure Requirment and Handler
 
-Register providers and functions/permissions using the `.AddAuthorizationPermission(typeof(MyFunction))` method, add a requirment to the policies via `.AddAuthorizationPermissionRequirment()`.
-iCat.Authorization needs to use `IHttpContextAccessor` to obtain the current requested functions/permissions.
+Register providers and permits/permissions using the `.AddAuthorizationPermission(typeof(Permit))` method, add a requirment to the policies via `.AddAuthorizationPermissionRequirment()`.<br>
+iCat.Authorization needs to use `IHttpContextAccessor` to obtain the current requested permits/permissions.
 
 ```C#
     using iCat.Authorization.Extensions;
@@ -79,7 +78,7 @@ iCat.Authorization needs to use `IHttpContextAccessor` to obtain the current req
         // Add services to the container.
         builder.Services
             .AddSingleton<IHttpContextAccessor, HttpContextAccessor>()
-            .AddAuthorizationPermission(typeof(MyFunction))
+            .AddAuthorizationPermission(typeof(PermitEnum))
             .AddAuthorization(options =>
             {
                 options.DefaultPolicy = new AuthorizationPolicyBuilder()
@@ -117,9 +116,10 @@ Set the permission for the action through the `AuthorizationPermission` attribut
     }
 ```
 
-### Obtain current user function/permissions, claims
+### Obtain current user permits, claims
 
-The `IFunctionPermissionProvider` provides currently requested user functions/permissions, and provides a method to get claim for the logged in user from the `FunctionPermissionData`
+The `IPermitProvider` provides a method to obtain the logged in user's claim from the `Permit`. <br>
+The `IPermissionProvider` provides all permits definition.
 
 
 ```C#
@@ -133,32 +133,33 @@ The `IFunctionPermissionProvider` provides currently requested user functions/pe
    [Route("[controller]")]
    public class TestController : ControllerBase
    {
-       private readonly IFunctionPermissionProvider _userPermissionProvider;
+        private readonly IPermitProvider _permitProvider;
+        private readonly IPermissionProvider _permissionProvider;
 
-       public TestController(IFunctionPermissionProvider userPermissionProvider)
+       public TestController(IPermitProvider permitProvider, IPermissionProvider permissionProvider)
        {
-           _userPermissionProvider = userPermissionProvider ?? throw new ArgumentNullException(nameof(userPermissionProvider));
+            _permitProvider = permitProvider ?? throw new ArgumentNullException(nameof(permitProvider));
+            _permissionProvider = permissionProvider ?? throw new ArgumentNullException(nameof(permissionProvider));
        }
-
+       
        [AuthorizationPermissions(
-           DepartmentPermission.Read | DepartmentPermission.Delete,
-           UserProfilePermission.Add | UserProfilePermission.Edit | UserProfilePermission.Read)]
+            DepartmentPermission.Read | DepartmentPermission.Delete,
+            UserProfilePermission.Add | UserProfilePermission.Edit | UserProfilePermission.ReadPartialDetail)]
        [HttpGet("[action]")]
        public IActionResult GetData()
        {
-            var claim = _userPermissionProvider.GetClaimFromFunctionPermissionData(new FunctionPermissionData
+            var claim = _permitProvider.GeneratePermitClaim(new Permit
             {
-                FunctionName = MyFunction.UserProfile.ToString(),
-                FunctionValue = (int)MyFunction.UserProfile,
-                PermissionDetails = new List<PermissionDetail> { new PermissionDetail
+                Value = (int)PermitEnum.UserProfile,
+                PermissionsData = new List<Permission> { new Permission
                 {
-                    PermissionName = UserProfilePermission.Add.ToString(),
-                    Permission = (int)UserProfilePermission.Add,
+                    Value = (int)UserProfilePermission.Add,
                 }}
             });
 
-            var userPermissionData = _userPermissionProvider.GetUserPermission();
-            return Ok(userPermissionData);
+            var permits = _permissionProvider.GetDefinitions();
+            var userPermits = _permitProvider.GetPermit();
+            return Ok(userPermits);
        }
    }
 ```

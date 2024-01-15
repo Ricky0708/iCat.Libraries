@@ -18,15 +18,16 @@ namespace iCat.Authorization.Extensions
     public static class IServiceCollectionExtension
     {
         /// <summary>
-        /// Register AuthorizationPermissionsHandler, DefaultUserPermissionProvider, FunctionPermissionParser
+        /// Register AuthorizationPermissionsHandler, DefaultPermissionProvider, DefaultPermitProvider
         /// </summary>
         /// <param name="services"></param>
-        /// <param name="functionEnum"></param>
+        /// <param name="permitEnum"></param>
         /// <returns></returns>
-        public static IServiceCollection AddAuthorizationPermission(this IServiceCollection services, Type functionEnum)
+        public static IServiceCollection AddAuthorizationPermission(this IServiceCollection services, Type permitEnum)
         {
             services.AddSingleton<IAuthorizationHandler, AuthorizationPermissionsHandler>();
-            services.AddSingleton<IFunctionPermissionProvider>(s => new DefaultFunctionPermissionProvider(s.GetRequiredService<IHttpContextAccessor>(), functionEnum));
+            services.AddSingleton<IPermissionProvider>(s => new DefaultPermissionProvider(permitEnum));
+            services.AddSingleton<IPermitProvider, DefaultPermitProvider>();
             return services;
         }
     }
