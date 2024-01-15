@@ -14,16 +14,16 @@ using iCat.Authorization.Constants;
 namespace iCat.Authorization.Utilities.Tests
 {
     [TestClass()]
-    public class FunctionPermissionParserTests
+    public class PermitPermissionParserTests
     {
         [TestMethod()]
-        public void GetFunctionPermissionDefinitions_Success()
+        public void GetPermitPermissionDefinitions_Success()
         {
             // arrange
-            var parser = new DefaultPermissionProvider(typeof(Function_Success));
+            var parser = new DefaultPermissionProvider(typeof(Permit_Success));
             var validationData = new List<Permit> {
                 new() {
-                    Name = "UserProfile",
+                    Name = nameof(UserProfileA),
                     Value = 1,
                     PermissionsData = new List<Permission> {
                         new() { Name = "Add", Value = 1 },
@@ -32,7 +32,7 @@ namespace iCat.Authorization.Utilities.Tests
                         new() { Name = "Delete", Value = 8 },
                 }},
                 new() {
-                    Name = "Order",
+                    Name = nameof(OrderB),
                     Value = 2,
                     PermissionsData = new List<Permission> {
                         new() { Name = "Add", Value = 1 },
@@ -41,7 +41,7 @@ namespace iCat.Authorization.Utilities.Tests
                         new() { Name = "Delete", Value = 8 },
                 }},
                 new() {
-                    Name = "Department",
+                    Name = nameof(DepartmentC),
                     Value = 3,
                     PermissionsData = new List<Permission> {
                         new() { Name = "Add", Value = 1 },
@@ -59,13 +59,13 @@ namespace iCat.Authorization.Utilities.Tests
         }
 
         [TestMethod()]
-        public void GetFunctionPermissionDefinitions_Fail1()
+        public void GetPermitPermissionDefinitions_Fail1()
         {
             // arrange
-            var parser = new DefaultPermissionProvider(typeof(Function_Fail));
+            var parser = new DefaultPermissionProvider(typeof(Permit_Fail));
             var validationData = new List<Permit> {
                 new() {
-                    Name = "UserProfile",
+                    Name = nameof(UserProfileA),
                     Value = 1,
                     PermissionsData = new List<Permission> {
                         new() { Name = "Add", Value = 1 },
@@ -74,7 +74,7 @@ namespace iCat.Authorization.Utilities.Tests
                         new() { Name = "Delete", Value = 8 },
                 }},
                 new() {
-                    Name = "Department",
+                    Name = nameof(DepartmentC),
                     Value = 3,
                     PermissionsData = new List<Permission> {
                         new() { Name = "Add", Value = 1 },
@@ -92,13 +92,13 @@ namespace iCat.Authorization.Utilities.Tests
         }
 
         [TestMethod()]
-        public void GetFunctionPermissionDefinitions_Fail2()
+        public void GetPermitPermissionDefinitions_Fail2()
         {
             // arrange
-            var parser = new DefaultPermissionProvider(typeof(Function_Fail));
+            var provider = new DefaultPermissionProvider(typeof(Permit_Fail));
             var validationData = new List<Permit> {
                 new() {
-                    Name = "UserProfile",
+                    Name = nameof(UserProfileA),
                     Value = 1,
                     PermissionsData = new List<Permission> {
                         new() { Name = "Add", Value = 1 },
@@ -107,7 +107,7 @@ namespace iCat.Authorization.Utilities.Tests
                         new() { Name = "Delete", Value = 8 },
                 }},
                 new() {
-                    Name = "Department",
+                    Name = nameof(DepartmentC),
                     Value = 3,
                     PermissionsData = new List<Permission> {
                         new() { Name = "Add", Value = 1 },
@@ -118,7 +118,7 @@ namespace iCat.Authorization.Utilities.Tests
             };
 
             // action
-            var defintions = parser.GetDefinitions();
+            var defintions = provider.GetDefinitions();
 
             // assert
             Assert.AreEqual(JsonSerializer.Serialize(validationData), JsonSerializer.Serialize(defintions));
@@ -128,12 +128,12 @@ namespace iCat.Authorization.Utilities.Tests
         public void GetAuthorizationPermissionsDataTest_Success()
         {
             // arrange
-            var parser = new DefaultPermissionProvider(typeof(Function_Success));
-            var method = typeof(FunctionPermissionParserTests).GetMethod(nameof(TestAttributeMethod), BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+            var parser = new DefaultPermissionProvider(typeof(Permit_Success));
+            var method = typeof(PermitPermissionParserTests).GetMethod(nameof(TestAttributeMethod), BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
 
             var validationData = new List<Permit> {
                 new() {
-                    Name = "UserProfile",
+                    Name = nameof(UserProfileA),
                     Value = 1,
                     PermissionsData = new List<Permission> {
                         new() { Name = "Add", Value = 1 },
@@ -142,7 +142,7 @@ namespace iCat.Authorization.Utilities.Tests
                         new() { Name = "Delete", Value = 8 },
                 }},
                 new() {
-                    Name = "Order",
+                    Name = nameof(OrderB),
                     Value = 2,
                     PermissionsData = new List<Permission> {
                         new() { Name = "Edit", Value = 4 },
@@ -161,12 +161,12 @@ namespace iCat.Authorization.Utilities.Tests
         public void GetAuthorizationPermissionsDataTest_Fail()
         {
             // arrange
-            var parser = new DefaultPermissionProvider(typeof(Function_Success));
-            var method = typeof(FunctionPermissionParserTests).GetMethod(nameof(TestAttributeMethod), BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+            var parser = new DefaultPermissionProvider(typeof(Permit_Success));
+            var method = typeof(PermitPermissionParserTests).GetMethod(nameof(TestAttributeMethod), BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
 
             var validationData = new List<Permit> {
                 new() {
-                    Name = "UserProfile",
+                    Name = nameof(UserProfileA),
                     Value = 1,
                     PermissionsData = new List<Permission> {
                         new() { Name = "Add", Value = 1 },
@@ -175,7 +175,7 @@ namespace iCat.Authorization.Utilities.Tests
                         new() { Name = "Delete", Value = 8 },
                 }},
                 new() {
-                    Name = "Order",
+                    Name = nameof(OrderB),
                     Value = 2,
                     PermissionsData = new List<Permission> {
                         new() { Name = "Edit", Value = 4 },
@@ -191,10 +191,10 @@ namespace iCat.Authorization.Utilities.Tests
         }
 
         [TestMethod()]
-        public void GetClaimFromFunctionPermissionDataTest()
+        public void GetClaimFromPermitDataTest()
         {
             // arrange
-            var permissionProvider = new DefaultPermissionProvider(typeof(Function_Success));
+            var permissionProvider = new DefaultPermissionProvider(typeof(Permit_Success));
             var permitProvider = new DefaultPermitProvider(null, permissionProvider);
 
             // action
@@ -215,9 +215,9 @@ namespace iCat.Authorization.Utilities.Tests
 
 
         [AuthorizationPermissions(
-        UserProfilePermission.Add | UserProfilePermission.Read,
-        OrderPermission.Edit | OrderPermission.Delete,
-        UserProfilePermission.Edit | UserProfilePermission.Delete)]
+        UserProfileA.Add | UserProfileA.Read,
+        OrderB.Edit | OrderB.Delete,
+        UserProfileA.Edit | UserProfileA.Delete)]
         public static void TestAttributeMethod()
         {
 
@@ -227,26 +227,26 @@ namespace iCat.Authorization.Utilities.Tests
     }
 
 
-    public enum Function_Success
+    public enum Permit_Success
     {
-        [Permission(typeof(UserProfilePermission))]
+        [Permission(typeof(UserProfileA))]
         UserProfile = 1,
-        [Permission(typeof(OrderPermission))]
+        [Permission(typeof(OrderB))]
         Order = 2,
-        [Permission(typeof(DepartmentPermission))]
+        [Permission(typeof(DepartmentC))]
         Department = 3
     }
 
-    public enum Function_Fail
+    public enum Permit_Fail
     {
-        [Permission(typeof(UserProfilePermission))]
+        [Permission(typeof(UserProfileA))]
         UserProfile = 1,
-        [Permission(typeof(DepartmentPermission))]
+        [Permission(typeof(DepartmentC))]
         Department = 3
     }
 
     [Flags]
-    public enum UserProfilePermission
+    public enum UserProfileA
     {
         Add = 1,
         Edit = 2,
@@ -255,7 +255,7 @@ namespace iCat.Authorization.Utilities.Tests
     }
 
     [Flags]
-    public enum OrderPermission
+    public enum OrderB
     {
         Add = 1,
         Read = 2,
@@ -264,7 +264,7 @@ namespace iCat.Authorization.Utilities.Tests
     }
 
     [Flags]
-    public enum DepartmentPermission
+    public enum DepartmentC
     {
         Add = 1,
         Edit = 2,

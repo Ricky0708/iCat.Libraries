@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace iCat.Authorization.ConsoleTest.Enum
 {
-    public enum Function
+    public enum Permit
     {
         [Permission(typeof(UserProfilePermission))]
         UserProfile = 1,

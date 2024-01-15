@@ -23,7 +23,7 @@ namespace iCat.Authorization.Utilities
         List<Permit> GetPermissionRequired(params CustomAttributeData[] attributes);
 
         /// <summary>
-        /// Get function and permission mapping
+        /// Get permit and permission mapping
         /// </summary>
         /// <returns></returns>
         List<Permit> GetDefinitions();

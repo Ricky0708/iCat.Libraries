@@ -15,13 +15,13 @@ namespace iCat.Authorization.Utilities
     /// <inheritdoc/>
     public class DefaultPermissionProvider : IPermissionProvider
     {
-        private const string _endWith = "Permission";
-        private readonly List<Permit> _functionDatas;
+        private readonly List<Permit> _permitData;
 
         /// <inheritdoc/>
-        public DefaultPermissionProvider(Type functionEnum)
+        public DefaultPermissionProvider(Type permitEnum)
         {
-            _functionDatas ??= DefaultPermissionProvider.GetDefinitions(functionEnum, DefaultPermissionProvider.GetPermissionEnumList(functionEnum));
+            //_permitData ??= DefaultPermissionProvider.GetDefinitions(permitEnum, DefaultPermissionProvider.GetPermissionEnumList(permitEnum));
+            _permitData ??= GetDefinitions(permitEnum);
         }
 
         /// <inheritdoc/>
@@ -42,7 +42,7 @@ namespace iCat.Authorization.Utilities
         /// <inheritdoc/>
         public List<Permit> GetDefinitions()
         {
-            return _functionDatas;
+            return _permitData;
         }
 
         #region private methods
@@ -61,27 +61,27 @@ namespace iCat.Authorization.Utilities
                     foreach (var value in values)
                         GetAttributePermission(value, ref permissionNeeds);
             }
-            else if (arg.ArgumentType.IsEnum && arg.ArgumentType.Name.EndsWith(_endWith))
+            else if (arg.ArgumentType.IsEnum)
             {
-                // Current arg belongs to the function
-                var function = _functionDatas.Any(p => p.Name == arg.ArgumentType.Name.Replace(_endWith, "")) ?
-                    _functionDatas.First(p => p.Name == arg.ArgumentType.Name.Replace(_endWith, ""))
-                    : throw new ArgumentException("Permissions is not in the function list.");
+                // Current arg belongs to the permit
+                var permit = _permitData.Any(p => p.Name == arg.ArgumentType.Name) ?
+                    _permitData.First(p => p.Name == arg.ArgumentType.Name)
+                    : throw new ArgumentException("Permissions is not in the permit list.");
 
-                // The function permission list
-                var functionPermissions = (IEnumerable<int>)Enum.GetValues(arg.ArgumentType);
+                // The permission list
+                var permissions = (IEnumerable<int>)Enum.GetValues(arg.ArgumentType);
 
-                // Function permission data exists
-                var permissionNeed = permissionNeeds.FirstOrDefault(p => p.Value == function.Value);
+                // permission data exists
+                var permissionNeed = permissionNeeds.FirstOrDefault(p => p.Value == permit.Value);
 
                 if (permissionNeed == null)
                 {
                     permissionNeeds.Add(
                              new Permit
                              {
-                                 Name = function.Name,
-                                 Value = function.Value,
-                                 PermissionsData = functionPermissions
+                                 Name = permit.Name,
+                                 Value = permit.Value,
+                                 PermissionsData = permissions
                                     .Where(p => ((int)arg.Value! & p) > 0)
                                     .Select(p => new Permission
                                     {
@@ -92,7 +92,7 @@ namespace iCat.Authorization.Utilities
                 }
                 else
                 {
-                    var c = functionPermissions.Where(p => ((int)arg.Value! & p) > 0);
+                    var c = permissions.Where(p => ((int)arg.Value! & p) > 0);
                     var notExistsPermission = c.Where(p => !permissionNeed.PermissionsData.Select(x => x.Value).Any(y => y == p));
                     permissionNeed.PermissionsData.AddRange(notExistsPermission.Select(p => new Permission
                     {
@@ -109,58 +109,81 @@ namespace iCat.Authorization.Utilities
         }
 
         /// <summary>
-        /// Parsing function and permission mapping
+        /// Parsing permit and permission mapping
         /// </summary>
-        /// <param name="functionEnum"></param>
-        /// <param name="functionPermissionEnums"></param>
+        /// <param name="permitEnum"></param>
         /// <returns></returns>
-        private static List<Permit> GetDefinitions(Type functionEnum, params Type[] functionPermissionEnums)
+        private static List<Permit> GetDefinitions(Type permitEnum)
         {
-            var functionDatas = new List<Permit>();
-            foreach (var functionItem in Enum.GetValues(functionEnum))
+            var permitData = new List<Permit>();
+
+            foreach (var field in permitEnum.GetFields().Where(p => p.Name != "value__"))
             {
-                var functionData = new Permit
+                var value = field.CustomAttributes.SingleOrDefault(p => p.AttributeType == typeof(PermissionAttribute))?.ConstructorArguments.First().Value as Type ?? throw new ArgumentNullException($"\"{field.Name}\" has no defined permission attribute.");
+                if (value.GetCustomAttribute<FlagsAttribute>() == null) throw new ArgumentException($"Enum {value.Name} have to be flag enum");
+
+                var permit = new Permit
                 {
-                    Name = Enum.GetName(functionEnum, functionItem),
-                    Value = (int)Enum.Parse(functionEnum, Enum.GetName(functionEnum, functionItem)!),
+                    Name = value.Name,
+                    Value = (int)Enum.Parse(permitEnum, Enum.GetName(permitEnum, field.GetValue(field)!)!),
                 };
 
-                foreach (var permissionType in functionPermissionEnums.Where(p => p.Name.Replace(_endWith, "") == functionData.Name))
+                foreach (var PermissionItem in Enum.GetValues(value))
                 {
-                    foreach (var PermissionItem in Enum.GetValues(permissionType))
+                    permit.PermissionsData.Add(new Permission
                     {
-                        functionData.PermissionsData.Add(new Permission
-                        {
-                            Name = Enum.GetName(permissionType, PermissionItem),
-                            Value = (int)Enum.Parse(permissionType, Enum.GetName(permissionType, PermissionItem)!),
-                        });
-                    }
+                        Name = Enum.GetName(value, PermissionItem),
+                        Value = (int)Enum.Parse(value, Enum.GetName(value, PermissionItem)!),
+                    });
                 }
 
-                functionDatas.Add(functionData);
+                permitData.Add(permit);
             }
-            return functionDatas;
+
+            //foreach (var permitItem in Enum.GetValues(permitEnum))
+            //{
+            //    var permit = new Permit
+            //    {
+            //        Name = Enum.GetName(permitEnum, permitItem),
+            //        Value = (int)Enum.Parse(permitEnum, Enum.GetName(permitEnum, permitItem)!),
+            //    };
+
+            //    foreach (var permissionType in permissionEnums.Where(p => p.Name.Replace(_endWith, "") == permit.Name))
+            //    {
+            //        foreach (var PermissionItem in Enum.GetValues(permissionType))
+            //        {
+            //            permit.PermissionsData.Add(new Permission
+            //            {
+            //                Name = Enum.GetName(permissionType, PermissionItem),
+            //                Value = (int)Enum.Parse(permissionType, Enum.GetName(permissionType, PermissionItem)!),
+            //            });
+            //        }
+            //    }
+
+            //    permitData.Add(permit);
+            //}
+            return permitData;
         }
 
-        /// <summary>
-        /// Get permission enum type list from function 
-        /// </summary>
-        /// <param name="functionEnumType"></param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="ArgumentException"></exception>
-        private static Type[] GetPermissionEnumList(Type functionEnumType)
-        {
-            var permissionList = new List<Type>();
-            foreach (var field in functionEnumType.GetFields().Where(p => p.Name != "value__"))
-            {
-                var permissionAttribute = field.CustomAttributes.SingleOrDefault(p => p.AttributeType == typeof(PermissionAttribute)) ?? throw new ArgumentNullException($"\"{field.Name}\" has no defined permission attribute.");
-                var value = permissionAttribute.ConstructorArguments.FirstOrDefault().Value as Type ?? throw new ArgumentException($"\"{field.Name}\" has no specify permission.");
-                if (value.GetCustomAttribute<FlagsAttribute>() == null) throw new ArgumentException($"Enum {value.Name} have to be flag enum");
-                permissionList.Add(value);
-            }
-            return permissionList.ToArray();
-        }
+        ///// <summary>
+        ///// Get permission enum type list from permit 
+        ///// </summary>
+        ///// <param name="permitEnumType"></param>
+        ///// <returns></returns>
+        ///// <exception cref="ArgumentNullException"></exception>
+        ///// <exception cref="ArgumentException"></exception>
+        //private static Type[] GetPermissionEnumList(Type permitEnumType)
+        //{
+        //    var permissionList = new List<Type>();
+        //    foreach (var field in permitEnumType.GetFields().Where(p => p.Name != "value__"))
+        //    {
+        //        var permissionAttribute = field.CustomAttributes.SingleOrDefault(p => p.AttributeType == typeof(PermissionAttribute)) ?? throw new ArgumentNullException($"\"{field.Name}\" has no defined permission attribute.");
+        //        var value = permissionAttribute.ConstructorArguments.FirstOrDefault().Value as Type ?? throw new ArgumentException($"\"{field.Name}\" has no specify permission.");
+        //        if (value.GetCustomAttribute<FlagsAttribute>() == null) throw new ArgumentException($"Enum {value.Name} have to be flag enum");
+        //        permissionList.Add(value);
+        //    }
+        //    return permissionList.ToArray();
+        //}
 
         #endregion
 

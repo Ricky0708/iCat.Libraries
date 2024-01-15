@@ -35,15 +35,15 @@ namespace iCat.Authorization.Utilities
         {
             var userPermission = _httpContextAccessor?.HttpContext?.User.Claims.Where(p => p.Type == AuthorizationPermissionClaimTypes.Permit).Select(p =>
             {
-                var functionPermission = p.Value.Split(",");
-                if (!int.TryParse(functionPermission[0], out var functionValue)) throw new ArgumentException("Invalid Permission claims");
-                if (!int.TryParse(functionPermission[1], out var permissionValue)) throw new ArgumentException("Invalid Permission claims");
-                var function = _permissionProvider.GetDefinitions().FirstOrDefault(p => p.Value == functionValue) ?? throw new ArgumentException("Function in claims is not in function list");
+                var permission = p.Value.Split(",");
+                if (!int.TryParse(permission[0], out var permitValue)) throw new ArgumentException("Invalid Permit claims");
+                if (!int.TryParse(permission[1], out var permissionValue)) throw new ArgumentException("Invalid Permit claims");
+                var permit = _permissionProvider.GetDefinitions().FirstOrDefault(x => x.Value == permitValue) ?? throw new ArgumentException("permit in claims is not in permit list");
                 return new Permit
                 {
-                    Value = function.Value,
-                    Name = function.Name,
-                    PermissionsData = function.PermissionsData.Where(p => (p.Value & permissionValue) > 0).ToList()
+                    Value = permit.Value,
+                    Name = permit.Name,
+                    PermissionsData = permit.PermissionsData.Where(x => (x.Value & permissionValue) > 0).ToList()
                 };
             }) ?? throw new ArgumentNullException(nameof(_httpContextAccessor));
             return userPermission;

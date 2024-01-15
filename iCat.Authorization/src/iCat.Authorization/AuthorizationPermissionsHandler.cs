@@ -22,7 +22,6 @@ namespace iCat.Authorization
     public class AuthorizationPermissionsHandler : AuthorizationHandler<AuthorizationPermissionsRequirement>
     {
         private const string _endWith = "Permission";
-        private static List<Permit>? _functionDatas;
         private static readonly ConcurrentDictionary<string, List<Permit>> _routePermissionCache = new();
         private readonly IPermissionProvider _permissionProvider;
         private readonly IPermitProvider _permitProvider;
@@ -37,7 +36,6 @@ namespace iCat.Authorization
         {
             _permissionProvider = permissionProvider ?? throw new ArgumentNullException(nameof(permissionProvider));
             _permitProvider = permitProvider ?? throw new ArgumentNullException(nameof(permitProvider));
-            _functionDatas ??= _permissionProvider.GetDefinitions();
         }
 
         /// <summary>

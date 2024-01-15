@@ -27,7 +27,7 @@ namespace iCat.Authorization.Utilities
         Claim GeneratePermitClaim(Permit permission);
 
         /// <summary>
-        /// Validate FunctionData
+        /// Validate Permit
         /// </summary>
         /// <param name="permits"></param>
         /// <param name="permissionRequired"></param>
