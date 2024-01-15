@@ -72,6 +72,18 @@ namespace iCat.Authorization.Providers.Tests
             Assert.AreEqual(JsonSerializer.Serialize(expeced), JsonSerializer.Serialize(result));
         }
 
+        [TestMethod()]
+        [ExpectedException(typeof(ArgumentException))]
+        public void GetUserPermission_Duplicate_Test()
+        {
+            // arrange
+
+            // action
+            var permissionProvider = new DefaultPermissionProvider(typeof(Permit_Duplicate));
+
+            // assert
+        }
+
         [DataRow(Permit.UserProfile, UserProfileQQ.Add, true)]
         [DataRow(Permit.UserProfile, UserProfileQQ.Edit, true)]
         [DataRow(Permit.UserProfile, UserProfileQQ.Read, false)]
@@ -116,6 +128,16 @@ namespace iCat.Authorization.Providers.Tests
 
             Assert.AreEqual(expected, result);
         }
+    }
+
+    public enum Permit_Duplicate
+    {
+        [Permission(typeof(UserProfileQQ))]
+        UserProfile = 1,
+        [Permission(typeof(UserProfileQQ))]
+        Order = 2,
+        [Permission(typeof(DepartmentPP))]
+        Department = 3
     }
 
     public enum Permit

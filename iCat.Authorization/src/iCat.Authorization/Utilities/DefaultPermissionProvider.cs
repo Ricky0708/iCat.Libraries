@@ -128,6 +128,8 @@ namespace iCat.Authorization.Utilities
                     Value = (int)Enum.Parse(permitEnum, Enum.GetName(permitEnum, field.GetValue(field)!)!),
                 };
 
+                if (permitData.Any(p => p.Name == permit.Name)) throw new ArgumentException($"Enum {contructorType.Name} is duplicate");
+
                 foreach (var PermissionItem in Enum.GetValues(contructorType))
                 {
                     permit.PermissionsData.Add(new Permission
