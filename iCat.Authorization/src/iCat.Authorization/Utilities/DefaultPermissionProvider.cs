@@ -119,21 +119,21 @@ namespace iCat.Authorization.Utilities
 
             foreach (var field in permitEnum.GetFields().Where(p => p.Name != "value__"))
             {
-                var value = field.CustomAttributes.SingleOrDefault(p => p.AttributeType == typeof(PermissionAttribute))?.ConstructorArguments.First().Value as Type ?? throw new ArgumentNullException($"\"{field.Name}\" has no defined permission attribute.");
-                if (value.GetCustomAttribute<FlagsAttribute>() == null) throw new ArgumentException($"Enum {value.Name} have to be flag enum");
+                var contructorType = field.CustomAttributes.SingleOrDefault(p => p.AttributeType == typeof(PermissionAttribute))?.ConstructorArguments.First().Value as Type ?? throw new ArgumentNullException($"\"{field.Name}\" has no defined permission attribute.");
+                if (contructorType.GetCustomAttribute<FlagsAttribute>() == null) throw new ArgumentException($"Enum {contructorType.Name} have to be flag enum");
 
                 var permit = new Permit
                 {
-                    Name = value.Name,
+                    Name = contructorType.Name,
                     Value = (int)Enum.Parse(permitEnum, Enum.GetName(permitEnum, field.GetValue(field)!)!),
                 };
 
-                foreach (var PermissionItem in Enum.GetValues(value))
+                foreach (var PermissionItem in Enum.GetValues(contructorType))
                 {
                     permit.PermissionsData.Add(new Permission
                     {
-                        Name = Enum.GetName(value, PermissionItem),
-                        Value = (int)Enum.Parse(value, Enum.GetName(value, PermissionItem)!),
+                        Name = Enum.GetName(contructorType, PermissionItem),
+                        Value = (int)Enum.Parse(contructorType, Enum.GetName(contructorType, PermissionItem)!),
                     });
                 }
 
