@@ -6,8 +6,14 @@ using System.Threading.Tasks;
 
 namespace iCat.Authorization.Constants
 {
+    /// <summary>
+    /// Claim Types
+    /// </summary>
     public class AuthorizationPermissionClaimTypes
     {
+        /// <summary>
+        /// Type for premission
+        /// </summary>
         public const string Permission = "AuthorizationPermission/Permission";
     }
 }

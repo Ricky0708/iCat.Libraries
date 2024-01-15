@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace iCat.Token.JWT.Models
 {
+    /// <summary>
+    /// Option
+    /// </summary>
     public class GenerateOption
     {
         /// <summary>

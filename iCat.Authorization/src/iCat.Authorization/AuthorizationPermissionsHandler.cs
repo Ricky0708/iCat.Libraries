@@ -23,21 +23,21 @@ namespace iCat.Authorization
     {
         private const string _endWith = "Permission";
         private static List<Function>? _functionDatas;
-        private static ConcurrentDictionary<string, List<Function>> _routePermissionCache = new ConcurrentDictionary<string, List<Function>>();
-        private readonly IFunctionPermissionProvider _provider;
+        private static readonly ConcurrentDictionary<string, List<Function>> _routePermissionCache = new();
+        private readonly IPermissionProvider _permissionProvider;
+        private readonly IPermitProvider _permitProvider;
 
         /// <summary>
         /// Authorize AuthorizationPermissionsRequirement
         /// </summary>
-        /// <param name="provider"></param>
+        /// <param name="permissionProvider"></param>
+        /// <param name="permitProvider"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public AuthorizationPermissionsHandler(IFunctionPermissionProvider provider)
+        public AuthorizationPermissionsHandler(IPermissionProvider permissionProvider, IPermitProvider permitProvider)
         {
-            _provider = provider ?? throw new ArgumentNullException(nameof(provider));
-            if (_functionDatas == null)
-            {
-                _functionDatas = _provider.GetFunctionPermissionDefinitions();
-            }
+            _permissionProvider = permissionProvider ?? throw new ArgumentNullException(nameof(permissionProvider));
+            _permitProvider = permitProvider ?? throw new ArgumentNullException(nameof(permitProvider));
+            _functionDatas ??= _permissionProvider.GetDefinitions();
         }
 
         /// <summary>
@@ -53,10 +53,10 @@ namespace iCat.Authorization
             if (context.Resource is HttpContext httpContext)
             {
                 var routerPermissions = GetRouterPermissions(httpContext);
-                var userPermissions = _provider.GetUserPermission();
+                var userPermissions = _permitProvider.GetPermit();
                 foreach (var routerPermission in routerPermissions)
                 {
-                    if (_provider.Validate(userPermissions, routerPermission))
+                    if (_permitProvider.Validate(userPermissions, routerPermission))
                     {
                         context.Succeed(requirement);
                         await Task.FromResult(0);
@@ -81,7 +81,7 @@ namespace iCat.Authorization
             if (!_routePermissionCache.TryGetValue(cacheKey, out var permissionNeedsData))
             {
                 var permissionAttrs = actionDescriptor!.MethodInfo.CustomAttributes.Where(p => p.AttributeType.Name.StartsWith(nameof(AuthorizationPermissionsAttribute)));
-                permissionNeedsData = _provider.GetAuthorizationPermissionsData(permissionAttrs.ToArray());
+                permissionNeedsData = _permissionProvider.GetPermissionRequired(permissionAttrs.ToArray());
                 _routePermissionCache.TryAdd(cacheKey, permissionNeedsData);
             }
             return permissionNeedsData;

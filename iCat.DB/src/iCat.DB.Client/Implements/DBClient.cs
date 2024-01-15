@@ -37,7 +37,7 @@ namespace iCat.DB.Client.Implements
 
         #region Field
 
-        private IDbTransaction? _tran;
+        private DbTransaction? _tran;
         private readonly DbConnection _conn;
         private readonly string? _category;
         private readonly ConcurrentDictionary<string, IDataReader> _readerCache;
@@ -362,7 +362,7 @@ namespace iCat.DB.Client.Implements
         /// <param name="command"></param>
         /// <param name="dbDataParameter"></param>
         /// <returns></returns>
-        protected async Task CallEvent(CommandKind commandKind, IDbCommand? command, IDbDataParameter[]? dbDataParameter)
+        private async Task CallEvent(CommandKind commandKind, IDbCommand? command, IDbDataParameter[]? dbDataParameter)
         {
             ExecutedEvent?.Invoke(Category, commandKind, command, dbDataParameter);
             await Task.CompletedTask;

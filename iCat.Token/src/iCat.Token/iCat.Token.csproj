@@ -28,7 +28,7 @@
 		</None>
 	</ItemGroup>
 	<ItemGroup>
-	  <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.0.3" />
+	  <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.2.0" />
 	</ItemGroup>
 
 	<ItemGroup>

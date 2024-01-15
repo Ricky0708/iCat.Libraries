@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace iCat.Token.Implements
 {
+    /// <inheritdoc/>
     public class TokenService<T> : ITokenService<T>
     {
         private readonly ITokenGenerator _tokenGenerator;
@@ -35,6 +36,7 @@ namespace iCat.Token.Implements
         private delegate void delgAddPropList(T obj, object value);
 
 
+        /// <inheritdoc/>
         public TokenService(ITokenGenerator tokenGenerator, ITokenValidator tokenValidator)
         {
             _tokenGenerator = tokenGenerator ?? throw new ArgumentNullException(nameof(tokenGenerator));
@@ -54,19 +56,19 @@ namespace iCat.Token.Implements
             {
                 if (prop.PropertyType == typeof(string))
                 {
-                    var result = GetGetDelg(_dicGetString, prop).Invoke(dataModel);
+                    var result = TokenService<T>.GetGetDelg(_dicGetString, prop).Invoke(dataModel);
                     claims.Add(new Claim(prop.Name, result));
                 }
                 else if (prop.PropertyType.IsEnum)
                 {
-                    var result = GetGetDelg(_dicGetLong, prop).Invoke(dataModel);
+                    var result = TokenService<T>.GetGetDelg(_dicGetLong, prop).Invoke(dataModel);
                     claims.Add(new Claim(prop.Name, result.ToString()));
                 }
                 else if (prop.PropertyType.IsArray ||
                     prop.PropertyType.IsGenericType && prop.PropertyType.GetGenericTypeDefinition() == typeof(IEnumerable<>) ||
                     prop.PropertyType.IsGenericType && prop.PropertyType.GetGenericTypeDefinition() == typeof(List<>))
                 {
-                    var result = GetGetDelg(_dicGetList, prop).Invoke(dataModel);
+                    var result = TokenService<T>.GetGetDelg(_dicGetList, prop).Invoke(dataModel);
                     foreach (var item in result)
                     {
                         claims.Add(new Claim(prop.Name, item.GetType().IsEnum
@@ -79,7 +81,7 @@ namespace iCat.Token.Implements
                     prop.PropertyType == typeof(int) || prop.PropertyType == typeof(long)
                     )
                 {
-                    var result = GetGetDelg(_dicGetLong, prop).Invoke(dataModel);
+                    var result = TokenService<T>.GetGetDelg(_dicGetLong, prop).Invoke(dataModel);
                     claims.Add(new Claim(prop.Name, result.ToString()));
                 }
                 else
@@ -150,7 +152,7 @@ namespace iCat.Token.Implements
                 prop.PropertyType.IsGenericType && prop.PropertyType.GetGenericTypeDefinition() == typeof(IEnumerable<>) ||
                 prop.PropertyType.IsGenericType && prop.PropertyType.GetGenericTypeDefinition() == typeof(List<>))
             {
-                if (GetGetDelg(_dicGetList, prop).Invoke(tokenData) == null)
+                if (TokenService<T>.GetGetDelg(_dicGetList, prop).Invoke(tokenData) == null)
                 {
                     var instance = Activator.CreateInstance(prop.PropertyType)!;
                     GetSetDelg(_dicSetProp, prop).Invoke(tokenData, instance);
@@ -168,7 +170,7 @@ namespace iCat.Token.Implements
             }
         }
 
-        private V GetGetDelg<V>(ConcurrentDictionary<string, V> dic, PropertyInfo prop)
+        private static V GetGetDelg<V>(ConcurrentDictionary<string, V> dic, PropertyInfo prop)
         {
             var key = $"{typeof(T).Name}.{prop.Name}";
             if (!dic.TryGetValue(key, out var delg))

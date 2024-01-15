@@ -23,8 +23,8 @@ namespace iCat.Authorization.Providers.Tests
         {
             // arrange
             var claims = new List<Claim>() {
-                new Claim(AuthorizationPermissionClaimTypes.Permission, $"{(int)Function.UserProfile},{(int)(UserProfilePermission.Add | UserProfilePermission.Read)}"),
-                new Claim(AuthorizationPermissionClaimTypes.Permission, $"{(int)Function.Order},{(int)(OrderPermission.Add | OrderPermission.Read)}"),
+                new (AuthorizationPermissionClaimTypes.Permission, $"{(int)Function.UserProfile},{(int)(UserProfilePermission.Add | UserProfilePermission.Read)}"),
+                new (AuthorizationPermissionClaimTypes.Permission, $"{(int)Function.Order},{(int)(OrderPermission.Add | OrderPermission.Read)}"),
             };
             var claimIdentity = new ClaimsIdentity(claims);
             var principal = new ClaimsPrincipal(claimIdentity);
@@ -32,30 +32,31 @@ namespace iCat.Authorization.Providers.Tests
             hc.User = principal;
             var accessor = Substitute.For<IHttpContextAccessor>();
             accessor.HttpContext = hc;
-            var provider = new DefaultFunctionPermissionProvider(accessor, typeof(Function));
+            var permissionProvider = new DefaultPermissionProvider(typeof(Function));
+            var permitProvider = new DefaultPermitProvider(accessor, permissionProvider);
 
             var expeced = new List<Models.Function> {
-                new Models.Function { Name = "UserProfile",
+                new() { Name = "UserProfile",
                     Value = 1,
                     PermissionsData = new List<Permission> {
-                        new Permission{
+                        new() {
                             Name = "Add",
                             Value = 1,
                         },
-                        new Permission {
+                        new() {
                             Name = "Read",
                             Value = 4,
                         }
                     },
                 },
-                new Models.Function { Name = "Order",
+                new() { Name = "Order",
                     Value = 2,
                     PermissionsData = new List<Permission> {
-                        new Permission{
+                        new(){
                             Name = "Add",
                             Value = 1,
                         },
-                        new Permission {
+                        new() {
                             Name = "Read",
                             Value = 2,
                         }
@@ -65,7 +66,7 @@ namespace iCat.Authorization.Providers.Tests
 
 
             // action
-            var result = provider.GetUserPermission();
+            var result = permitProvider.GetPermit();
 
             // assert
             Assert.AreEqual(JsonSerializer.Serialize(expeced), JsonSerializer.Serialize(result));
@@ -83,13 +84,14 @@ namespace iCat.Authorization.Providers.Tests
         {
             // arrange
             var accessor = Substitute.For<IHttpContextAccessor>();
-            var provider = new DefaultFunctionPermissionProvider(accessor, typeof(Function));
+            var permissionProvider = new DefaultPermissionProvider(typeof(Function));
+            var permitProvider = new DefaultPermitProvider(accessor, permissionProvider);
             var userPermission = new List<Models.Function> {
-                new Models.Function {
+                new() {
                     Value = (int)userFunction,
                     PermissionsData = new List<Permission>
                     {
-                        new Permission{
+                        new(){
                             Value = (int)permission
                         }
                     }
@@ -97,14 +99,14 @@ namespace iCat.Authorization.Providers.Tests
             };
 
             // action
-            var result = provider.Validate(userPermission, new Models.Function
+            var result = permitProvider.Validate(userPermission, new Models.Function
             {
                 Value = (int)Function.UserProfile,
                 PermissionsData = new List<Permission> {
-                    new Permission{
+                    new(){
                         Value = (int)UserProfilePermission.Add,
                     },
-                    new Permission{
+                    new(){
                         Value = (int)UserProfilePermission.Edit,
                     }
                 }

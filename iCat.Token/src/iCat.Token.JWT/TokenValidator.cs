@@ -13,8 +13,10 @@ using System.Threading.Tasks;
 
 namespace iCat.Token.JWT
 {
+    /// <inheritdoc/>
     public class TokenValidator : ITokenValidator
     {
+        /// <inheritdoc/>
         public string Category => "JWT";
         private readonly ValidateOption _parameters;
 

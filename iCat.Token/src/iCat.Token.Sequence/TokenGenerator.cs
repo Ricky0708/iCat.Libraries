@@ -10,10 +10,12 @@ using System.Threading.Tasks;
 
 namespace iCat.Token.Sequence
 {
+    /// <inheritdoc/>
     public class TokenGenerator : ITokenGenerator
     {
         private readonly ICryptor _cryptor;
 
+        /// <inheritdoc/>
         public string Category => "Sequence";
 
         /// <summary>
@@ -26,6 +28,7 @@ namespace iCat.Token.Sequence
             _cryptor = cryptor ?? throw new ArgumentNullException(nameof(cryptor));
         }
 
+        /// <inheritdoc/>
         public string GenerateToken(List<Claim> claims)
         {
             var sb = new StringBuilder();

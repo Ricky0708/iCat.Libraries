@@ -12,6 +12,9 @@ using System.Threading.Tasks;
 
 namespace iCat.Localization.Extension.Web
 {
+    /// <summary>
+    /// Extension
+    /// </summary>
     public static class IApplicationBuilderExtension
     {
         /// <summary>

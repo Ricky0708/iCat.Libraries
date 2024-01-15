@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace iCat.Token.Interfaces
 {
+    /// <summary>
+    /// Token validator
+    /// </summary>
     public interface ITokenValidator
     {
         /// <summary>

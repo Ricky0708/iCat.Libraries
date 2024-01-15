@@ -20,39 +20,39 @@ namespace iCat.Authorization.Utilities.Tests
         public void GetFunctionPermissionDefinitions_Success()
         {
             // arrange
-            var parser = new DefaultFunctionPermissionProvider(null, typeof(Function_Success));
+            var parser = new DefaultPermissionProvider(typeof(Function_Success));
             var validationData = new List<Function> {
-                new Function {
+                new() {
                     Name = "UserProfile",
                     Value = 1,
                     PermissionsData = new List<Permission> {
-                        new Permission { Name = "Add", Value = 1 },
-                        new Permission { Name = "Edit", Value = 2 },
-                        new Permission { Name = "Read", Value = 4 },
-                        new Permission { Name = "Delete", Value = 8 },
+                        new() { Name = "Add", Value = 1 },
+                        new() { Name = "Edit", Value = 2 },
+                        new() { Name = "Read", Value = 4 },
+                        new() { Name = "Delete", Value = 8 },
                 }},
-                new Function {
+                new() {
                     Name = "Order",
                     Value = 2,
                     PermissionsData = new List<Permission> {
-                        new Permission { Name = "Add", Value = 1 },
-                        new Permission { Name = "Read", Value = 2 },
-                        new Permission { Name = "Edit", Value = 4 },
-                        new Permission { Name = "Delete", Value = 8 },
+                        new() { Name = "Add", Value = 1 },
+                        new() { Name = "Read", Value = 2 },
+                        new() { Name = "Edit", Value = 4 },
+                        new() { Name = "Delete", Value = 8 },
                 }},
-                new Function {
+                new() {
                     Name = "Department",
                     Value = 3,
                     PermissionsData = new List<Permission> {
-                        new Permission { Name = "Add", Value = 1 },
-                        new Permission { Name = "Edit", Value = 2 },
-                        new Permission { Name = "Read", Value = 4 },
-                        new Permission { Name = "Delete", Value = 8 },
+                        new() { Name = "Add", Value = 1 },
+                        new() { Name = "Edit", Value = 2 },
+                        new() { Name = "Read", Value = 4 },
+                        new() { Name = "Delete", Value = 8 },
                 }},
             };
 
             // action
-            var defintions = parser.GetFunctionPermissionDefinitions();
+            var defintions = parser.GetDefinitions();
 
             // assert
             Assert.AreEqual(JsonSerializer.Serialize(validationData), JsonSerializer.Serialize(defintions));
@@ -62,30 +62,30 @@ namespace iCat.Authorization.Utilities.Tests
         public void GetFunctionPermissionDefinitions_Fail1()
         {
             // arrange
-            var parser = new DefaultFunctionPermissionProvider(null, typeof(Function_Fail));
+            var parser = new DefaultPermissionProvider(typeof(Function_Fail));
             var validationData = new List<Function> {
-                new Function {
+                new() {
                     Name = "UserProfile",
                     Value = 1,
                     PermissionsData = new List<Permission> {
-                        new Permission { Name = "Add", Value = 1 },
-                        new Permission { Name = "Edit", Value = 2 },
-                        new Permission { Name = "Read", Value = 4 },
-                        new Permission { Name = "Delete", Value = 8 },
+                        new() { Name = "Add", Value = 1 },
+                        new() { Name = "Edit", Value = 2 },
+                        new() { Name = "Read", Value = 4 },
+                        new() { Name = "Delete", Value = 8 },
                 }},
-                new Function {
+                new() {
                     Name = "Department",
                     Value = 3,
                     PermissionsData = new List<Permission> {
-                        new Permission { Name = "Add", Value = 1 },
-                        new Permission { Name = "Edit", Value = 2 },
-                        new Permission { Name = "Read", Value = 4 },
-                        new Permission { Name = "Delete", Value = 8 },
+                        new() { Name = "Add", Value = 1 },
+                        new() { Name = "Edit", Value = 2 },
+                        new() { Name = "Read", Value = 4 },
+                        new() { Name = "Delete", Value = 8 },
                 }},
             };
 
             // action
-            var defintions = parser.GetFunctionPermissionDefinitions();
+            var defintions = parser.GetDefinitions();
 
             // assert
             Assert.AreEqual(JsonSerializer.Serialize(validationData), JsonSerializer.Serialize(defintions));
@@ -95,30 +95,30 @@ namespace iCat.Authorization.Utilities.Tests
         public void GetFunctionPermissionDefinitions_Fail2()
         {
             // arrange
-            var parser = new DefaultFunctionPermissionProvider(null, typeof(Function_Fail));
+            var parser = new DefaultPermissionProvider(typeof(Function_Fail));
             var validationData = new List<Function> {
-                new Function {
+                new() {
                     Name = "UserProfile",
                     Value = 1,
                     PermissionsData = new List<Permission> {
-                        new Permission { Name = "Add", Value = 1 },
-                        new Permission { Name = "Edit", Value = 2 },
-                        new Permission { Name = "Read", Value = 4 },
-                        new Permission { Name = "Delete", Value = 8 },
+                        new() { Name = "Add", Value = 1 },
+                        new() { Name = "Edit", Value = 2 },
+                        new() { Name = "Read", Value = 4 },
+                        new() { Name = "Delete", Value = 8 },
                 }},
-                new Function {
+                new() {
                     Name = "Department",
                     Value = 3,
                     PermissionsData = new List<Permission> {
-                        new Permission { Name = "Add", Value = 1 },
-                        new Permission { Name = "Edit", Value = 2 },
-                        new Permission { Name = "Read", Value = 4 },
-                        new Permission { Name = "Delete", Value = 8 },
+                        new() { Name = "Add", Value = 1 },
+                        new() { Name = "Edit", Value = 2 },
+                        new() { Name = "Read", Value = 4 },
+                        new() { Name = "Delete", Value = 8 },
                 }},
             };
 
             // action
-            var defintions = parser.GetFunctionPermissionDefinitions();
+            var defintions = parser.GetDefinitions();
 
             // assert
             Assert.AreEqual(JsonSerializer.Serialize(validationData), JsonSerializer.Serialize(defintions));
@@ -128,30 +128,30 @@ namespace iCat.Authorization.Utilities.Tests
         public void GetAuthorizationPermissionsDataTest_Success()
         {
             // arrange
-            var parser = new DefaultFunctionPermissionProvider(null, typeof(Function_Success));
+            var parser = new DefaultPermissionProvider(typeof(Function_Success));
             var method = typeof(FunctionPermissionParserTests).GetMethod(nameof(TestAttributeMethod), BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
 
             var validationData = new List<Function> {
-                new Function {
+                new() {
                     Name = "UserProfile",
                     Value = 1,
                     PermissionsData = new List<Permission> {
-                        new Permission { Name = "Add", Value = 1 },
-                        new Permission { Name = "Read", Value = 4 },
-                        new Permission { Name = "Edit", Value = 2 },
-                        new Permission { Name = "Delete", Value = 8 },
+                        new() { Name = "Add", Value = 1 },
+                        new() { Name = "Read", Value = 4 },
+                        new() { Name = "Edit", Value = 2 },
+                        new() { Name = "Delete", Value = 8 },
                 }},
-                new Function {
+                new() {
                     Name = "Order",
                     Value = 2,
                     PermissionsData = new List<Permission> {
-                        new Permission { Name = "Edit", Value = 4 },
-                        new Permission { Name = "Delete", Value = 8 },
+                        new() { Name = "Edit", Value = 4 },
+                        new() { Name = "Delete", Value = 8 },
                 }},
             };
 
             // action
-            var defintions = parser.GetAuthorizationPermissionsData(method!.CustomAttributes.ToArray());
+            var defintions = parser.GetPermissionRequired(method!.CustomAttributes.ToArray());
 
             // assert
             Assert.AreEqual(JsonSerializer.Serialize(validationData), JsonSerializer.Serialize(defintions));
@@ -161,30 +161,30 @@ namespace iCat.Authorization.Utilities.Tests
         public void GetAuthorizationPermissionsDataTest_Fail()
         {
             // arrange
-            var parser = new DefaultFunctionPermissionProvider(null, typeof(Function_Success));
+            var parser = new DefaultPermissionProvider(typeof(Function_Success));
             var method = typeof(FunctionPermissionParserTests).GetMethod(nameof(TestAttributeMethod), BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
 
             var validationData = new List<Function> {
-                new Function {
+                new() {
                     Name = "UserProfile",
                     Value = 1,
                     PermissionsData = new List<Permission> {
-                        new Permission { Name = "Add", Value = 1 },
-                        new Permission { Name = "Read", Value = 4 },
-                        new Permission { Name = "Edit", Value = 2 },
-                        new Permission { Name = "Delete", Value = 8 },
+                        new() { Name = "Add", Value = 1 },
+                        new() { Name = "Read", Value = 4 },
+                        new() { Name = "Edit", Value = 2 },
+                        new() { Name = "Delete", Value = 8 },
                 }},
-                new Function {
+                new() {
                     Name = "Order",
                     Value = 2,
                     PermissionsData = new List<Permission> {
-                        new Permission { Name = "Edit", Value = 4 },
-                        new Permission { Name = "Delete", Value = 8 },
+                        new() { Name = "Edit", Value = 4 },
+                        new() { Name = "Delete", Value = 8 },
                 }},
             };
 
             // action
-            var defintions = parser.GetAuthorizationPermissionsData(method!.CustomAttributes.ToArray());
+            var defintions = parser.GetPermissionRequired(method!.CustomAttributes.ToArray());
 
             // assert
             Assert.AreEqual(JsonSerializer.Serialize(validationData), JsonSerializer.Serialize(defintions));
@@ -194,16 +194,17 @@ namespace iCat.Authorization.Utilities.Tests
         public void GetClaimFromFunctionPermissionDataTest()
         {
             // arrange
-            var parser = new DefaultFunctionPermissionProvider(null, typeof(Function_Success));
+            var permissionProvider = new DefaultPermissionProvider(typeof(Function_Success));
+            var permitProvider = new DefaultPermitProvider(null, permissionProvider);
 
             // action
-            var result = parser.GetClaimFromFunctionPermissionData(new Function
+            var result = permitProvider.GeneratePermitClaim(new Function
             {
                 Name = "A",
                 Value = 1,
                 PermissionsData = new List<Permission>
                 {
-                    new Permission { Name = "Add", Value = 1}
+                    new() { Name = "Add", Value = 1}
                 }
             });
 

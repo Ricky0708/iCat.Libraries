@@ -11,12 +11,16 @@ using System.Threading.Tasks;
 
 namespace iCat.Token.Sequence
 {
+
+    /// <inheritdoc/>
     public class TokenValidator<T> : ITokenValidator
     {
         private readonly ICryptor _cryptor;
 
+        /// <inheritdoc/>
         public string Category => "Sequence";
 
+        /// <inheritdoc/>
         public TokenValidator(ICryptor cryptor)
         {
             _cryptor = cryptor ?? throw new ArgumentNullException(nameof(cryptor));
