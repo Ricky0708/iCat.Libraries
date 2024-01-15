@@ -1,0 +1,6 @@
+@iCat.Authorization.demo_HostAddress = http://localhost:5063
+
+GET {{iCat.Authorization.demo_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
