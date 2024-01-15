@@ -21,7 +21,7 @@ namespace iCat.Authorization.Utilities.Tests
         {
             // arrange
             var parser = new DefaultPermissionProvider(typeof(Function_Success));
-            var validationData = new List<Function> {
+            var validationData = new List<Permit> {
                 new() {
                     Name = "UserProfile",
                     Value = 1,
@@ -63,7 +63,7 @@ namespace iCat.Authorization.Utilities.Tests
         {
             // arrange
             var parser = new DefaultPermissionProvider(typeof(Function_Fail));
-            var validationData = new List<Function> {
+            var validationData = new List<Permit> {
                 new() {
                     Name = "UserProfile",
                     Value = 1,
@@ -96,7 +96,7 @@ namespace iCat.Authorization.Utilities.Tests
         {
             // arrange
             var parser = new DefaultPermissionProvider(typeof(Function_Fail));
-            var validationData = new List<Function> {
+            var validationData = new List<Permit> {
                 new() {
                     Name = "UserProfile",
                     Value = 1,
@@ -131,7 +131,7 @@ namespace iCat.Authorization.Utilities.Tests
             var parser = new DefaultPermissionProvider(typeof(Function_Success));
             var method = typeof(FunctionPermissionParserTests).GetMethod(nameof(TestAttributeMethod), BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
 
-            var validationData = new List<Function> {
+            var validationData = new List<Permit> {
                 new() {
                     Name = "UserProfile",
                     Value = 1,
@@ -164,7 +164,7 @@ namespace iCat.Authorization.Utilities.Tests
             var parser = new DefaultPermissionProvider(typeof(Function_Success));
             var method = typeof(FunctionPermissionParserTests).GetMethod(nameof(TestAttributeMethod), BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
 
-            var validationData = new List<Function> {
+            var validationData = new List<Permit> {
                 new() {
                     Name = "UserProfile",
                     Value = 1,
@@ -198,7 +198,7 @@ namespace iCat.Authorization.Utilities.Tests
             var permitProvider = new DefaultPermitProvider(null, permissionProvider);
 
             // action
-            var result = permitProvider.GeneratePermitClaim(new Function
+            var result = permitProvider.GeneratePermitClaim(new Permit
             {
                 Name = "A",
                 Value = 1,

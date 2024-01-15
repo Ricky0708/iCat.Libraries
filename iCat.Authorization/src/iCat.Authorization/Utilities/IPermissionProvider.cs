@@ -20,12 +20,12 @@ namespace iCat.Authorization.Utilities
         /// <param name="attributes"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        List<Function> GetPermissionRequired(params CustomAttributeData[] attributes);
+        List<Permit> GetPermissionRequired(params CustomAttributeData[] attributes);
 
         /// <summary>
         /// Get function and permission mapping
         /// </summary>
         /// <returns></returns>
-        List<Function> GetDefinitions();
+        List<Permit> GetDefinitions();
     }
 }

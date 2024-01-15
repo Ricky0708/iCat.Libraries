@@ -16,7 +16,7 @@ namespace iCat.Authorization.Utilities
     public class DefaultPermissionProvider : IPermissionProvider
     {
         private const string _endWith = "Permission";
-        private readonly List<Function> _functionDatas;
+        private readonly List<Permit> _functionDatas;
 
         /// <inheritdoc/>
         public DefaultPermissionProvider(Type functionEnum)
@@ -25,13 +25,13 @@ namespace iCat.Authorization.Utilities
         }
 
         /// <inheritdoc/>
-        public List<Function> GetPermissionRequired(params CustomAttributeData[] attributes)
+        public List<Permit> GetPermissionRequired(params CustomAttributeData[] attributes)
         {
             if (attributes.Any(p => !p.AttributeType.Name.StartsWith(nameof(AuthorizationPermissionsAttribute)))) throw new ArgumentException("All attributes must be AuthorizationPermissionsAttribute.");
 
             var permissionAttrs = attributes.Where(p => p.AttributeType.Name.StartsWith(nameof(AuthorizationPermissionsAttribute)));
             var args = permissionAttrs.SelectMany(p => p.ConstructorArguments);
-            var permissionNeedsData = new List<Function>();
+            var permissionNeedsData = new List<Permit>();
             foreach (var arg in args)
             {
                 GetAttributePermission(arg, ref permissionNeedsData);
@@ -40,7 +40,7 @@ namespace iCat.Authorization.Utilities
         }
 
         /// <inheritdoc/>
-        public List<Function> GetDefinitions()
+        public List<Permit> GetDefinitions()
         {
             return _functionDatas;
         }
@@ -53,7 +53,7 @@ namespace iCat.Authorization.Utilities
         /// <param name="arg"></param>
         /// <param name="permissionNeeds"></param>
         /// <exception cref="ArgumentException"></exception>
-        private void GetAttributePermission(CustomAttributeTypedArgument arg, ref List<Function> permissionNeeds)
+        private void GetAttributePermission(CustomAttributeTypedArgument arg, ref List<Permit> permissionNeeds)
         {
             if (arg.ArgumentType.IsArray)
             {
@@ -77,7 +77,7 @@ namespace iCat.Authorization.Utilities
                 if (permissionNeed == null)
                 {
                     permissionNeeds.Add(
-                             new Function
+                             new Permit
                              {
                                  Name = function.Name,
                                  Value = function.Value,
@@ -114,12 +114,12 @@ namespace iCat.Authorization.Utilities
         /// <param name="functionEnum"></param>
         /// <param name="functionPermissionEnums"></param>
         /// <returns></returns>
-        private static List<Function> GetDefinitions(Type functionEnum, params Type[] functionPermissionEnums)
+        private static List<Permit> GetDefinitions(Type functionEnum, params Type[] functionPermissionEnums)
         {
-            var functionDatas = new List<Function>();
+            var functionDatas = new List<Permit>();
             foreach (var functionItem in Enum.GetValues(functionEnum))
             {
-                var functionData = new Function
+                var functionData = new Permit
                 {
                     Name = Enum.GetName(functionEnum, functionItem),
                     Value = (int)Enum.Parse(functionEnum, Enum.GetName(functionEnum, functionItem)!),

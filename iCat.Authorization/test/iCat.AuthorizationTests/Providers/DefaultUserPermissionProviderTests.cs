@@ -35,7 +35,7 @@ namespace iCat.Authorization.Providers.Tests
             var permissionProvider = new DefaultPermissionProvider(typeof(Function));
             var permitProvider = new DefaultPermitProvider(accessor, permissionProvider);
 
-            var expeced = new List<Models.Function> {
+            var expeced = new List<Models.Permit> {
                 new() { Name = "UserProfile",
                     Value = 1,
                     PermissionsData = new List<Permission> {
@@ -86,7 +86,7 @@ namespace iCat.Authorization.Providers.Tests
             var accessor = Substitute.For<IHttpContextAccessor>();
             var permissionProvider = new DefaultPermissionProvider(typeof(Function));
             var permitProvider = new DefaultPermitProvider(accessor, permissionProvider);
-            var userPermission = new List<Models.Function> {
+            var userPermission = new List<Models.Permit> {
                 new() {
                     Value = (int)userFunction,
                     PermissionsData = new List<Permission>
@@ -99,7 +99,7 @@ namespace iCat.Authorization.Providers.Tests
             };
 
             // action
-            var result = permitProvider.Validate(userPermission, new Models.Function
+            var result = permitProvider.Validate(userPermission, new Models.Permit
             {
                 Value = (int)Function.UserProfile,
                 PermissionsData = new List<Permission> {

@@ -17,14 +17,14 @@ namespace iCat.Authorization.Utilities
         /// Get Permit
         /// </summary>
         /// <returns></returns>
-        IEnumerable<Function> GetPermit();
+        IEnumerable<Permit> GetPermit();
 
         /// <summary>
         /// Generate permit claim
         /// </summary>
         /// <param name="permission"></param>
         /// <returns></returns>
-        Claim GeneratePermitClaim(Function permission);
+        Claim GeneratePermitClaim(Permit permission);
 
         /// <summary>
         /// Validate FunctionData
@@ -32,6 +32,6 @@ namespace iCat.Authorization.Utilities
         /// <param name="permits"></param>
         /// <param name="permissionRequired"></param>
         /// <returns></returns>
-        bool Validate(IEnumerable<Function> permits, Function permissionRequired);
+        bool Validate(IEnumerable<Permit> permits, Permit permissionRequired);
     }
 }

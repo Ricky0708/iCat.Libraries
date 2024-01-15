@@ -7,17 +7,17 @@ using System.Threading.Tasks;
 namespace iCat.Authorization.Models
 {
     /// <summary>
-    /// Function - Permission information
+    /// Permit - Permission information
     /// </summary>
-    public class Function
+    public class Permit
     {
         /// <summary>
-        /// Function name
+        /// Permit name
         /// </summary>
         public string? Name { get; set; }
 
         /// <summary>
-        /// Function value
+        /// Permit value
         /// </summary>
         public int? Value { get; set; }
 
