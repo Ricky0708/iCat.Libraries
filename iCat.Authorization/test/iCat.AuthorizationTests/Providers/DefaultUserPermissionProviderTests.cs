@@ -23,8 +23,8 @@ namespace iCat.Authorization.Providers.Tests
         {
             // arrange
             var claims = new List<Claim>() {
-                new (AuthorizationPermissionClaimTypes.Permission, $"{(int)Function.UserProfile},{(int)(UserProfilePermission.Add | UserProfilePermission.Read)}"),
-                new (AuthorizationPermissionClaimTypes.Permission, $"{(int)Function.Order},{(int)(OrderPermission.Add | OrderPermission.Read)}"),
+                new (AuthorizationPermissionClaimTypes.Permit, $"{(int)Function.UserProfile},{(int)(UserProfilePermission.Add | UserProfilePermission.Read)}"),
+                new (AuthorizationPermissionClaimTypes.Permit, $"{(int)Function.Order},{(int)(OrderPermission.Add | OrderPermission.Read)}"),
             };
             var claimIdentity = new ClaimsIdentity(claims);
             var principal = new ClaimsPrincipal(claimIdentity);

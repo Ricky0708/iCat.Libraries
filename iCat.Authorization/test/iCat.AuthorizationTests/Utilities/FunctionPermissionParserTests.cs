@@ -209,7 +209,7 @@ namespace iCat.Authorization.Utilities.Tests
             });
 
             // assert
-            Assert.AreEqual(result.Type, AuthorizationPermissionClaimTypes.Permission);
+            Assert.AreEqual(result.Type, AuthorizationPermissionClaimTypes.Permit);
             Assert.AreEqual(result.Value, "1,1");
         }
 

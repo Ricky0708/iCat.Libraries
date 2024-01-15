@@ -14,6 +14,6 @@ namespace iCat.Authorization.Constants
         /// <summary>
         /// Type for premission
         /// </summary>
-        public const string Permission = "AuthorizationPermission/Permission";
+        public const string Permit = "AuthorizationPermission/Permit";
     }
 }

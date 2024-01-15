@@ -26,14 +26,14 @@ namespace iCat.Authorization.Utilities
         /// <inheritdoc/>
         public Claim GeneratePermitClaim(Function permission)
         {
-            var claim = new Claim(AuthorizationPermissionClaimTypes.Permission, $"{permission.Value},{permission.Permissions}");
+            var claim = new Claim(AuthorizationPermissionClaimTypes.Permit, $"{permission.Value},{permission.Permissions}");
             return claim;
         }
 
         /// <inheritdoc/>
         public IEnumerable<Function> GetPermit()
         {
-            var userPermission = _httpContextAccessor?.HttpContext?.User.Claims.Where(p => p.Type == AuthorizationPermissionClaimTypes.Permission).Select(p =>
+            var userPermission = _httpContextAccessor?.HttpContext?.User.Claims.Where(p => p.Type == AuthorizationPermissionClaimTypes.Permit).Select(p =>
             {
                 var functionPermission = p.Value.Split(",");
                 if (!int.TryParse(functionPermission[0], out var functionValue)) throw new ArgumentException("Invalid Permission claims");
