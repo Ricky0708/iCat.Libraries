@@ -23,6 +23,14 @@ namespace iCat.Authorization.Utilities
         List<Permit> GetPermissionRequired(params CustomAttributeData[] attributes);
 
         /// <summary>
+        /// Get permit definition from permission
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="permission"></param>
+        /// <returns></returns>
+        Permit GetPermitFromPermission<T>(T permission) where T : Enum;
+
+        /// <summary>
         /// Get permit and permission mapping
         /// </summary>
         /// <returns></returns>

@@ -9,7 +9,18 @@ namespace iCat.Authorization.Models
     /// <summary>
     /// Permission detail
     /// </summary>
-    public class Permission
+    public interface IPermission
+    {
+        /// <summary>
+        /// Permission
+        /// </summary>
+        int Value { get; set; }
+    }
+
+    /// <summary>
+    /// Permission detail
+    /// </summary>
+    public class Permission : IPermission
     {
         /// <summary>
         /// Permission name

@@ -9,7 +9,29 @@ namespace iCat.Authorization.Models
     /// <summary>
     /// Permit - Permission information
     /// </summary>
-    public class Permit
+    /// <typeparam name="T"></typeparam>
+    public interface IPermit<T> where T : IPermission
+    {
+        /// <summary>
+        /// Permit value
+        /// </summary>
+        int? Value { get; set; }
+
+        /// <summary>
+        /// permission detail
+        /// </summary>
+        List<T> PermissionsData { get; set; }
+
+        /// <summary>
+        /// Permissions
+        /// </summary>
+        int Permissions { get; }
+    }
+
+    /// <summary>
+    /// Permit - Permission information
+    /// </summary>
+    public class Permit : IPermit<Permission>
     {
         /// <summary>
         /// Permit name

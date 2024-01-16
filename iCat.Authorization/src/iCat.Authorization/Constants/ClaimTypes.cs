@@ -9,7 +9,7 @@ namespace iCat.Authorization.Constants
     /// <summary>
     /// Claim Types
     /// </summary>
-    public class AuthorizationPermissionClaimTypes
+    public class ClaimTypes
     {
         /// <summary>
         /// Type for premission
