@@ -24,16 +24,24 @@ namespace iCat.Authorization.Utilities
         }
 
         /// <inheritdoc/>
-        public Claim GeneratePermitClaim(Permit permission)
+        public Claim GeneratePermitClaim<T>(IPermit<T> permission) where T : IPermission
         {
-            var claim = new Claim(AuthorizationPermissionClaimTypes.Permit, $"{permission.Value},{permission.Permissions}");
+            var claim = new Claim(Constants.ClaimTypes.Permit, $"{permission.Value},{permission.Permissions}");
+            return claim;
+        }
+
+        /// <inheritdoc/>
+        public Claim GeneratePermitClaim<TPermission>(TPermission permission) where TPermission : Enum
+        {
+            var permit = _permissionProvider.GetPermitFromPermission(permission);
+            var claim = new Claim(Constants.ClaimTypes.Permit, $"{permit.Value},{(int)(object)permission}");
             return claim;
         }
 
         /// <inheritdoc/>
         public IEnumerable<Permit> GetPermit()
         {
-            var userPermission = _httpContextAccessor?.HttpContext?.User.Claims.Where(p => p.Type == AuthorizationPermissionClaimTypes.Permit).Select(p =>
+            var userPermission = _httpContextAccessor?.HttpContext?.User.Claims.Where(p => p.Type == Constants.ClaimTypes.Permit).Select(p =>
             {
                 var permission = p.Value.Split(",");
                 if (!int.TryParse(permission[0], out var permitValue)) throw new ArgumentException("Invalid Permit claims");

@@ -209,10 +209,24 @@ namespace iCat.Authorization.Utilities.Tests
             });
 
             // assert
-            Assert.AreEqual(result.Type, AuthorizationPermissionClaimTypes.Permit);
+            Assert.AreEqual(result.Type, Constants.ClaimTypes.Permit);
             Assert.AreEqual(result.Value, "1,1");
         }
 
+        [TestMethod()]
+        public void GetClaimFromPermitDataTest2()
+        {
+            // arrange
+            var permissionProvider = new DefaultPermissionProvider(typeof(Permit_Success));
+            var permitProvider = new DefaultPermitProvider(null, permissionProvider);
+
+            // action
+            var result = permitProvider.GeneratePermitClaim(OrderB.Read);
+
+            // assert
+            Assert.AreEqual(result.Type, Constants.ClaimTypes.Permit);
+            Assert.AreEqual(result.Value, "2,2");
+        }
 
         [AuthorizationPermissions(
         UserProfileA.Add | UserProfileA.Read,

@@ -24,7 +24,15 @@ namespace iCat.Authorization.Utilities
         /// </summary>
         /// <param name="permission"></param>
         /// <returns></returns>
-        Claim GeneratePermitClaim(Permit permission);
+        Claim GeneratePermitClaim<T>(IPermit<T> permission) where T : IPermission;
+
+        /// <summary>
+        /// Generate permit claim
+        /// </summary>
+        /// <typeparam name="TPermission"></typeparam>
+        /// <param name="permission"></param>
+        /// <returns></returns>
+        Claim GeneratePermitClaim<TPermission>(TPermission permission) where TPermission : Enum;
 
         /// <summary>
         /// Validate Permit
