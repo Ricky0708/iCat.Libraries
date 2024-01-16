@@ -14,7 +14,7 @@ namespace iCat.Authorization.Utilities
     public interface IPermitProvider
     {
         /// <summary>
-        /// Get Permit
+        /// Get Permit, currently authenticated user
         /// </summary>
         /// <returns></returns>
         IEnumerable<Permit> GetPermit();
