@@ -39,6 +39,13 @@ namespace iCat.Authorization.Utilities
         }
 
         /// <inheritdoc/>
+        public Claim GeneratePermitClaim(int permit, int permission)
+        {
+            var claim = new Claim(Constants.ClaimTypes.Permit, $"{permit},{permission}");
+            return claim;
+        }
+
+        /// <inheritdoc/>
         public IEnumerable<Permit> GetPermit()
         {
             var userPermission = _httpContextAccessor?.HttpContext?.User.Claims.Where(p => p.Type == Constants.ClaimTypes.Permit).Select(p =>
