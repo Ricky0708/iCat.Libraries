@@ -58,7 +58,7 @@ namespace iCat.Authorization.Utilities
         }
 
         /// <inheritdoc/>
-        public bool Validate(IEnumerable<Permit> permits, Permit permissionRequired)
+        public bool Validate<T>(IEnumerable<IPermit<T>> permits, IPermit<T> permissionRequired) where T : IPermission
         {
             if (permits.Any(p => p.Value == permissionRequired.Value && (p.Permissions & permissionRequired.Permissions) > 0))
             {

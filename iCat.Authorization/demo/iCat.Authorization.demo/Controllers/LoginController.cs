@@ -36,7 +36,7 @@ namespace iCat.Authorization.demo.Controllers
             {
                 new Claim(ClaimTypes.Name, "TestUser"),
                 new Claim("UserId", "TestId"),
-                _permitProvider.GeneratePermitClaim(UserProfilePermission.Add),
+                _permitProvider.GeneratePermitClaim(UserProfilePermission.Add | UserProfilePermission.ReadAllDetail),
                 _permitProvider.GeneratePermitClaim(DepartmentPermission.Delete),
             };
 

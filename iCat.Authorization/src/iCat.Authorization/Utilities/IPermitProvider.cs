@@ -37,9 +37,10 @@ namespace iCat.Authorization.Utilities
         /// <summary>
         /// Validate Permit
         /// </summary>
+        /// <typeparam name="T"></typeparam>
         /// <param name="permits"></param>
         /// <param name="permissionRequired"></param>
         /// <returns></returns>
-        bool Validate(IEnumerable<Permit> permits, Permit permissionRequired);
+        bool Validate<T>(IEnumerable<IPermit<T>> permits, IPermit<T> permissionRequired) where T : IPermission;
     }
 }
