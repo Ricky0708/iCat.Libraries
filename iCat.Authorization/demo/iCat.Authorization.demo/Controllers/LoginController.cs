@@ -32,8 +32,6 @@ namespace iCat.Authorization.demo.Controllers
         [HttpGet("[action]")]
         public IActionResult CookieLogin()
         {
-            var a = _permitProvider.GeneratePermitClaim(UserProfilePermission.Add);
-
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, "TestUser"),
