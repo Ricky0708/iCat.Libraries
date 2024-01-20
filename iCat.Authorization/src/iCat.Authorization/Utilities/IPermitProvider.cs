@@ -14,7 +14,7 @@ namespace iCat.Authorization.Utilities
     public interface IPermitProvider
     {
         /// <summary>
-        /// Get Permit
+        /// Get currently authenticated user permit
         /// </summary>
         /// <returns></returns>
         IEnumerable<Permit> GetPermit();
@@ -24,14 +24,31 @@ namespace iCat.Authorization.Utilities
         /// </summary>
         /// <param name="permission"></param>
         /// <returns></returns>
-        Claim GeneratePermitClaim(Permit permission);
+        Claim GeneratePermitClaim<T>(IPermit<T> permission) where T : IPermission;
+
+        /// <summary>
+        /// Generate permit claim
+        /// </summary>
+        /// <typeparam name="TPermission"></typeparam>
+        /// <param name="permission"></param>
+        /// <returns></returns>
+        Claim GeneratePermitClaim<TPermission>(TPermission permission) where TPermission : Enum;
+
+        /// <summary>
+        /// Generate permit claim
+        /// </summary>
+        /// <param name="permit"></param>
+        /// <param name="permission"></param>
+        /// <returns></returns>
+        Claim GeneratePermitClaim(int permit, int permission);
 
         /// <summary>
         /// Validate Permit
         /// </summary>
+        /// <typeparam name="T"></typeparam>
         /// <param name="permits"></param>
         /// <param name="permissionRequired"></param>
         /// <returns></returns>
-        bool Validate(IEnumerable<Permit> permits, Permit permissionRequired);
+        bool Validate<T>(IEnumerable<IPermit<T>> permits, IPermit<T> permissionRequired) where T : IPermission;
     }
 }

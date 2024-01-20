@@ -25,18 +25,7 @@ namespace iCat.Authorization.demo.Controllers
         [HttpGet]
         public IActionResult GetData()
         {
-            var claim = _permitProvider.GeneratePermitClaim(new Permit
-            {
-                Value = (int)PermitEnum.UserProfile,
-                PermissionsData = new List<Permission> { new Permission
-                {
-                    Value = (int)UserProfilePermission.Add,
-                }}
-            });
-
-            var permits = _permissionProvider.GetDefinitions();
-            var userPermits = _permitProvider.GetPermit();
-            return Ok(userPermits);
+            return Ok(_permitProvider.GetPermit());
         }
     }
 }

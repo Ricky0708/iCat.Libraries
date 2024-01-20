@@ -45,6 +45,15 @@ namespace iCat.Authorization.Utilities
             return _permitData;
         }
 
+        /// <inheritdoc/>
+        public Permit GetPermitFromPermission<T>(T permission) where T : Enum
+        {
+            var permit = GetPermitFromPermission(permission.GetType());
+            return permit;
+        }
+
+    
+
         #region private methods
 
         /// <summary>
@@ -64,9 +73,7 @@ namespace iCat.Authorization.Utilities
             else if (arg.ArgumentType.IsEnum)
             {
                 // Current arg belongs to the permit
-                var permit = _permitData.Any(p => p.Name == arg.ArgumentType.Name) ?
-                    _permitData.First(p => p.Name == arg.ArgumentType.Name)
-                    : throw new ArgumentException("Permissions is not in the permit list.");
+                var permit = GetPermitFromPermission(arg.ArgumentType);
 
                 // The permission list
                 var permissions = (IEnumerable<int>)Enum.GetValues(arg.ArgumentType);
@@ -106,6 +113,20 @@ namespace iCat.Authorization.Utilities
             {
                 throw new ArgumentException("Constructor parameter type is not an authorization permission type");
             }
+        }
+
+        /// <summary>
+        /// Get permit definition from permission type
+        /// </summary>
+        /// <param name="permissionType"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        private Permit GetPermitFromPermission(Type permissionType)
+        {
+            var permit = _permitData.Any(p => p.Name == permissionType.Name) ?
+                 _permitData.First(p => p.Name == permissionType.Name)
+                 : throw new ArgumentException("Permissions is not in the permit list.");
+            return permit;
         }
 
         /// <summary>
