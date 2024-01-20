@@ -25,7 +25,7 @@ namespace iCat.Authorization.Extensions
         /// <returns></returns>
         public static IServiceCollection AddAuthorizationPermission(this IServiceCollection services, Type permitEnum)
         {
-            services.AddSingleton<IAuthorizationHandler, AuthorizationPermissionsHandler>();
+            services.AddScoped<IAuthorizationHandler, AuthorizationPermissionsHandler>();
             services.AddSingleton<IPermissionProvider>(s => new DefaultPermissionProvider(permitEnum));
             services.AddSingleton<IPermitProvider, DefaultPermitProvider>();
             return services;
