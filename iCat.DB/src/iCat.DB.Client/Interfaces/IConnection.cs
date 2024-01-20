@@ -40,6 +40,11 @@ namespace iCat.DB.Client.Interfaces
         /// </summary>
         DbConnection Connection { get; }
 
+        /// <summary>
+        /// Transaction
+        /// </summary>
+        IDbTransaction? Transaction { get; }
+
         #endregion
 
         #region command executors
