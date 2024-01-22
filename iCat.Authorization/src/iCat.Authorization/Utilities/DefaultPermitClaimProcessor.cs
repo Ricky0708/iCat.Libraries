@@ -45,9 +45,9 @@ namespace iCat.Authorization.Utilities
         }
 
         /// <inheritdoc/>
-        public virtual IEnumerable<Permit> GetPermit()
+        public virtual IEnumerable<Permit> GetPermits()
         {
-            var userPermission = _httpContextAccessor?.HttpContext?.User.Claims.Where(p => p.Type == Constants.ClaimTypes.Permit).Select(p =>
+            var userPermits = _httpContextAccessor?.HttpContext?.User.Claims.Where(p => p.Type == Constants.ClaimTypes.Permit).Select(p =>
             {
                 var permission = p.Value.Split(",");
                 if (!int.TryParse(permission[0], out var permitValue)) throw new ArgumentException("Invalid Permit claims");
@@ -60,7 +60,7 @@ namespace iCat.Authorization.Utilities
                     PermissionsData = permit.PermissionsData.Where(x => (x.Value & permissionValue) > 0).ToList()
                 };
             }) ?? throw new ArgumentNullException(nameof(_httpContextAccessor));
-            return userPermission;
+            return userPermits;
         }
     }
 }

@@ -40,6 +40,6 @@ namespace iCat.Authorization.Utilities
         /// Get currently authenticated user permit
         /// </summary>
         /// <returns></returns>
-        IEnumerable<Permit> GetPermit();
+        IEnumerable<Permit> GetPermits();
     }
 }

@@ -51,7 +51,7 @@ namespace iCat.Authorization
             if (context.Resource is HttpContext httpContext)
             {
                 var routerPermissions = GetRouterPermissions(httpContext);
-                var userPermit = _permitClaimProcessor.GetPermit();
+                var userPermit = _permitClaimProcessor.GetPermits();
                 foreach (var routerPermission in routerPermissions)
                 {
                     if (_permissionProvider.Validate(userPermit, routerPermission))
