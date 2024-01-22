@@ -24,18 +24,18 @@ namespace iCat.Authorization
         private const string _endWith = "Permission";
         private static readonly ConcurrentDictionary<string, List<Permit>> _routePermissionCache = new();
         private readonly IPermissionProvider _permissionProvider;
-        private readonly IPermitProvider _permitProvider;
+        private readonly IPermitClaimProcessor _permitClaimProcessor;
 
         /// <summary>
         /// Authorize AuthorizationPermissionsRequirement
         /// </summary>
         /// <param name="permissionProvider"></param>
-        /// <param name="permitProvider"></param>
+        /// <param name="permitClaimProcessor"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public AuthorizationPermissionsHandler(IPermissionProvider permissionProvider, IPermitProvider permitProvider)
+        public AuthorizationPermissionsHandler(IPermissionProvider permissionProvider, IPermitClaimProcessor permitClaimProcessor)
         {
             _permissionProvider = permissionProvider ?? throw new ArgumentNullException(nameof(permissionProvider));
-            _permitProvider = permitProvider ?? throw new ArgumentNullException(nameof(permitProvider));
+            _permitClaimProcessor = permitClaimProcessor ?? throw new ArgumentNullException(nameof(permitClaimProcessor));
         }
 
         /// <summary>
@@ -51,10 +51,10 @@ namespace iCat.Authorization
             if (context.Resource is HttpContext httpContext)
             {
                 var routerPermissions = GetRouterPermissions(httpContext);
-                var userPermissions = _permitProvider.GetPermit();
+                var userPermit = _permitClaimProcessor.GetPermit();
                 foreach (var routerPermission in routerPermissions)
                 {
-                    if (_permitProvider.Validate(userPermissions, routerPermission))
+                    if (_permissionProvider.Validate(userPermit, routerPermission))
                     {
                         context.Succeed(requirement);
                         await Task.FromResult(0);

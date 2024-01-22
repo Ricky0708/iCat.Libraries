@@ -1,5 +1,4 @@
-﻿using iCat.Authorization.Constants;
-using iCat.Authorization.Models;
+﻿using iCat.Authorization.Models;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -11,13 +10,13 @@ using System.Threading.Tasks;
 namespace iCat.Authorization.Utilities
 {
     /// <inheritdoc/>
-    public class DefaultPermitProvider : IPermitProvider
+    public class DefaultPermitClaimProcessor : IPermitClaimProcessor
     {
         private readonly IHttpContextAccessor? _httpContextAccessor;
         private readonly IPermissionProvider _permissionProvider;
 
         /// <inheritdoc/>
-        public DefaultPermitProvider(IHttpContextAccessor? httpContextAccessor, IPermissionProvider permissionProvider)
+        public DefaultPermitClaimProcessor(IHttpContextAccessor? httpContextAccessor, IPermissionProvider permissionProvider)
         {
             _httpContextAccessor = httpContextAccessor;
             _permissionProvider = permissionProvider ?? throw new ArgumentNullException(nameof(permissionProvider));
@@ -26,7 +25,7 @@ namespace iCat.Authorization.Utilities
         /// <inheritdoc/>
         public Claim GeneratePermitClaim<T>(IPermit<T> permission) where T : IPermission
         {
-            var claim = new Claim(Constants.ClaimTypes.Permit, $"{permission.Value},{permission.Permissions}");
+            var claim = GeneratePermitClaim(permission.Value!.Value, permission.Permissions);
             return claim;
         }
 
@@ -34,19 +33,19 @@ namespace iCat.Authorization.Utilities
         public Claim GeneratePermitClaim<TPermission>(TPermission permission) where TPermission : Enum
         {
             var permit = _permissionProvider.GetPermitFromPermission(permission);
-            var claim = new Claim(Constants.ClaimTypes.Permit, $"{permit.Value},{(int)(object)permission}");
+            var claim = GeneratePermitClaim(permit.Value!.Value, (int)(object)permission);
             return claim;
         }
 
         /// <inheritdoc/>
-        public Claim GeneratePermitClaim(int permit, int permission)
+        public virtual Claim GeneratePermitClaim(int permit, int permission)
         {
             var claim = new Claim(Constants.ClaimTypes.Permit, $"{permit},{permission}");
             return claim;
         }
 
         /// <inheritdoc/>
-        public IEnumerable<Permit> GetPermit()
+        public virtual IEnumerable<Permit> GetPermit()
         {
             var userPermission = _httpContextAccessor?.HttpContext?.User.Claims.Where(p => p.Type == Constants.ClaimTypes.Permit).Select(p =>
             {
@@ -62,16 +61,6 @@ namespace iCat.Authorization.Utilities
                 };
             }) ?? throw new ArgumentNullException(nameof(_httpContextAccessor));
             return userPermission;
-        }
-
-        /// <inheritdoc/>
-        public bool Validate<T>(IEnumerable<IPermit<T>> permits, IPermit<T> permissionRequired) where T : IPermission
-        {
-            if (permits.Any(p => p.Value == permissionRequired.Value && (p.Permissions & permissionRequired.Permissions) > 0))
-            {
-                return true;
-            }
-            return false;
         }
     }
 }

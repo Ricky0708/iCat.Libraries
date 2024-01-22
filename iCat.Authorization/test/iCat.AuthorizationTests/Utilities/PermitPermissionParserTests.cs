@@ -195,10 +195,10 @@ namespace iCat.Authorization.Utilities.Tests
         {
             // arrange
             var permissionProvider = new DefaultPermissionProvider(typeof(Permit_Success));
-            var permitProvider = new DefaultPermitProvider(null, permissionProvider);
+            var claimGenerator = new DefaultPermitClaimProcessor(null, permissionProvider);
 
             // action
-            var result = permitProvider.GeneratePermitClaim(new Permit
+            var result = claimGenerator.GeneratePermitClaim(new Permit
             {
                 Name = "A",
                 Value = 1,
@@ -218,10 +218,10 @@ namespace iCat.Authorization.Utilities.Tests
         {
             // arrange
             var permissionProvider = new DefaultPermissionProvider(typeof(Permit_Success));
-            var permitProvider = new DefaultPermitProvider(null, permissionProvider);
+            var claimGenerator = new DefaultPermitClaimProcessor(null, permissionProvider);
 
             // action
-            var result = permitProvider.GeneratePermitClaim(OrderB.Read);
+            var result = claimGenerator.GeneratePermitClaim(OrderB.Read);
 
             // assert
             Assert.AreEqual(result.Type, Constants.ClaimTypes.Permit);
@@ -233,10 +233,10 @@ namespace iCat.Authorization.Utilities.Tests
         {
             // arrange
             var permissionProvider = new DefaultPermissionProvider(typeof(Permit_Success));
-            var permitProvider = new DefaultPermitProvider(null, permissionProvider);
+            var claimGenerator = new DefaultPermitClaimProcessor(null, permissionProvider);
 
             // action
-            var result = permitProvider.GeneratePermitClaim(2, 2);
+            var result = claimGenerator.GeneratePermitClaim(2, 2);
 
             // assert
             Assert.AreEqual(result.Type, Constants.ClaimTypes.Permit);

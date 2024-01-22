@@ -52,7 +52,16 @@ namespace iCat.Authorization.Utilities
             return permit;
         }
 
-    
+        /// <inheritdoc/>
+        public bool Validate<T>(IEnumerable<IPermit<T>> permits, IPermit<T> permissionRequired) where T : IPermission
+        {
+            if (permits.Any(p => p.Value == permissionRequired.Value && (p.Permissions & permissionRequired.Permissions) > 0))
+            {
+                return true;
+            }
+            return false;
+        }
+
 
         #region private methods
 
