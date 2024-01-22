@@ -118,7 +118,7 @@ Set the permission for the action through the `AuthorizationPermission` attribut
 
 ### Obtain current user permits, claims
 
-The `IPermitProvider` provides a method to obtain the logged in user's claim from the `Permit`. <br>
+The `IPermitClaimProcessor` provides a method to obtain the logged in user's claim from the `Permit`. <br>
 The `IPermissionProvider` provides all permits definition.
 
 
@@ -133,12 +133,12 @@ The `IPermissionProvider` provides all permits definition.
    [Route("[controller]")]
    public class TestController : ControllerBase
    {
-        private readonly IPermitProvider _permitProvider;
+        private readonly IPermitClaimProcessor _permitClaimProcessor;
         private readonly IPermissionProvider _permissionProvider;
 
-       public TestController(IPermitProvider permitProvider, IPermissionProvider permissionProvider)
+       public TestController(IPermitClaimProcessor permitClaimeProcessor, IPermissionProvider permissionProvider)
        {
-            _permitProvider = permitProvider ?? throw new ArgumentNullException(nameof(permitProvider));
+            _permitClaimProcessor = permitClaimeProcessor ?? throw new ArgumentNullException(nameof(permitProvider));
             _permissionProvider = permissionProvider ?? throw new ArgumentNullException(nameof(permissionProvider));
        }
        
@@ -148,7 +148,7 @@ The `IPermissionProvider` provides all permits definition.
        [HttpGet("[action]")]
        public IActionResult GetData()
        {
-            var claim = _permitProvider.GeneratePermitClaim(new Permit
+            var claim = _permitClaimProcessor.GeneratePermitClaim(new Permit
             {
                 Value = (int)PermitEnum.UserProfile,
                 PermissionsData = new List<Permission> { new Permission
@@ -158,7 +158,7 @@ The `IPermissionProvider` provides all permits definition.
             });
 
             var permits = _permissionProvider.GetDefinitions();
-            var userPermits = _permitProvider.GetPermit();
+            var userPermits = _permitClaimProcessor.GetPermit();
             return Ok(userPermits);
        }
    }
