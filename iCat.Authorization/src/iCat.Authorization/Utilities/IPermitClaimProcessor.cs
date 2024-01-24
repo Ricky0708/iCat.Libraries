@@ -1,24 +1,18 @@
-﻿using System;
+﻿using iCat.Authorization.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using iCat.Authorization.Models;
 
 namespace iCat.Authorization.Utilities
 {
     /// <summary>
-    /// Permit Provider
+    /// Claim Generator
     /// </summary>
-    public interface IPermitProvider
+    public interface IPermitClaimProcessor
     {
-        /// <summary>
-        /// Get currently authenticated user permit
-        /// </summary>
-        /// <returns></returns>
-        IEnumerable<Permit> GetPermit();
-
         /// <summary>
         /// Generate permit claim
         /// </summary>
@@ -43,12 +37,9 @@ namespace iCat.Authorization.Utilities
         Claim GeneratePermitClaim(int permit, int permission);
 
         /// <summary>
-        /// Validate Permit
+        /// Get currently authenticated user permit
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="permits"></param>
-        /// <param name="permissionRequired"></param>
         /// <returns></returns>
-        bool Validate<T>(IEnumerable<IPermit<T>> permits, IPermit<T> permissionRequired) where T : IPermission;
+        IEnumerable<Permit> GetPermits();
     }
 }

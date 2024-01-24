@@ -33,7 +33,7 @@ namespace iCat.Authorization.Providers.Tests
             var accessor = Substitute.For<IHttpContextAccessor>();
             accessor.HttpContext = hc;
             var permissionProvider = new DefaultPermissionProvider(typeof(Permit));
-            var permitProvider = new DefaultPermitProvider(accessor, permissionProvider);
+            var permitProvider = new DefaultPermitClaimProcessor(accessor, permissionProvider);
 
             var expeced = new List<Models.Permit> {
                 new() { Name = nameof(UserProfileQQ),
@@ -66,7 +66,7 @@ namespace iCat.Authorization.Providers.Tests
 
 
             // action
-            var result = permitProvider.GetPermit();
+            var result = permitProvider.GetPermits();
 
             // assert
             Assert.AreEqual(JsonSerializer.Serialize(expeced), JsonSerializer.Serialize(result));
@@ -97,7 +97,7 @@ namespace iCat.Authorization.Providers.Tests
             // arrange
             var accessor = Substitute.For<IHttpContextAccessor>();
             var permissionProvider = new DefaultPermissionProvider(typeof(Permit));
-            var permitProvider = new DefaultPermitProvider(accessor, permissionProvider);
+            var permitProvider = new DefaultPermitClaimProcessor(accessor, permissionProvider);
             var userPermission = new List<Models.Permit> {
                 new() {
                     Value = (int)permit,
@@ -111,7 +111,7 @@ namespace iCat.Authorization.Providers.Tests
             };
 
             // action
-            var result = permitProvider.Validate(userPermission, new Models.Permit
+            var result = permissionProvider.Validate(userPermission, new Models.Permit
             {
                 Value = (int)Permit.UserProfile,
                 PermissionsData = new List<Permission> {

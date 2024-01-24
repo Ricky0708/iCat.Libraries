@@ -27,7 +27,7 @@ namespace iCat.Authorization.Extensions
         {
             services.AddScoped<IAuthorizationHandler, AuthorizationPermissionsHandler>();
             services.AddSingleton<IPermissionProvider>(s => new DefaultPermissionProvider(permitEnum));
-            services.AddSingleton<IPermitProvider, DefaultPermitProvider>();
+            services.AddSingleton<IPermitClaimProcessor, DefaultPermitClaimProcessor>();
             return services;
         }
     }

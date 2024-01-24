@@ -18,14 +18,14 @@ namespace iCat.Authorization.demo.Controllers
     public class LoginController : ControllerBase
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IPermitProvider _permitProvider;
+        private readonly IPermitClaimProcessor _permitClaimProcessor;
 
         public LoginController(
             IHttpContextAccessor httpContextAccessor,
-            IPermitProvider permitProvider)
+            IPermitClaimProcessor permitClaimGenerator)
         {
             _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
-            _permitProvider = permitProvider ?? throw new ArgumentNullException(nameof(permitProvider));
+            _permitClaimProcessor = permitClaimGenerator ?? throw new ArgumentNullException(nameof(permitClaimGenerator));
         }
 
         [AllowAnonymous]
@@ -36,8 +36,8 @@ namespace iCat.Authorization.demo.Controllers
             {
                 new Claim(ClaimTypes.Name, "TestUser"),
                 new Claim("UserId", "TestId"),
-                _permitProvider.GeneratePermitClaim(UserProfilePermission.Add | UserProfilePermission.ReadAllDetail),
-                _permitProvider.GeneratePermitClaim(DepartmentPermission.Delete),
+                _permitClaimProcessor.GeneratePermitClaim(UserProfilePermission.Add | UserProfilePermission.ReadAllDetail),
+                _permitClaimProcessor.GeneratePermitClaim(DepartmentPermission.Delete),
             };
 
 
