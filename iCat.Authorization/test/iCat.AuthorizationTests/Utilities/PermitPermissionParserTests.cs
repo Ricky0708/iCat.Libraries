@@ -21,11 +21,11 @@ namespace iCat.Authorization.Utilities.Tests
         {
             // arrange
             var parser = new DefaultPermissionProvider(typeof(Permit_Success));
-            var validationData = new List<Permit> {
+            var validationData = new List<PermitTest> {
                 new() {
                     Name = nameof(UserProfileA),
                     Value = 1,
-                    PermissionsData = new List<Permission> {
+                    PermissionsData = new List<PermissionTest> {
                         new() { Name = "Add", Value = 1 },
                         new() { Name = "Edit", Value = 2 },
                         new() { Name = "Read", Value = 4 },
@@ -34,7 +34,7 @@ namespace iCat.Authorization.Utilities.Tests
                 new() {
                     Name = nameof(OrderB),
                     Value = 2,
-                    PermissionsData = new List<Permission> {
+                    PermissionsData = new List<PermissionTest> {
                         new() { Name = "Add", Value = 1 },
                         new() { Name = "Read", Value = 2 },
                         new() { Name = "Edit", Value = 4 },
@@ -43,7 +43,7 @@ namespace iCat.Authorization.Utilities.Tests
                 new() {
                     Name = nameof(DepartmentC),
                     Value = 3,
-                    PermissionsData = new List<Permission> {
+                    PermissionsData = new List<PermissionTest> {
                         new() { Name = "Add", Value = 1 },
                         new() { Name = "Edit", Value = 2 },
                         new() { Name = "Read", Value = 4 },
@@ -63,11 +63,11 @@ namespace iCat.Authorization.Utilities.Tests
         {
             // arrange
             var parser = new DefaultPermissionProvider(typeof(Permit_Fail));
-            var validationData = new List<Permit> {
+            var validationData = new List<PermitTest> {
                 new() {
                     Name = nameof(UserProfileA),
                     Value = 1,
-                    PermissionsData = new List<Permission> {
+                    PermissionsData = new List<PermissionTest> {
                         new() { Name = "Add", Value = 1 },
                         new() { Name = "Edit", Value = 2 },
                         new() { Name = "Read", Value = 4 },
@@ -76,7 +76,7 @@ namespace iCat.Authorization.Utilities.Tests
                 new() {
                     Name = nameof(DepartmentC),
                     Value = 3,
-                    PermissionsData = new List<Permission> {
+                    PermissionsData = new List<PermissionTest> {
                         new() { Name = "Add", Value = 1 },
                         new() { Name = "Edit", Value = 2 },
                         new() { Name = "Read", Value = 4 },
@@ -96,11 +96,11 @@ namespace iCat.Authorization.Utilities.Tests
         {
             // arrange
             var provider = new DefaultPermissionProvider(typeof(Permit_Fail));
-            var validationData = new List<Permit> {
+            var validationData = new List<PermitTest> {
                 new() {
                     Name = nameof(UserProfileA),
                     Value = 1,
-                    PermissionsData = new List<Permission> {
+                    PermissionsData = new List<PermissionTest> {
                         new() { Name = "Add", Value = 1 },
                         new() { Name = "Edit", Value = 2 },
                         new() { Name = "Read", Value = 4 },
@@ -109,7 +109,7 @@ namespace iCat.Authorization.Utilities.Tests
                 new() {
                     Name = nameof(DepartmentC),
                     Value = 3,
-                    PermissionsData = new List<Permission> {
+                    PermissionsData = new List<PermissionTest> {
                         new() { Name = "Add", Value = 1 },
                         new() { Name = "Edit", Value = 2 },
                         new() { Name = "Read", Value = 4 },
@@ -131,11 +131,11 @@ namespace iCat.Authorization.Utilities.Tests
             var parser = new DefaultPermissionProvider(typeof(Permit_Success));
             var method = typeof(PermitPermissionParserTests).GetMethod(nameof(TestAttributeMethod), BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
 
-            var validationData = new List<Permit> {
+            var validationData = new List<PermitTest> {
                 new() {
                     Name = nameof(UserProfileA),
                     Value = 1,
-                    PermissionsData = new List<Permission> {
+                    PermissionsData = new List<PermissionTest> {
                         new() { Name = "Add", Value = 1 },
                         new() { Name = "Read", Value = 4 },
                         new() { Name = "Edit", Value = 2 },
@@ -144,7 +144,7 @@ namespace iCat.Authorization.Utilities.Tests
                 new() {
                     Name = nameof(OrderB),
                     Value = 2,
-                    PermissionsData = new List<Permission> {
+                    PermissionsData = new List<PermissionTest> {
                         new() { Name = "Edit", Value = 4 },
                         new() { Name = "Delete", Value = 8 },
                 }},
@@ -164,11 +164,11 @@ namespace iCat.Authorization.Utilities.Tests
             var parser = new DefaultPermissionProvider(typeof(Permit_Success));
             var method = typeof(PermitPermissionParserTests).GetMethod(nameof(TestAttributeMethod), BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
 
-            var validationData = new List<Permit> {
+            var validationData = new List<PermitTest> {
                 new() {
                     Name = nameof(UserProfileA),
                     Value = 1,
-                    PermissionsData = new List<Permission> {
+                    PermissionsData = new List<PermissionTest> {
                         new() { Name = "Add", Value = 1 },
                         new() { Name = "Read", Value = 4 },
                         new() { Name = "Edit", Value = 2 },
@@ -177,7 +177,7 @@ namespace iCat.Authorization.Utilities.Tests
                 new() {
                     Name = nameof(OrderB),
                     Value = 2,
-                    PermissionsData = new List<Permission> {
+                    PermissionsData = new List<PermissionTest> {
                         new() { Name = "Edit", Value = 4 },
                         new() { Name = "Delete", Value = 8 },
                 }},
@@ -198,11 +198,11 @@ namespace iCat.Authorization.Utilities.Tests
             var claimGenerator = new DefaultPermitClaimProcessor(null, permissionProvider);
 
             // action
-            var result = claimGenerator.GeneratePermitClaim(new Permit
+            var result = claimGenerator.GeneratePermitClaim(new PermitTest
             {
                 Name = "A",
                 Value = 1,
-                PermissionsData = new List<Permission>
+                PermissionsData = new List<PermissionTest>
                 {
                     new() { Name = "Add", Value = 1}
                 }
@@ -256,6 +256,49 @@ namespace iCat.Authorization.Utilities.Tests
 
     }
 
+    #region test data
+
+    /// <summary>
+    /// Permit - Permission information
+    /// </summary>
+    public class PermitTest : IPermit<PermissionTest>
+    {
+        /// <summary>
+        /// Permit name
+        /// </summary>
+        public string? Name { get; set; }
+
+        /// <summary>
+        /// Permit value
+        /// </summary>
+        public int? Value { get; set; }
+
+        /// <summary>
+        /// permission detail
+        /// </summary>
+        public List<PermissionTest> PermissionsData { get; set; } = new List<PermissionTest>();
+
+        /// <summary>
+        /// Permissions
+        /// </summary>
+        public int Permissions => PermissionsData?.Sum(p => p.Value) ?? 0;
+    }
+
+    /// <summary>
+    /// Permission detail
+    /// </summary>
+    public class PermissionTest : IPermission
+    {
+        /// <summary>
+        /// Permission name
+        /// </summary>
+        public string? Name { get; set; }
+
+        /// <summary>
+        /// Permission
+        /// </summary>
+        public int Value { get; set; }
+    }
 
     public enum Permit_Success
     {
@@ -301,4 +344,7 @@ namespace iCat.Authorization.Utilities.Tests
         Read = 4,
         Delete = 8
     }
+
+    #endregion
+
 }

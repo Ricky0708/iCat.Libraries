@@ -13,12 +13,12 @@
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<RepositoryUrl>https://github.com/Ricky0708/iCat.Libraries/tree/main/iCat.Authorization</RepositoryUrl>
 		<PackageTags>Authorization</PackageTags>
-		<PackageReleaseNotes>Version 1.3.4</PackageReleaseNotes>
+		<PackageReleaseNotes>Version 1.3.5</PackageReleaseNotes>
 		<PackAsTool>False</PackAsTool>
 		<NeutralLanguage>zh-TW</NeutralLanguage>
-		<AssemblyVersion>1.3.4</AssemblyVersion>
-		<FileVersion>1.3.4</FileVersion>
-		<Version>1.3.4</Version>
+		<AssemblyVersion>1.3.5</AssemblyVersion>
+		<FileVersion>1.3.5</FileVersion>
+		<Version>1.3.5</Version>
 		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
 	</PropertyGroup>
 	<ItemGroup>
