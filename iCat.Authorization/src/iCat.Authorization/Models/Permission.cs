@@ -14,7 +14,7 @@ namespace iCat.Authorization.Models
         /// <summary>
         /// Permission
         /// </summary>
-        int Value { get; set; }
+        int Value { get; }
     }
 
     /// <summary>
@@ -25,11 +25,11 @@ namespace iCat.Authorization.Models
         /// <summary>
         /// Permission name
         /// </summary>
-        public string? Name { get; set; }
+        public string? Name { get; internal set; }
 
         /// <summary>
         /// Permission
         /// </summary>
-        public int Value { get; set; }
+        public int Value { get; internal set; }
     }
 }

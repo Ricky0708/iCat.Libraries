@@ -15,12 +15,12 @@ namespace iCat.Authorization.Models
         /// <summary>
         /// Permit value
         /// </summary>
-        int? Value { get; set; }
+        int? Value { get; }
 
         /// <summary>
         /// permission detail
         /// </summary>
-        List<T> PermissionsData { get; set; }
+        List<T> PermissionsData { get; }
 
         /// <summary>
         /// Permissions
@@ -36,17 +36,17 @@ namespace iCat.Authorization.Models
         /// <summary>
         /// Permit name
         /// </summary>
-        public string? Name { get; set; }
+        public string? Name { get; internal set; }
 
         /// <summary>
         /// Permit value
         /// </summary>
-        public int? Value { get; set; }
+        public int? Value { get; internal set; }
 
         /// <summary>
         /// permission detail
         /// </summary>
-        public List<Permission> PermissionsData { get; set; } = new List<Permission>();
+        public List<Permission> PermissionsData { get; internal set; } = new List<Permission>();
 
         /// <summary>
         /// Permissions

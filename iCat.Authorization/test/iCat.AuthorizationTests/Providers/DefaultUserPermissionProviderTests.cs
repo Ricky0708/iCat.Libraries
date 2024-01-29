@@ -35,10 +35,10 @@ namespace iCat.Authorization.Providers.Tests
             var permissionProvider = new DefaultPermissionProvider(typeof(Permit));
             var permitProvider = new DefaultPermitClaimProcessor(accessor, permissionProvider);
 
-            var expeced = new List<Models.Permit> {
+            var expeced = new List<PermitTest> {
                 new() { Name = nameof(UserProfileQQ),
                     Value = 1,
-                    PermissionsData = new List<Permission> {
+                    PermissionsData = new List<PermissionTest> {
                         new() {
                             Name = "Add",
                             Value = 1,
@@ -51,7 +51,7 @@ namespace iCat.Authorization.Providers.Tests
                 },
                 new() { Name = nameof(OrderPe),
                     Value = 2,
-                    PermissionsData = new List<Permission> {
+                    PermissionsData = new List<PermissionTest> {
                         new(){
                             Name = "Add",
                             Value = 1,
@@ -98,10 +98,10 @@ namespace iCat.Authorization.Providers.Tests
             var accessor = Substitute.For<IHttpContextAccessor>();
             var permissionProvider = new DefaultPermissionProvider(typeof(Permit));
             var permitProvider = new DefaultPermitClaimProcessor(accessor, permissionProvider);
-            var userPermission = new List<Models.Permit> {
+            var userPermission = new List<PermitTest> {
                 new() {
                     Value = (int)permit,
-                    PermissionsData = new List<Permission>
+                    PermissionsData = new List<PermissionTest>
                     {
                         new(){
                             Value = (int)permission
@@ -111,10 +111,10 @@ namespace iCat.Authorization.Providers.Tests
             };
 
             // action
-            var result = permissionProvider.Validate(userPermission, new Models.Permit
+            var result = permissionProvider.Validate(userPermission, new PermitTest
             {
                 Value = (int)Permit.UserProfile,
-                PermissionsData = new List<Permission> {
+                PermissionsData = new List<PermissionTest> {
                     new(){
                         Value = (int)UserProfileQQ.Add,
                     },
@@ -128,6 +128,51 @@ namespace iCat.Authorization.Providers.Tests
 
             Assert.AreEqual(expected, result);
         }
+    }
+
+
+    #region test data
+
+    /// <summary>
+    /// Permit - Permission information
+    /// </summary>
+    public class PermitTest : IPermit<PermissionTest>
+    {
+        /// <summary>
+        /// Permit name
+        /// </summary>
+        public string? Name { get; set; }
+
+        /// <summary>
+        /// Permit value
+        /// </summary>
+        public int? Value { get; set; }
+
+        /// <summary>
+        /// permission detail
+        /// </summary>
+        public List<PermissionTest> PermissionsData { get; set; } = new List<PermissionTest>();
+
+        /// <summary>
+        /// Permissions
+        /// </summary>
+        public int Permissions => PermissionsData?.Sum(p => p.Value) ?? 0;
+    }
+
+    /// <summary>
+    /// Permission detail
+    /// </summary>
+    public class PermissionTest : IPermission
+    {
+        /// <summary>
+        /// Permission name
+        /// </summary>
+        public string? Name { get; set; }
+
+        /// <summary>
+        /// Permission
+        /// </summary>
+        public int Value { get; set; }
     }
 
     public enum Permit_Duplicate
@@ -176,4 +221,7 @@ namespace iCat.Authorization.Providers.Tests
         Read = 4,
         Delete = 8
     }
+
+    #endregion
+
 }
