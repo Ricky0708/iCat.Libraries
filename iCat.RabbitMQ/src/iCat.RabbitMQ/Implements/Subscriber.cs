@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 
 namespace iCat.RabbitMQ.Implements
 {
+        /// <inheritdoc/>
     public class Subscriber : ISubscriber
     {
         private readonly IConnection _connection;
@@ -24,8 +25,10 @@ namespace iCat.RabbitMQ.Implements
         private readonly ConcurrentDictionary<string, IModel> _models;
         private readonly ConcurrentDictionary<string, string> _consumeTags;
 
+        /// <inheritdoc/>
         public string Category => _category;
 
+        /// <inheritdoc/>
         public Subscriber(IConnection connection, string category, string prefix)
         {
             this._connection = connection ?? throw new ArgumentNullException(nameof(connection));
@@ -37,35 +40,52 @@ namespace iCat.RabbitMQ.Implements
 
         #region public methods
 
-        /// <summary>
         /// <inheritdoc/>
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="queueName"></param>
-        /// <param name="isAutoDeleteQueue"></param>
-        /// <param name="processReceived"></param>
-        /// <returns></returns>
         public IModel Subscribe<T>(string queueName, bool isAutoDeleteQueue, Action<T> processReceived)
         {
-            return SubscribeCore<T>(queueName, isAutoDeleteQueue, true, (channel, lambda, ea) =>
+            var exchangeName = GetExchangeName(typeof(T));
+            var lambda = BuildDelg<T>();
+            return SubscribeCore(exchangeName, queueName, isAutoDeleteQueue, true, (channel, ea) =>
             {
                 processReceived(lambda.Invoke(Encoding.UTF8.GetString(ea.Body.ToArray())));
             });
         }
 
-        /// <summary>
         /// <inheritdoc/>
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="queueName"></param>
-        /// <param name="isAutoDeleteQueue"></param>
-        /// <param name="processReceived"></param>
-        /// <returns></returns>
         public IModel Subscribe<T>(string queueName, bool isAutoDeleteQueue, Func<T, bool> processReceived)
         {
-            return SubscribeCore<T>(queueName, isAutoDeleteQueue, false, (channel, lambda, ea) =>
+            var exchangeName = GetExchangeName(typeof(T));
+            var lambda = BuildDelg<T>();
+            return SubscribeCore(exchangeName, queueName, isAutoDeleteQueue, false, (channel, ea) =>
             {
                 if (processReceived(lambda.Invoke(Encoding.UTF8.GetString(ea.Body.ToArray()))))
+                {
+                    channel.BasicAck(ea.DeliveryTag, false);
+                }
+                else
+                {
+                    channel.BasicNack(ea.DeliveryTag, false, true);
+                };
+            });
+        }
+
+        /// <inheritdoc/>
+        public IModel SubscribeToString<T>(string queueName, bool isAutoDeleteQueue, Action<string> processReceived)
+        {
+            var exchangeName = GetExchangeName(typeof(T));
+            return SubscribeCore(exchangeName, queueName, isAutoDeleteQueue, true, (channel, ea) =>
+            {
+                processReceived(Encoding.UTF8.GetString(ea.Body.ToArray()));
+            });
+        }
+
+        /// <inheritdoc/>
+        public IModel SubscribeToString<T>(string queueName, bool isAutoDeleteQueue, Func<string, bool> processReceived)
+        {
+            var exchangeName = GetExchangeName(typeof(T));
+            return SubscribeCore(exchangeName, queueName, isAutoDeleteQueue, false, (channel, ea) =>
+            {
+                if (processReceived(Encoding.UTF8.GetString(ea.Body.ToArray())))
                 {
                     channel.BasicAck(ea.DeliveryTag, false);
                 }
@@ -80,9 +100,8 @@ namespace iCat.RabbitMQ.Implements
 
         #region private methods
 
-        private IModel SubscribeCore<T>(string queueName, bool isAutoDeleteQueue, bool isAutoAck, Action<IModel, delgExecuter<T>, BasicDeliverEventArgs> processReceived)
+        private IModel SubscribeCore(string exchangeName, string queueName, bool isAutoDeleteQueue, bool isAutoAck, Action<IModel, BasicDeliverEventArgs> processReceived)
         {
-            var exchangeName = GetExchangeName<T>();
             var exchangeFullName = $"{_prefix}.{exchangeName}";
             var queueFullName = $"{_prefix}.{exchangeName}.{queueName}";
             if (!_models.TryGetValue(queueFullName, out var channel))
@@ -90,14 +109,11 @@ namespace iCat.RabbitMQ.Implements
                 // define and create MQ
                 channel = DeclareChannelAndQueInfo(_connection, queueFullName, isAutoDeleteQueue, exchangeFullName);
 
-                // create delegate
-                var lambda = BuildDelg<T>(typeof(T));
-
                 // subsribe
                 var consumer = new EventingBasicConsumer(channel);
                 consumer.Received += (model, ea) =>
                 {
-                    processReceived(channel, lambda, ea);
+                    processReceived(channel, ea);
                 };
                 var tag = channel.BasicConsume(queue: queueFullName,
                                      autoAck: isAutoAck,
@@ -108,21 +124,21 @@ namespace iCat.RabbitMQ.Implements
                 return channel;
 
             }
-            throw new Exception($"{typeof(T).Name} has been subscribed");
+            throw new Exception($"{queueFullName} has been subscribed");
         }
 
-        private static string GetExchangeName<T>()
+        private static string GetExchangeName(Type type)
         {
             var exchangeName = default(string);
-            if (typeof(T).IsArray ||
-                   typeof(T).IsGenericType && typeof(T).GetGenericTypeDefinition() == typeof(IEnumerable<>) ||
-                   typeof(T).IsGenericType && typeof(T).GetGenericTypeDefinition() == typeof(List<>))
+            if (type.IsArray ||
+                   type.IsGenericType && type.GetGenericTypeDefinition() == typeof(IEnumerable<>) ||
+                   type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
             {
-                exchangeName = typeof(T).GetGenericArguments().First().CustomAttributes.First(p => p.AttributeType == typeof(ExchangeAttribute)).ConstructorArguments[0].Value as string;
+                exchangeName = type.GetGenericArguments().First().CustomAttributes.First(p => p.AttributeType == typeof(ExchangeAttribute)).ConstructorArguments[0].Value as string;
             }
             else
             {
-                exchangeName = typeof(T).CustomAttributes.First(p => p.AttributeType == typeof(ExchangeAttribute)).ConstructorArguments[0].Value as string;
+                exchangeName = type.CustomAttributes.First(p => p.AttributeType == typeof(ExchangeAttribute)).ConstructorArguments[0].Value as string;
             }
             return exchangeName!;
         }
@@ -130,9 +146,9 @@ namespace iCat.RabbitMQ.Implements
         /// <summary>
         /// dynamic build Expression (instance, target) => instance./MethodName/.Invoke(Deserialize(target, Convert(null, JsonSerializerOptions)))
         /// </summary>
-        /// <param name="exchangeMethod"></param>
+        /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        private static delgExecuter<T> BuildDelg<T>(Type type)
+        private static delgExecuter<T> BuildDelg<T>()
         {
             // 定義 target 的型別
             var targetExpr = Expression.Parameter(typeof(string), "target");
