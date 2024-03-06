@@ -297,11 +297,11 @@ namespace iCat.Localization.Implements
             {
                 foreach (var chr in str)
                 {
-                    if (chr == '{')
+                    if (chr == _options.KeywordPrefix)
                     {
                         start = true;
                     }
-                    else if (chr == '}')
+                    else if (chr == _options.KeywordSuffix)
                     {
                         if (isParam)
                         {
