@@ -309,7 +309,24 @@ namespace iCat.Localization.Implements
                         }
                         else
                         {
-                            sb.Append(Parser(_langCache[lang][key.ToString()], lang, paramModel));
+                            try
+                            {
+                                sb.Append(Parser(_langCache[lang][key.ToString()], lang, paramModel));
+                            }
+                            catch (KeyNotFoundException kex)
+                            {
+                                //var ex = new KeyNotFoundException(kex.Message, new KeyNotFoundException($"{key.ToString()}{(kex.InnerException == null ? null : "→" + kex.InnerException.Message)}"));
+                                if (_options.EnableKeyNotFoundException)
+                                {
+                                    var ex = new KeyNotFoundException($"{key.ToString()}{(kex.InnerException == null ? null : "→" + kex.Message)}", kex);
+                                    throw ex;
+                                }
+                                else
+                                {
+                                    sb.Append($"{_options.KeywordPrefix}{key.ToString()}{_options.KeywordSuffix}");
+                                }
+
+                            }
                         }
                         key.Clear();
                         start = false;
@@ -332,20 +349,6 @@ namespace iCat.Localization.Implements
                     }
 
                 }
-            }
-            catch (KeyNotFoundException kex)
-            {
-                //var ex = new KeyNotFoundException(kex.Message, new KeyNotFoundException($"{key.ToString()}{(kex.InnerException == null ? null : "→" + kex.InnerException.Message)}"));
-                if (_options.EnableKeyNotFoundException)
-                {
-                    var ex = new KeyNotFoundException($"{key.ToString()}{(kex.InnerException == null ? null : "→" + kex.Message)}", kex);
-                    throw ex;
-                }
-                else
-                {
-                    return str;
-                }
-
             }
             catch (Exception)
             {
