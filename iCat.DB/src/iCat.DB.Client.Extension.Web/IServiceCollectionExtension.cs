@@ -74,7 +74,9 @@ namespace iCat.DB.Client.Extension.Web
         /// <returns></returns>
         public static IServiceCollection AddDBFactory(this IServiceCollection services, params Expression<Func<DBClient>>[] dbClients)
         {
+#pragma warning disable CS0618 // Type or member is obsolete
             return services.AddDBClientFactory(dbClients);
+#pragma warning restore CS0618 // Type or member is obsolete
 
         }
 
@@ -87,7 +89,9 @@ namespace iCat.DB.Client.Extension.Web
         /// <returns></returns>
         public static IServiceCollection AddDBFactory(this IServiceCollection services, Func<IServiceProvider, Expression<Func<DBClient>>[]> dbClients)
         {
+#pragma warning disable CS0618 // Type or member is obsolete
             return services.AddDBClientFactory(dbClients);
+#pragma warning restore CS0618 // Type or member is obsolete
 
         }
 
@@ -100,7 +104,9 @@ namespace iCat.DB.Client.Extension.Web
         /// <returns></returns>
         public static IServiceCollection AddDBFactory(this IServiceCollection services, Func<IServiceProvider, IDBClientProvider> implementationDBClientProvider)
         {
+#pragma warning disable CS0618 // Type or member is obsolete
             return services.AddDBClientFactory(implementationDBClientProvider);
+#pragma warning restore CS0618 // Type or member is obsolete
 
         }
 

@@ -11,7 +11,9 @@ namespace iCat.DB.Client.Factory.Implements
     /// <summary>
     /// DBClient factory
     /// </summary>
+#pragma warning disable CS0618 // Type or member is obsolete
     public class DBClientFactory : IDBClientFactory
+#pragma warning restore CS0618 // Type or member is obsolete
     {
         private readonly IDBClientProvider _provider;
         private readonly Dictionary<string, DBClient> _dbClients = new Dictionary<string, DBClient>();
