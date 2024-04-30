@@ -108,7 +108,7 @@ namespace iCat.DB.Client.Extension.Web.Tests
             // arrange
             var service = WebApplication.CreateBuilder().Services;
             var dbConnection = Substitute.For<DbConnection>();
-            service.AddDBClientFactory(
+            service.AddDBFactory(
                    () => new DBClient("A", dbConnection),
                    () => new DBClient("B", dbConnection)
                );
@@ -131,7 +131,7 @@ namespace iCat.DB.Client.Extension.Web.Tests
             // arrange
             var service = WebApplication.CreateBuilder().Services;
             var dbConnection = Substitute.For<DbConnection>();
-            service.AddDBClientFactory(
+            service.AddDBFactory(
                    () => new DBClient("A", dbConnection),
                    () => new DBClient("A", dbConnection)
                );
@@ -155,7 +155,7 @@ namespace iCat.DB.Client.Extension.Web.Tests
             Func<IServiceProvider, Expression<Func<DBClient>>[]> func = (s) => new[] { expr };
 
             // action
-            service.AddDBClientFactory(func);
+            service.AddDBFactory(func!);
 
             // assert
             var n = service.BuildServiceProvider().GetService<IDBClientFactory>();

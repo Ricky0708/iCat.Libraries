@@ -34,6 +34,12 @@ namespace iCat.Localization.Implements
         private readonly IStringLocalizationDataProvider _localizationDataProvider;
         private readonly Options _options;
 
+        /// <summary>
+        /// Set provider and notify update
+        /// </summary>
+        /// <param name="localizationDataProvider"></param>
+        /// <param name="options"></param>
+        /// <exception cref="ArgumentNullException"></exception>
         public StringLocalizer(IStringLocalizationDataProvider localizationDataProvider, Options? options = null)
         {
             _localizationDataProvider = localizationDataProvider ?? throw new ArgumentNullException(nameof(localizationDataProvider));

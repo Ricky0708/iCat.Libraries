@@ -10,11 +10,19 @@ using System.Threading.Tasks;
 
 namespace iCat.Localization.Extensions
 {
+    /// <summary>
+    /// LocalizationString extension
+    /// </summary>
     public static class iCatLocalizationStringExtension
     {
 
         private static Interfaces.IStringLocalizerFactory? _factory;
 
+        /// <summary>
+        /// set factory
+        /// </summary>
+        /// <param name="stringLocalizerFactory"></param>
+        /// <exception cref="ArgumentNullException"></exception>
         public static void SetLocalizationFactory(Interfaces.IStringLocalizerFactory stringLocalizerFactory)
         {
             _factory = stringLocalizerFactory ?? throw new ArgumentNullException(nameof(stringLocalizerFactory));

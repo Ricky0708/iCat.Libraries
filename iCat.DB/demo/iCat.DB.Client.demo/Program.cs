@@ -13,7 +13,7 @@ namespace iCat.DB.Client.demo
             // Add services to the container.
             var services = builder.Services;
             services
-                .AddDBClientFactory(
+                .AddDBFactory(
                     () => new DBClient(new DBClientInfo("MainDB", new SqlConnection("server=192.168.1.3\\SQL2019;user id=sa;password= P@ssw0rd;initial catalog=iNoty;TrustServerCertificate=true"))),
                     () => new DBClient(new DBClientInfo("Company", new SqlConnection("server=192.168.1.3\\SQL2019;user id=sa;password= P@ssw0rd;initial catalog=iNoty;TrustServerCertificate=true")))
                 );

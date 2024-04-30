@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace iCat.Localization.Interfaces
 {
+    /// <summary>
+    /// Localization Data Provider
+    /// </summary>
     public interface IStringLocalizationDataProvider
     {
         /// <summary>

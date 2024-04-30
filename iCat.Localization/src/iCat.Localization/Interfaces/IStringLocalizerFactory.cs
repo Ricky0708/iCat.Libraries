@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace iCat.Localization.Interfaces
 {
+    /// <summary>
+    /// Localizer Factory
+    /// </summary>
     public interface IStringLocalizerFactory : Microsoft.Extensions.Localization.IStringLocalizerFactory
     {
         /// <summary>
