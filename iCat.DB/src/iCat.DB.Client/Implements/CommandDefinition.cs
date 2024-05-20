@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.Common;
+using System.Threading;
 
 namespace iCat.DB.Client.Implements
 {

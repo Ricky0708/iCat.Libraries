@@ -9,23 +9,25 @@ namespace iCat.Cache.demo.Controllers
     [Route("[controller]")]
     public class DemoController : ControllerBase
     {
-        private readonly IDBClientFactory _factory;
+        private readonly IConnectionFactory _connectionFactory;
+        private readonly IUnitOfWorkFactory _unitOfWorkFactory;
 
-        public DemoController(IDBClientFactory factory)
+        public DemoController(IConnectionFactory connectionFactory, IUnitOfWorkFactory unitOfWorkFactory)
         {
-            _factory = factory ?? throw new ArgumentNullException(nameof(factory));
+            _connectionFactory = connectionFactory ?? throw new ArgumentNullException(nameof(connectionFactory));
+            _unitOfWorkFactory = unitOfWorkFactory ?? throw new ArgumentNullException(nameof(unitOfWorkFactory));
         }
 
         [HttpGet]
         public IActionResult Get()
         {
-            using (var unitOfWork = _factory.GetUnitOfWork("MainDB"))
+            using (var unitOfWork = _unitOfWorkFactory.GetUnitOfWork("MainDB"))
             {
                 try
                 {
                     unitOfWork.Open();
                     unitOfWork.BeginTransaction();
-                    var connection = _factory.GetConnection("MainDB");
+                    var connection = _connectionFactory.GetConnection("MainDB");
 
                     foreach (var dr in connection.ExecuteReader("SELECT * FROM UnsbscribeMember", new DbParameter[] { }))
                     {

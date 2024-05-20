@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
-		<ImplicitUsings>enable</ImplicitUsings>
+		<TargetFrameworks>netcoreapp3.1;net6.0;net7.0;net8.0</TargetFrameworks>
+		<ImplicitUsings>disable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 		<GeneratePackageOnBuild>False</GeneratePackageOnBuild>
@@ -13,12 +13,12 @@
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<RepositoryUrl>https://github.com/Ricky0708/iCat.Libraries/tree/main/iCat.DB</RepositoryUrl>
 		<PackageTags>UnitOfWork, DB Client</PackageTags>
-		<PackageReleaseNotes>Version 1.1.5</PackageReleaseNotes>
+		<PackageReleaseNotes>Version 1.2.5</PackageReleaseNotes>
 		<PackAsTool>False</PackAsTool>
 		<NeutralLanguage>zh-TW</NeutralLanguage>
-		<AssemblyVersion>1.1.5</AssemblyVersion>
-		<FileVersion>1.1.5</FileVersion>
-		<Version>1.1.5</Version>
+		<AssemblyVersion>1.3.5</AssemblyVersion>
+		<FileVersion>1.3.5</FileVersion>
+		<Version>1.3.5-alpha</Version>
 		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
 	</PropertyGroup>
 	<ItemGroup>

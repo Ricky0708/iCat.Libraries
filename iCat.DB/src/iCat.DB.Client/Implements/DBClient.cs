@@ -7,8 +7,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
-using System.Runtime.InteropServices.ObjectiveC;
-using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using static iCat.DB.Client.Constants.ExecuteCommand;

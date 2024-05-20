@@ -13,12 +13,17 @@ using iCat.Localization.Models;
 
 namespace iCat.Localization.Extensions
 {
+    /// <summary>
+    /// Extension
+    /// </summary>
     public static class IServiceCollectionExtension
     {
         /// <summary>
         /// Register language services
         /// </summary>
         /// <param name="services"></param>
+        /// <param name="localizationMappings"></param>
+        /// <param name="options"></param>
         /// <returns></returns>
         public static IServiceCollection AddiCatLocalizationeService(this IServiceCollection services, IEnumerable<LocalizationMapping> localizationMappings, Options? options = null)
         {
@@ -35,6 +40,8 @@ namespace iCat.Localization.Extensions
         /// Register language services
         /// </summary>
         /// <param name="services"></param>
+        /// <param name="iCatLocalizationDataProvider"></param>
+        /// <param name="options"></param>
         /// <returns></returns>
         public static IServiceCollection AddiCatLocalizationeService(this IServiceCollection services, IStringLocalizationDataProvider iCatLocalizationDataProvider, Options? options = null)
         {

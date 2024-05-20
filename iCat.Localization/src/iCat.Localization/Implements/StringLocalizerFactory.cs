@@ -10,10 +10,18 @@ using System.Threading.Tasks;
 
 namespace iCat.Localization.Implements
 {
+    /// <summary>
+    /// StringLocalizerFactory
+    /// </summary>
     public class StringLocalizerFactory : Interfaces.IStringLocalizerFactory
     {
         private readonly Interfaces.IStringLocalizer _processor;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="processor"></param>
+        /// <exception cref="ArgumentNullException"></exception>
         public StringLocalizerFactory(Interfaces.IStringLocalizer processor)
         {
             _processor = processor ?? throw new ArgumentNullException(nameof(processor));

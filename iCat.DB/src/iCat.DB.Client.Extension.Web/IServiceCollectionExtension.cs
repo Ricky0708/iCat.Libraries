@@ -72,9 +72,57 @@ namespace iCat.DB.Client.Extension.Web
         /// <param name="services"></param>
         /// <param name="dbClients"></param>
         /// <returns></returns>
+        public static IServiceCollection AddDBFactory(this IServiceCollection services, params Expression<Func<DBClient>>[] dbClients)
+        {
+#pragma warning disable CS0618 // Type or member is obsolete
+            return services.AddDBClientFactory(dbClients);
+#pragma warning restore CS0618 // Type or member is obsolete
+
+        }
+
+        /// <summary>
+        /// Register the factory with a ServiceProvider using default connection provider
+        /// IConnection and IUnitOfWork created by the factory are different from throse created by ServiceProvider
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="dbClients"></param>
+        /// <returns></returns>
+        public static IServiceCollection AddDBFactory(this IServiceCollection services, Func<IServiceProvider, Expression<Func<DBClient>>[]> dbClients)
+        {
+#pragma warning disable CS0618 // Type or member is obsolete
+            return services.AddDBClientFactory(dbClients);
+#pragma warning restore CS0618 // Type or member is obsolete
+
+        }
+
+        /// <summary>
+        /// Register the factory with a ServiceProvider using custom connection provider
+        /// IConnection and IUnitOfWork created by the factory are different from throse created by ServiceProvider
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="implementationDBClientProvider"></param>
+        /// <returns></returns>
+        public static IServiceCollection AddDBFactory(this IServiceCollection services, Func<IServiceProvider, IDBClientProvider> implementationDBClientProvider)
+        {
+#pragma warning disable CS0618 // Type or member is obsolete
+            return services.AddDBClientFactory(implementationDBClientProvider);
+#pragma warning restore CS0618 // Type or member is obsolete
+
+        }
+
+        /// <summary>
+        /// Register the factory with a ServiceProvider using default connection provider
+        /// IConnection and IUnitOfWork created by the factory are different from throse created by ServiceProvider
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="dbClients"></param>
+        /// <returns></returns>
+        [Obsolete("Please use AddDBFactory instead. ", false)]
         public static IServiceCollection AddDBClientFactory(this IServiceCollection services, params Expression<Func<DBClient>>[] dbClients)
         {
             services.AddScoped<IDBClientFactory, DBClientFactory>();
+            services.AddScoped<IConnectionFactory>(s => s.GetRequiredService<IDBClientFactory>());
+            services.AddScoped<IUnitOfWorkFactory>(s => s.GetRequiredService<IDBClientFactory>());
             services.AddSingleton<IDBClientProvider>(s => new DefaultDBClientProvider(dbClients));
             return services;
         }
@@ -86,9 +134,12 @@ namespace iCat.DB.Client.Extension.Web
         /// <param name="services"></param>
         /// <param name="dbClients"></param>
         /// <returns></returns>
+        [Obsolete("Please use AddDBFactory instead. ", false)]
         public static IServiceCollection AddDBClientFactory(this IServiceCollection services, Func<IServiceProvider, Expression<Func<DBClient>>[]> dbClients)
         {
             services.AddScoped<IDBClientFactory, DBClientFactory>();
+            services.AddScoped<IConnectionFactory>(s => s.GetRequiredService<IDBClientFactory>());
+            services.AddScoped<IUnitOfWorkFactory>(s => s.GetRequiredService<IDBClientFactory>());
             services.AddSingleton<IDBClientProvider>(s => new DefaultDBClientProvider(dbClients.Invoke(s)));
             return services;
         }
@@ -100,9 +151,12 @@ namespace iCat.DB.Client.Extension.Web
         /// <param name="services"></param>
         /// <param name="implementationDBClientProvider"></param>
         /// <returns></returns>
+        [Obsolete("Please use AddDBFactory instead. ", false)]
         public static IServiceCollection AddDBClientFactory(this IServiceCollection services, Func<IServiceProvider, IDBClientProvider> implementationDBClientProvider)
         {
             services.AddScoped<IDBClientFactory, DBClientFactory>();
+            services.AddScoped<IConnectionFactory>(s => s.GetRequiredService<IDBClientFactory>());
+            services.AddScoped<IUnitOfWorkFactory>(s => s.GetRequiredService<IDBClientFactory>());
             services.AddSingleton<IDBClientProvider>(implementationDBClientProvider);
             return services;
         }

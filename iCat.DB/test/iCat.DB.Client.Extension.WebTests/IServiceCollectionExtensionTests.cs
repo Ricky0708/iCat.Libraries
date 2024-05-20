@@ -108,14 +108,16 @@ namespace iCat.DB.Client.Extension.Web.Tests
             // arrange
             var service = WebApplication.CreateBuilder().Services;
             var dbConnection = Substitute.For<DbConnection>();
-            service.AddDBClientFactory(
+            service.AddDBFactory(
                    () => new DBClient("A", dbConnection),
                    () => new DBClient("B", dbConnection)
                );
             var provider = service.BuildServiceProvider();
 
             // action
+#pragma warning disable CS0618 // Type or member is obsolete
             var factory = provider.GetRequiredService<IDBClientFactory>();
+#pragma warning restore CS0618 // Type or member is obsolete
 
             // assert
             Assert.IsTrue(factory.GetUnitOfWork("A") == factory.GetConnection("A"));
@@ -125,20 +127,65 @@ namespace iCat.DB.Client.Extension.Web.Tests
         }
 
         [TestMethod()]
+        public void AddDBFactoryTest_A_Success()
+        {
+            // arrange
+            var service = WebApplication.CreateBuilder().Services;
+            var dbConnection = Substitute.For<DbConnection>();
+            service.AddDBFactory(
+                   () => new DBClient("A", dbConnection),
+                   () => new DBClient("B", dbConnection)
+               );
+            var provider = service.BuildServiceProvider();
+
+            // action
+            var unitOfWork = provider.GetRequiredService<IUnitOfWorkFactory>();
+            var connection = provider.GetRequiredService<IConnectionFactory>();
+
+            // assert
+            Assert.IsTrue(unitOfWork.GetUnitOfWork("A") == connection.GetConnection("A"));
+            Assert.IsTrue(unitOfWork.GetUnitOfWork("A") != connection.GetConnection("B"));
+            Assert.AreEqual(unitOfWork.GetUnitOfWorks().Count(), 2);
+            Assert.AreEqual(connection.GetConnections().Count(), 2);
+        }
+
+        [TestMethod()]
         [ExpectedException(typeof(ArgumentException))]
         public void AddDBClientFactoryTest_A_Fail()
         {
             // arrange
             var service = WebApplication.CreateBuilder().Services;
             var dbConnection = Substitute.For<DbConnection>();
-            service.AddDBClientFactory(
+            service.AddDBFactory(
                    () => new DBClient("A", dbConnection),
                    () => new DBClient("A", dbConnection)
                );
             var provider = service.BuildServiceProvider();
 
             // action
+#pragma warning disable CS0618 // Type or member is obsolete
             var factory = provider.GetRequiredService<IDBClientFactory>();
+#pragma warning restore CS0618 // Type or member is obsolete
+
+            // assert
+
+        }
+
+        [TestMethod()]
+        [ExpectedException(typeof(ArgumentException))]
+        public void AddDBFactoryTest_A_Fail()
+        {
+            // arrange
+            var service = WebApplication.CreateBuilder().Services;
+            var dbConnection = Substitute.For<DbConnection>();
+            service.AddDBFactory(
+                   () => new DBClient("A", dbConnection),
+                   () => new DBClient("A", dbConnection)
+               );
+            var provider = service.BuildServiceProvider();
+
+            // action
+            var factory = provider.GetRequiredService<IUnitOfWorkFactory>();
 
             // assert
 
@@ -155,10 +202,31 @@ namespace iCat.DB.Client.Extension.Web.Tests
             Func<IServiceProvider, Expression<Func<DBClient>>[]> func = (s) => new[] { expr };
 
             // action
-            service.AddDBClientFactory(func);
+            service.AddDBFactory(func!);
 
             // assert
+#pragma warning disable CS0618 // Type or member is obsolete
             var n = service.BuildServiceProvider().GetService<IDBClientFactory>();
+#pragma warning restore CS0618 // Type or member is obsolete
+            Assert.IsTrue(n != null);
+
+        }
+
+        [TestMethod()]
+        public void AddDBFactoryTest_B()
+        {
+            // arrange
+            var service = WebApplication.CreateBuilder().Services;
+            var connection = Substitute.For<DbConnection>();
+            Expression<Func<DBClient>> expr = () => new Implements.DBClient("A", connection);
+
+            Func<IServiceProvider, Expression<Func<DBClient>>[]> func = (s) => new[] { expr };
+
+            // action
+            service.AddDBFactory(func!);
+
+            // assert
+            var n = service.BuildServiceProvider().GetService<IConnectionFactory>();
             Assert.IsTrue(n != null);
 
         }
