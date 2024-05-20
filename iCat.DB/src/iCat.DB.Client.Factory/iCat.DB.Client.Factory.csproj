@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
-		<ImplicitUsings>enable</ImplicitUsings>
+		<TargetFrameworks>netstandard2.1;net6.0;net7.0;net8.0;</TargetFrameworks>
+		<ImplicitUsings>disable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 		<GeneratePackageOnBuild>False</GeneratePackageOnBuild>
@@ -16,9 +16,9 @@
 		<PackageReleaseNotes>Version 2.1.2</PackageReleaseNotes>
 		<PackAsTool>False</PackAsTool>
 		<NeutralLanguage>zh-TW</NeutralLanguage>
-		<AssemblyVersion>2.1.2</AssemblyVersion>
-		<FileVersion>2.1.2</FileVersion>
-		<Version>2.0.2</Version>
+		<AssemblyVersion>2.2.2</AssemblyVersion>
+		<FileVersion>2.2.2</FileVersion>
+		<Version>2.2.2-alpha</Version>
 		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
 	</PropertyGroup>
 	<ItemGroup>

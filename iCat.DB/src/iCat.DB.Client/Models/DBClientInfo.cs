@@ -15,12 +15,12 @@ namespace iCat.DB.Client.Models
         /// <summary>
         /// Category of DBClient
         /// </summary>
-        public string Category { get; init; }
+        public string Category { get; }
 
         /// <summary>
         /// Connection string
         /// </summary>
-        public DbConnection Connection { get; init; }
+        public DbConnection Connection { get; }
 
         /// <summary>
         /// DBClient info
