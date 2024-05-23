@@ -133,8 +133,8 @@ namespace iCat.Cache.Implements
 
                 string luaScript = @$"
                     redis.call('HSET', @redisKey, @absexpKey, @absexpValue, @sldexpKey, @sldexpValue, @dataKey, @dataValue)
-                    if absexpValue ~= '-1' then
-                      redis.call('EXPIRE', @absexpKey, @absexpValue)
+                    if @expiredAt ~= '-1' then
+                      redis.call('EXPIRE', @redisKey, @expiredAt)
                     end
 ";
                 LuaScript? prepared = null;
@@ -144,16 +144,18 @@ namespace iCat.Cache.Implements
                 prepared = LuaScript.Prepare(luaScript);
                 _loadedHSetLuaScript = prepared.Load(server, CommandFlags.None);
             }
-
+            var creationTime = DateTimeOffset.UtcNow;
+            var absexpValue = GetAbsoluteExpiration(options?.AbsoluteExpiration ?? DateTimeOffset.Now, options ?? new CacheOptions());
             await _loadedHSetLuaScript.EvaluateAsync(_connection.GetDatabase(), new
             {
                 redisKey = (RedisKey)redisKey,
                 dataKey = dataKey,
                 dataValue = dataValue,
                 absexpKey = "absexp",
-                absexpValue = GetAbsoluteExpiration(options?.AbsoluteExpiration ?? DateTimeOffset.Now, options ?? new CacheOptions())?.Ticks ?? -1,
+                absexpValue = absexpValue?.Ticks ?? -1,
                 sldexpKey = "sldexp",
                 sldexpValue = options?.SlidingExpiration?.Ticks ?? -1,
+                expiredAt = GetExpirationInSeconds(creationTime, absexpValue, options ?? new CacheOptions()) ?? -1
             }, flags: CommandFlags.None);
         }
 
