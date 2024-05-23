@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Caching.Distributed;
+﻿using iCat.Cache.Models;
+using Microsoft.Extensions.Caching.Distributed;
 using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace iCat.Cache.Interfaces
     public interface ICache2
     {
         /// <summary>
-        /// 取得Redis物件
+        /// Get value by key
         /// </summary>
         /// <typeparam name="T">物件型別</typeparam>
         /// <param name="key">緩存鍵值</param>
@@ -23,7 +24,7 @@ namespace iCat.Cache.Interfaces
         public Task<T?> GetAsync<T>(string key, CancellationToken cancellationToken = default) where T : class;
 
         /// <summary>
-        /// 取得Redis內容
+        /// Get value by ke
         /// </summary>
         /// <param name="key">緩存鍵值</param>
         /// <param name="cancellationToken"></param>
@@ -31,84 +32,47 @@ namespace iCat.Cache.Interfaces
         public Task<string?> GetStringAsync(string key, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// 設置Redis內容(永久存在)
+        /// Set key value without expired
         /// </summary>
-        /// <param name="key">鍵值</param>
-        /// <param name="value">內容</param>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
         /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public Task SetStringAsync(string key, string value, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// 設置Redis內容
+        /// Set key value without expired
         /// </summary>
-        /// <param name="key">鍵值</param>
-        /// <param name="value">內容</param>
-        /// <param name="absoluteExpiration">絕對過期時間：時間到後就會消失</param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        public Task SetStringAsync(string key, string value, DateTimeOffset absoluteExpiration,
-            CancellationToken cancellationToken = default);
-
-        /// <summary>
-        /// 設置Redis內容
-        /// </summary>
-        /// <param name="key">鍵值</param>
-        /// <param name="value">內容</param>
-        /// <param name="options">保存時間設定</param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        public Task SetStringAsync(string key, string value, DistributedCacheEntryOptions options,
-            CancellationToken cancellationToken = default);
-
-        /// <summary>
-        /// 設置Redis內容
-        /// </summary>
-        /// <typeparam name="T">物件型別</typeparam>
-        /// <param name="key">鍵值</param>
-        /// <param name="value">內容</param>
-        /// <param name="absoluteExpirationRelativeToNow">絕對過期時間：時間到後就會消失</param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        public Task SetStringAsync<T>(string key, T? value, TimeSpan absoluteExpirationRelativeToNow,
-            CancellationToken cancellationToken = default) where T : class;
-
-        /// <summary>
-        /// 設置Redis內容(永久存在)
-        /// </summary>
-        /// <typeparam name="T">物件型別</typeparam>
-        /// <param name="key">鍵值</param>
-        /// <param name="value">內容</param>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         public Task SetStringAsync<T>(string key, T? value, CancellationToken cancellationToken = default) where T : class;
 
         /// <summary>
-        /// 設置Redis內容
+        /// Set key value
         /// </summary>
-        /// <typeparam name="T">物件型別</typeparam>
-        /// <param name="key">鍵值</param>
-        /// <param name="value">內容</param>
-        /// <param name="absoluteExpiration">絕對過期時間：時間到後就會消失</param>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <param name="options"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public Task SetStringAsync<T>(string key, T? value, DateTimeOffset absoluteExpiration,
-            CancellationToken cancellationToken = default) where T : class;
+        public Task SetStringAsync(string key, string value, CacheOptions options, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// 設置Redis內容
+        /// Set key value
         /// </summary>
-        /// <typeparam name="T">物件型別</typeparam>
-        /// <param name="key">鍵值</param>
-        /// <param name="value">內容</param>
-        /// <param name="options">絕對過期時間：時間到後就會消失</param>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <param name="options"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public Task SetStringAsync<T>(string key, T? value, DistributedCacheEntryOptions options,
-            CancellationToken cancellationToken = default)
-            where T : class;
+        public Task SetStringAsync<T>(string key, T? value, CacheOptions options, CancellationToken cancellationToken = default) where T : class;
 
         /// <summary>
-        /// 刷新Redis內容
+        /// Refresh
         /// </summary>
         /// <param name="key">緩存鍵值</param>
         /// <param name="cancellationToken"></param>
@@ -116,7 +80,7 @@ namespace iCat.Cache.Interfaces
         public Task RefreshAsync(string key, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// 刪除Redis內容
+        /// Remove target key
         /// </summary>
         /// <param name="key">緩存鍵值</param>
         /// <param name="cancellationToken"></param>
@@ -124,7 +88,7 @@ namespace iCat.Cache.Interfaces
         public Task RemoveAsync(string key, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// 取得所有符合match pattern的key
+        /// Get all keys that matched the pattern
         /// </summary>
         /// <param name="match"></param>
         /// <param name="cancellationToken"></param>
@@ -132,16 +96,16 @@ namespace iCat.Cache.Interfaces
         public IAsyncEnumerable<string> GetKeys(string match, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// 
+        /// Get feilds value
         /// </summary>
         /// <param name="redisKey"></param>
         /// <param name="expiredSeconds"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<Dictionary<string, RedisResult>?> HashGetAsync(RedisKey redisKey, int expiredSeconds, CancellationToken cancellationToken = default);
+        Task<Dictionary<string, string?>?> HashGetAsync(string redisKey, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// 
+        /// Set filed value
         /// </summary>
         /// <param name="redisKey"></param>
         /// <param name="dataKey"></param>
@@ -149,16 +113,127 @@ namespace iCat.Cache.Interfaces
         /// <param name="expiredSeconds"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task HashSetAsync(RedisKey redisKey, RedisKey dataKey, RedisValue dataValue, int expiredSeconds, CancellationToken cancellationToken = default);
+        Task HashSetAsync(string redisKey, string dataKey, object dataValue, CacheOptions options, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// 
+        /// Increase field value
         /// </summary>
         /// <param name="redisKey"></param>
         /// <param name="dataKey"></param>
         /// <param name="dataValue"></param>
+        /// <param name="options"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<decimal> IncreaseValueAsync(RedisKey redisKey, RedisKey dataKey, RedisValue dataValue, CancellationToken cancellationToken = default);
+        Task<byte> IncreaseValueAsync(string redisKey, string dataKey, byte dataValue, CacheOptions options, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Increase field value
+        /// </summary>
+        /// <param name="redisKey"></param>
+        /// <param name="dataKey"></param>
+        /// <param name="dataValue"></param>
+        /// <param name="options"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task<sbyte> IncreaseValueAsync(string redisKey, string dataKey, sbyte dataValue, CacheOptions options, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Increase field value
+        /// </summary>
+        /// <param name="redisKey"></param>
+        /// <param name="dataKey"></param>
+        /// <param name="dataValue"></param>
+        /// <param name="options"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task<short> IncreaseValueAsync(string redisKey, string dataKey, short dataValue, CacheOptions options, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Increase field value
+        /// </summary>
+        /// <param name="redisKey"></param>
+        /// <param name="dataKey"></param>
+        /// <param name="dataValue"></param>
+        /// <param name="options"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task<ushort> IncreaseValueAsync(string redisKey, string dataKey, ushort dataValue, CacheOptions options, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Increase field value
+        /// </summary>
+        /// <param name="redisKey"></param>
+        /// <param name="dataKey"></param>
+        /// <param name="dataValue"></param>
+        /// <param name="options"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task<int> IncreaseValueAsync(string redisKey, string dataKey, int dataValue, CacheOptions options, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Increase field value
+        /// </summary>
+        /// <param name="redisKey"></param>
+        /// <param name="dataKey"></param>
+        /// <param name="dataValue"></param>
+        /// <param name="options"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task<uint> IncreaseValueAsync(string redisKey, string dataKey, uint dataValue, CacheOptions options, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Increase field value
+        /// </summary>
+        /// <param name="redisKey"></param>
+        /// <param name="dataKey"></param>
+        /// <param name="dataValue"></param>
+        /// <param name="options"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task<long> IncreaseValueAsync(string redisKey, string dataKey, long dataValue, CacheOptions options, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Increase field value
+        /// </summary>
+        /// <param name="redisKey"></param>
+        /// <param name="dataKey"></param>
+        /// <param name="dataValue"></param>
+        /// <param name="options"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task<ulong> IncreaseValueAsync(string redisKey, string dataKey, ulong dataValue, CacheOptions options, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Increase field value
+        /// </summary>
+        /// <param name="redisKey"></param>
+        /// <param name="dataKey"></param>
+        /// <param name="dataValue"></param>
+        /// <param name="options"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task<float> IncreaseValueAsync(string redisKey, string dataKey, float dataValue, CacheOptions options, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Increase field value
+        /// </summary>
+        /// <param name="redisKey"></param>
+        /// <param name="dataKey"></param>
+        /// <param name="dataValue"></param>
+        /// <param name="options"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task<double> IncreaseValueAsync(string redisKey, string dataKey, double dataValue, CacheOptions options, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Increase field value
+        /// </summary>
+        /// <param name="redisKey"></param>
+        /// <param name="dataKey"></param>
+        /// <param name="dataValue"></param>
+        /// <param name="options"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task<decimal> IncreaseValueAsync(string redisKey, string dataKey, decimal dataValue, CacheOptions options, CancellationToken cancellationToken = default);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using iCat.Cache.Interfaces;
+using iCat.Cache.Models;
 using Microsoft.Extensions.Caching.Distributed;
 using StackExchange.Redis;
 using System;
@@ -7,10 +8,11 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace iCat.Cache.Implements
 {
+
+
     /// <inheritdoc/>
     public class RedisCacheImpl : ICache2
     {
@@ -27,167 +29,62 @@ namespace iCat.Cache.Implements
             _connection = connection;
         }
 
-        /// <summary>
-        /// 取得Redis物件
-        /// </summary>
-        /// <typeparam name="T">物件型別</typeparam>
-        /// <param name="key">緩存鍵值</param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public async Task<T?> GetAsync<T>(string key, CancellationToken cancellationToken = default) where T : class
         {
             var result = await _cache.GetStringAsync(key, cancellationToken);
             return string.IsNullOrWhiteSpace(result) ? default : JsonSerializer.Deserialize<T>(result);
         }
 
-        /// <summary>
-        /// 取得Redis內容
-        /// </summary>
-        /// <param name="key">緩存鍵值</param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public async Task<string?> GetStringAsync(string key, CancellationToken cancellationToken = default)
         {
             return await _cache.GetStringAsync(key, cancellationToken);
         }
 
-        /// <summary>
-        /// 設置Redis內容(永久存在)
-        /// </summary>
-        /// <param name="key">鍵值</param>
-        /// <param name="value">內容</param>
-        /// <param name="cancellationToken"></param>
-        public Task SetStringAsync(string key, string value, CancellationToken cancellationToken = default)
+        /// <inheritdoc/>
+        public async Task SetStringAsync(string key, string value, CancellationToken cancellationToken = default)
         {
-            return _cache.SetStringAsync(key, value, cancellationToken);
+            await _cache.SetStringAsync(key, value, cancellationToken);
         }
 
-        /// <summary>
-        /// 設置Redis內容(永久存在)
-        /// </summary>
-        /// <typeparam name="T">型別</typeparam>
-        /// <param name="key">鍵值</param>
-        /// <param name="value">內容</param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        public Task SetStringAsync<T>(string key, T? value, CancellationToken cancellationToken = default) where T : class
+        /// <inheritdoc/>
+        public async Task SetStringAsync<T>(string key, T? value, CancellationToken cancellationToken = default) where T : class
         {
-            return SetStringAsync(key, JsonSerializer.Serialize(value), cancellationToken);
+            await SetStringAsync(key, JsonSerializer.Serialize(value), cancellationToken);
         }
 
-        /// <summary>
-        /// 設置Redis內容
-        /// </summary>
-        /// <typeparam name="T">物件型別</typeparam>
-        /// <param name="key">鍵值</param>
-        /// <param name="value">內容</param>
-        /// <param name="absoluteExpirationRelativeToNow">絕對過期時間：時間到後就會消失</param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        public Task SetStringAsync<T>(string key, T? value, TimeSpan absoluteExpirationRelativeToNow, CancellationToken cancellationToken = default) where T : class
+        /// <inheritdoc/>
+        public async Task SetStringAsync(string key, string value, CacheOptions options, CancellationToken cancellationToken = default)
         {
-            return SetStringAsync(key, JsonSerializer.Serialize(value), absoluteExpirationRelativeToNow, cancellationToken);
+            await _cache.SetStringAsync(key, value, new DistributedCacheEntryOptions
+            {
+                AbsoluteExpiration = options.AbsoluteExpiration,
+                AbsoluteExpirationRelativeToNow = options.AbsoluteExpirationRelativeToNow,
+                SlidingExpiration = options.SlidingExpiration,
+            }, cancellationToken);
         }
 
-        /// <summary>
-        /// 設置Redis內容
-        /// </summary>
-        /// <param name="key">鍵值</param>
-        /// <param name="value">內容</param>
-        /// <param name="absoluteExpirationRelativeToNow">絕對過期時間：時間到後就會消失</param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        public Task SetStringAsync(string key, string value, TimeSpan absoluteExpirationRelativeToNow, CancellationToken cancellationToken = default)
+        /// <inheritdoc/>
+        public async Task SetStringAsync<T>(string key, T? value, CacheOptions options, CancellationToken cancellationToken = default) where T : class
         {
-            var options = new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = absoluteExpirationRelativeToNow };
-            return _cache.SetStringAsync(key, value, options, cancellationToken);
+            await SetStringAsync(key, JsonSerializer.Serialize(value), options, cancellationToken);
         }
 
-        /// <summary>
-        /// 設置Redis內容
-        /// </summary>
-        /// <typeparam name="T">物件型別</typeparam>
-        /// <param name="key">鍵值</param>
-        /// <param name="value">內容</param>
-        /// <param name="absoluteExpiration">絕對過期時間：時間到後就會消失</param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        public Task SetStringAsync<T>(string key, T? value, DateTimeOffset absoluteExpiration, CancellationToken cancellationToken = default) where T : class
+        /// <inheritdoc/>
+        public async Task RefreshAsync(string key, CancellationToken cancellationToken = default)
         {
-            return SetStringAsync(key, JsonSerializer.Serialize(value), absoluteExpiration, cancellationToken);
+            await _cache.RefreshAsync(key, cancellationToken);
         }
 
-        /// <summary>
-        /// 設置Redis內容
-        /// </summary>
-        /// <typeparam name="T">物件型別</typeparam>
-        /// <param name="key">鍵值</param>
-        /// <param name="value">內容</param>
-        /// <param name="options">絕對過期時間：時間到後就會消失</param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        public Task SetStringAsync<T>(string key, T? value, DistributedCacheEntryOptions options, CancellationToken cancellationToken = default)
-        where T : class
+        /// <inheritdoc/>
+        public async Task RemoveAsync(string key, CancellationToken cancellationToken = default)
         {
-            return SetStringAsync(key, JsonSerializer.Serialize(value), options, cancellationToken);
+            await _cache.RemoveAsync(key, cancellationToken);
         }
 
-        /// <summary>
-        /// 設置Redis內容
-        /// </summary>
-        /// <param name="key">鍵值</param>
-        /// <param name="value">內容</param>
-        /// <param name="absoluteExpiration">絕對過期時間：時間到後就會消失</param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        public Task SetStringAsync(string key, string value, DateTimeOffset absoluteExpiration, CancellationToken cancellationToken = default)
-        {
-            var options = new DistributedCacheEntryOptions { AbsoluteExpiration = absoluteExpiration };
-            return _cache.SetStringAsync(key, value, options, cancellationToken);
-        }
-
-        /// <summary>
-        /// 設置Redis內容
-        /// </summary>
-        /// <param name="key">鍵值</param>
-        /// <param name="value">內容</param>
-        /// <param name="options">保存時間設定</param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        public Task SetStringAsync(string key, string value, DistributedCacheEntryOptions options, CancellationToken cancellationToken = default)
-        {
-            return _cache.SetStringAsync(key, value, options, cancellationToken);
-        }
-
-        /// <summary>
-        /// 刷新Redis內容
-        /// </summary>
-        /// <param name="key">緩存鍵值</param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        public Task RefreshAsync(string key, CancellationToken cancellationToken = default)
-        {
-            return _cache.RefreshAsync(key, cancellationToken);
-        }
-
-        /// <summary>
-        /// 刪除Redis內容
-        /// </summary>
-        /// <param name="key">緩存鍵值</param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        public Task RemoveAsync(string key, CancellationToken cancellationToken = default)
-        {
-            return _cache.RemoveAsync(key, cancellationToken);
-        }
-
-        /// <summary>
-        /// 取得所有符合match pattern的key
-        /// </summary>
-        /// <param name="match"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        public async IAsyncEnumerable<string> GetKeys(string match, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        /// <inheritdoc/>
+        public async IAsyncEnumerable<string> GetKeys(string match, CancellationToken cancellationToken = default)
         {
             var points = _connection.GetEndPoints();
             var keys = (_connection.GetServer(points.First())).KeysAsync(_connection.GetDatabase().Database, match);
@@ -204,13 +101,12 @@ namespace iCat.Cache.Implements
         }
 
         /// <inheritdoc/>
-        public async Task<Dictionary<string, RedisResult>?> HashGetAsync(RedisKey redisKey, int expiredSeconds, CancellationToken cancellationToken = default)
+        public async Task<Dictionary<string, string?>?> HashGetAsync(string redisKey, CancellationToken cancellationToken = default)
         {
             if (_loadedHGetAllLuaScript == null)
             {
                 string luaScript = @$"
                     local currentValue = redis.call('HGETALL',@redisKey)
-                    redis.call('EXPIRE', @redisKey, @expiredSeconds)
                     return currentValue";
                 LuaScript? prepared = null;
                 StackExchange.Redis.IServer? server;
@@ -223,19 +119,24 @@ namespace iCat.Cache.Implements
             var n = await _loadedHGetAllLuaScript.EvaluateAsync(_connection.GetDatabase(), new
             {
                 redisKey = (RedisKey)redisKey,
-                expiredSeconds = expiredSeconds
             }, flags: CommandFlags.None);
-            return n.ToDictionary();
+            var dic = n.ToDictionary();
+            return n.ToDictionary().Select(p => KeyValuePair.Create(p.Key, (string?)p.Value)).ToDictionary(p => p.Key, p => p.Value);
         }
 
         /// <inheritdoc/>
-        public async Task HashSetAsync(RedisKey redisKey, RedisKey dataKey, RedisValue dataValue, int expiredSeconds, CancellationToken cancellationToken = default)
+        public async Task HashSetAsync(string redisKey, string dataKey, object dataValue, CacheOptions options, CancellationToken cancellationToken = default)
         {
             if (_loadedHSetLuaScript == null)
             {
+                //redis.call('EXPIRE', @redisKey, @expiredSeconds)
+
                 string luaScript = @$"
-                    redis.call('HSET', @redisKey, @dataKey, @dataValue)
-                    redis.call('EXPIRE', @redisKey, @expiredSeconds)";
+                    redis.call('HSET', @redisKey, @absexpKey, @absexpValue, @sldexpKey, @sldexpValue, @dataKey, @dataValue)
+                    if absexpValue ~= '-1' then
+                      redis.call('EXPIRE', @absexpKey, @absexpValue)
+                    end
+";
                 LuaScript? prepared = null;
                 StackExchange.Redis.IServer? server;
                 var points = _connection.GetEndPoints();
@@ -249,38 +150,116 @@ namespace iCat.Cache.Implements
                 redisKey = (RedisKey)redisKey,
                 dataKey = dataKey,
                 dataValue = dataValue,
-                expiredSeconds = expiredSeconds
+                absexpKey = "absexp",
+                absexpValue = GetAbsoluteExpiration(options?.AbsoluteExpiration ?? DateTimeOffset.Now, options ?? new CacheOptions())?.Ticks ?? -1,
+                sldexpKey = "sldexp",
+                sldexpValue = options?.SlidingExpiration?.Ticks ?? -1,
             }, flags: CommandFlags.None);
         }
 
         /// <inheritdoc/>
-        public async Task<decimal> IncreaseValueAsync(RedisKey redisKey, RedisKey dataKey, RedisValue dataValue, CancellationToken cancellationToken = default)
+        public async Task<byte> IncreaseValueAsync(string redisKey, string dataKey, byte dataValue, CacheOptions options, CancellationToken cancellationToken = default)
         {
-            if (_loadedIncreaseValueLuaScript == null)
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public async Task<sbyte> IncreaseValueAsync(string redisKey, string dataKey, sbyte dataValue, CacheOptions options, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public async Task<short> IncreaseValueAsync(string redisKey, string dataKey, short dataValue, CacheOptions options, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public async Task<ushort> IncreaseValueAsync(string redisKey, string dataKey, ushort dataValue, CacheOptions options, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public async Task<int> IncreaseValueAsync(string redisKey, string dataKey, int dataValue, CacheOptions options, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public async Task<uint> IncreaseValueAsync(string redisKey, string dataKey, uint dataValue, CacheOptions options, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public async Task<long> IncreaseValueAsync(string redisKey, string dataKey, long dataValue, CacheOptions options, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public async Task<ulong> IncreaseValueAsync(string redisKey, string dataKey, ulong dataValue, CacheOptions options, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public async Task<float> IncreaseValueAsync(string redisKey, string dataKey, float dataValue, CacheOptions options, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public async Task<double> IncreaseValueAsync(string redisKey, string dataKey, double dataValue, CacheOptions options, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public async Task<decimal> IncreaseValueAsync(string redisKey, string dataKey, decimal dataValue, CacheOptions options, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        private static DateTimeOffset? GetAbsoluteExpiration(DateTimeOffset creationTime, CacheOptions options)
+        {
+            if (options.AbsoluteExpiration.HasValue && options.AbsoluteExpiration <= creationTime)
             {
-                string luaScript = @$"
-                    local currentValue = redis.call('HGET',@redisKey, @dataKey)
-                    local newValue = 0
-                    if currentValue==false then newValue = @dataValue else newValue = currentValue + @dataValue end
-                    redis.call('HSET', @redisKey, @dataKey, newValue)
-                    redis.call('EXPIRE', @redisKey, {1 * 70})
-                    return newValue";
-                LuaScript? prepared = null;
-                StackExchange.Redis.IServer? server;
-                var points = _connection.GetEndPoints();
-                server = _connection.GetServer(points.First());
-                prepared = LuaScript.Prepare(luaScript);
-                _loadedIncreaseValueLuaScript = prepared.Load(server, CommandFlags.None);
+#pragma warning disable CA2208 // Instantiate argument exceptions correctly
+                throw new ArgumentOutOfRangeException(
+                    nameof(DistributedCacheEntryOptions.AbsoluteExpiration),
+                    options.AbsoluteExpiration.Value,
+                    "The absolute expiration value must be in the future.");
+#pragma warning restore CA2208 // Instantiate argument exceptions correctly
             }
 
-            var n = await _loadedIncreaseValueLuaScript.EvaluateAsync(_connection.GetDatabase(), new
+            if (options.AbsoluteExpirationRelativeToNow.HasValue)
             {
-                redisKey = (RedisKey)redisKey,
-                dataKey = dataKey,
-                dataValue = (RedisKey)dataValue.ToString()
+                return creationTime + options.AbsoluteExpirationRelativeToNow;
+            }
 
-            }, flags: CommandFlags.None);
-            return decimal.Parse(n?.ToString() ?? "0");
+            return options.AbsoluteExpiration;
+        }
+
+        private static long? GetExpirationInSeconds(DateTimeOffset creationTime, DateTimeOffset? absoluteExpiration, CacheOptions options)
+        {
+            if (absoluteExpiration.HasValue && options.SlidingExpiration.HasValue)
+            {
+                return (long)Math.Min(
+                    (absoluteExpiration.Value - creationTime).TotalSeconds,
+                    options.SlidingExpiration.Value.TotalSeconds);
+            }
+            else if (absoluteExpiration.HasValue)
+            {
+                return (long)(absoluteExpiration.Value - creationTime).TotalSeconds;
+            }
+            else if (options.SlidingExpiration.HasValue)
+            {
+                return (long)options.SlidingExpiration.Value.TotalSeconds;
+            }
+            return null;
         }
     }
 }
