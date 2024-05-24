@@ -11,16 +11,18 @@ using System.Text.Json;
 
 namespace iCat.Cache.Implements
 {
-
-
     /// <inheritdoc/>
-    public class RedisCacheImpl : ICache2
+    public class RedisCacheImpl : ICache
     {
         private readonly IDistributedCache _cache;
         private readonly IConnectionMultiplexer _connection;
         private static LoadedLuaScript? _loadedIncreaseValueLuaScript;
         private static LoadedLuaScript? _loadedHGetAllLuaScript;
         private static LoadedLuaScript? _loadedHSetLuaScript;
+
+
+        /// <inheritdoc/>
+        public string Category => nameof(RedisCacheImpl);
 
         /// <inheritdoc/>
         public RedisCacheImpl(IDistributedCache cache, IConnectionMultiplexer connection)
@@ -32,14 +34,17 @@ namespace iCat.Cache.Implements
         /// <inheritdoc/>
         public async Task<T?> GetAsync<T>(string key, CancellationToken cancellationToken = default) where T : class
         {
-            var result = await _cache.GetStringAsync(key, cancellationToken);
+            var result = await GetStringAsync(key, cancellationToken);
+            await RefreshAsync(key, cancellationToken);
             return string.IsNullOrWhiteSpace(result) ? default : JsonSerializer.Deserialize<T>(result);
         }
 
         /// <inheritdoc/>
         public async Task<string?> GetStringAsync(string key, CancellationToken cancellationToken = default)
         {
-            return await _cache.GetStringAsync(key, cancellationToken);
+            var result = await _cache.GetStringAsync(key, cancellationToken);
+            await RefreshAsync(key, cancellationToken);
+            return result;
         }
 
         /// <inheritdoc/>
@@ -91,11 +96,7 @@ namespace iCat.Cache.Implements
 
             await foreach (var key in keys)
             {
-                if (cancellationToken.IsCancellationRequested)
-                {
-                    break;
-                }
-
+                if (cancellationToken.IsCancellationRequested) break;
                 yield return key.ToString();
             }
         }
@@ -121,6 +122,7 @@ namespace iCat.Cache.Implements
                 redisKey = (RedisKey)redisKey,
             }, flags: CommandFlags.None);
             var dic = n.ToDictionary();
+            await RefreshAsync(redisKey, cancellationToken);
             return n.ToDictionary().Select(p => KeyValuePair.Create(p.Key, (string?)p.Value)).ToDictionary(p => p.Key, p => p.Value);
         }
 
@@ -162,67 +164,102 @@ namespace iCat.Cache.Implements
         /// <inheritdoc/>
         public async Task<byte> IncreaseValueAsync(string redisKey, string dataKey, byte dataValue, CacheOptions options, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            return await IncreaseValueAsync(redisKey, dataKey, dataValue, options); ;
         }
 
         /// <inheritdoc/>
         public async Task<sbyte> IncreaseValueAsync(string redisKey, string dataKey, sbyte dataValue, CacheOptions options, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            return await IncreaseValueAsync(redisKey, dataKey, dataValue, options); ;
         }
 
         /// <inheritdoc/>
         public async Task<short> IncreaseValueAsync(string redisKey, string dataKey, short dataValue, CacheOptions options, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            return await IncreaseValueAsync(redisKey, dataKey, dataValue, options); ;
         }
 
         /// <inheritdoc/>
         public async Task<ushort> IncreaseValueAsync(string redisKey, string dataKey, ushort dataValue, CacheOptions options, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            return await IncreaseValueAsync(redisKey, dataKey, dataValue, options); ;
         }
 
         /// <inheritdoc/>
         public async Task<int> IncreaseValueAsync(string redisKey, string dataKey, int dataValue, CacheOptions options, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            return await IncreaseValueAsync(redisKey, dataKey, dataValue, options); ;
         }
 
         /// <inheritdoc/>
         public async Task<uint> IncreaseValueAsync(string redisKey, string dataKey, uint dataValue, CacheOptions options, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            return await IncreaseValueAsync(redisKey, dataKey, dataValue, options); ;
         }
 
         /// <inheritdoc/>
         public async Task<long> IncreaseValueAsync(string redisKey, string dataKey, long dataValue, CacheOptions options, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            return await IncreaseValueAsync(redisKey, dataKey, dataValue, options); ;
         }
 
         /// <inheritdoc/>
         public async Task<ulong> IncreaseValueAsync(string redisKey, string dataKey, ulong dataValue, CacheOptions options, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            return await IncreaseValueAsync(redisKey, dataKey, dataValue, options); ;
         }
 
         /// <inheritdoc/>
         public async Task<float> IncreaseValueAsync(string redisKey, string dataKey, float dataValue, CacheOptions options, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            return await IncreaseValueAsync(redisKey, dataKey, dataValue, options); ;
         }
 
         /// <inheritdoc/>
         public async Task<double> IncreaseValueAsync(string redisKey, string dataKey, double dataValue, CacheOptions options, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            return await IncreaseValueAsync(redisKey, dataKey, dataValue, options); ;
         }
 
         /// <inheritdoc/>
         public async Task<decimal> IncreaseValueAsync(string redisKey, string dataKey, decimal dataValue, CacheOptions options, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            return await IncreaseValueAsync(redisKey, dataKey, dataValue, options); ;
+        }
+
+        private async Task<decimal> IncreaseValueAsync(RedisKey redisKey, RedisKey dataKey, RedisValue dataValue, CacheOptions options, CancellationToken cancellationToken = default)
+        {
+            if (_loadedIncreaseValueLuaScript == null)
+            {
+                string luaScript = @$"
+                    local currentValue = redis.call('HGET',@redisKey, @dataKey)
+                    local newValue = 0
+                    if currentValue==false then newValue = @dataValue else newValue = currentValue + @dataValue end
+                    redis.call('HSET', @redisKey, @absexpKey, @absexpValue, @sldexpKey, @sldexpValue, @dataKey, newValue)
+                    redis.call('EXPIRE', @redisKey, @expiredAt)
+                    return tostring(newValue)";
+                LuaScript? prepared = null;
+                StackExchange.Redis.IServer? server;
+                var points = _connection.GetEndPoints();
+                server = _connection.GetServer(points.First());
+                prepared = LuaScript.Prepare(luaScript);
+                _loadedIncreaseValueLuaScript = prepared.Load(server, CommandFlags.None);
+            }
+
+            var creationTime = DateTimeOffset.UtcNow;
+            var absexpValue = GetAbsoluteExpiration(options?.AbsoluteExpiration ?? DateTimeOffset.Now, options ?? new CacheOptions());
+            var n = await _loadedIncreaseValueLuaScript.EvaluateAsync(_connection.GetDatabase(), new
+            {
+                redisKey = redisKey,
+                dataKey = dataKey,
+                dataValue = dataValue,
+                absexpKey = "absexp",
+                absexpValue = absexpValue?.Ticks ?? -1,
+                sldexpKey = "sldexp",
+                sldexpValue = options?.SlidingExpiration?.Ticks ?? -1,
+                expiredAt = GetExpirationInSeconds(creationTime, absexpValue, options ?? new CacheOptions()) ?? -1
+            }, flags: CommandFlags.None);
+            return decimal.Parse(n?.ToString() ?? "0");
         }
 
         private static DateTimeOffset? GetAbsoluteExpiration(DateTimeOffset creationTime, CacheOptions options)

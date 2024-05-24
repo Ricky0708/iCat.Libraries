@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace iCat.Cache.Implements
 {
-    public class Cache : ICache
+    public class Cache : ICacheBackup
     {
         private readonly IDistributedCache _cache;
 
