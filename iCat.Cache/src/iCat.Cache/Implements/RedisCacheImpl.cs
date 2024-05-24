@@ -89,7 +89,7 @@ namespace iCat.Cache.Implements
         }
 
         /// <inheritdoc/>
-        public async IAsyncEnumerable<string> GetKeys(string match, CancellationToken cancellationToken = default)
+        public async IAsyncEnumerable<string> GetKeys(string match, [EnumeratorCancellation]CancellationToken cancellationToken = default)
         {
             var points = _connection.GetEndPoints();
             var keys = (_connection.GetServer(points.First())).KeysAsync(_connection.GetDatabase().Database, match);
