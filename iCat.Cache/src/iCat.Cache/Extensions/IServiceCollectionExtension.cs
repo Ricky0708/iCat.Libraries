@@ -1,12 +1,6 @@
 ﻿using iCat.Cache.Implements;
 using iCat.Cache.Interfaces;
-using iCat.DB.Client.Factory.Implements;
-using iCat.DB.Client.Factory.Interfaces;
 //using iCat.DB.Client.Factory.Models;
-using iCat.DB.Client.Implements;
-using iCat.DB.Client.Interfaces;
-using iCat.DB.Client.Models;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;

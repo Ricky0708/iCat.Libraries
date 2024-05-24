@@ -25,11 +25,6 @@ namespace iCat.Cache.Implements.Tests
             var json = Encoding.UTF8.GetBytes(System.Text.Json.JsonSerializer.Serialize(data));
             var distributedCache = Substitute.For<IDistributedCache>();
             distributedCache.Get(Arg.Do<string>(p => Assert.AreEqual(p, "AAA"))).Returns(json);
-            //distributedCache.Set(Arg.Do<string>(
-            //    p => Assert.AreEqual(p, "AAA")), 
-            //    Arg.Any<byte[]>(), 
-            //    Arg.Any<DistributedCacheEntryOptions>());
-
 
             var cache = new Cache(distributedCache);
 

@@ -13,7 +13,7 @@ namespace iCat.Cache.demo
 
             builder.Services.AddControllers();
             builder.Services.AddDistributedMemoryCache(); // inject memory cache into IDistributedCache
-            builder.Services.AddSingleton<ICache, iCat.Cache.Implements.Cache>(); // IDistributedCache adapter
+            builder.Services.AddSingleton<ICacheBackup, iCat.Cache.Implements.Cache>(); // IDistributedCache adapter
 
             var app = builder.Build();
 

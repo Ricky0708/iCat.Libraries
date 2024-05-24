@@ -13,9 +13,9 @@ namespace iCat.Cache.demo.Controllers
     [Route("[controller]")]
     public class DemoController : ControllerBase
     {
-        private readonly ICache _cache;
+        private readonly ICacheBackup _cache;
 
-        public DemoController(ICache cache)
+        public DemoController(ICacheBackup cache)
         {
             _cache = cache ?? throw new ArgumentNullException(nameof(cache));
         }
