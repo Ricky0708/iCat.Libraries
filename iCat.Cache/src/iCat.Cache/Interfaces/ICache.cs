@@ -104,7 +104,6 @@ namespace iCat.Cache.Interfaces
         /// Get feilds value
         /// </summary>
         /// <param name="redisKey"></param>
-        /// <param name="expiredSeconds"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         Task<Dictionary<string, string?>?> HashGetAsync(string redisKey, CancellationToken cancellationToken = default);
@@ -115,7 +114,7 @@ namespace iCat.Cache.Interfaces
         /// <param name="redisKey"></param>
         /// <param name="dataKey"></param>
         /// <param name="dataValue"></param>
-        /// <param name="expiredSeconds"></param>
+        /// <param name="options"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         Task HashSetAsync(string redisKey, string dataKey, string dataValue, CacheOptions options, CancellationToken cancellationToken = default);
