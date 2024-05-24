@@ -13,7 +13,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace iCat.DB.Client.Extension.Web
+namespace iCat.Cache.Extensions
 {
     /// <summary>
     /// extension
@@ -27,9 +27,17 @@ namespace iCat.DB.Client.Extension.Web
         /// <param name="services"></param>
         /// <param name="config"></param>
         /// <returns></returns>
-        public static IServiceCollection AddDBClient(this IServiceCollection services, ConfigurationOptions config)
+        public static IServiceCollection AddiCatRedisCaching(this IServiceCollection services, ConfigurationOptions config)
         {
-            services.TryAddSingleton<ICache, RedisCacheImpl>();
+            services.AddSingleton<ICache, RedisCacheImpl>(p =>
+            {
+                var connection = ConnectionMultiplexer.ConnectAsync(config).Result;
+
+                connection.ConnectionFailed += (_, _) =>
+                    throw new RedisConnectionException(ConnectionFailureType.UnableToConnect, "Connect to Redis fail");
+
+                return new RedisCacheImpl(p.GetRequiredService<IDistributedCache>(), connection);
+            });
             services.AddStackExchangeRedisCache(o =>
             {
                 o.ConnectionMultiplexerFactory = async () =>

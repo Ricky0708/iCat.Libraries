@@ -127,7 +127,7 @@ namespace iCat.Cache.Implements
         }
 
         /// <inheritdoc/>
-        public async Task HashSetAsync(string redisKey, string dataKey, object dataValue, CacheOptions options, CancellationToken cancellationToken = default)
+        public async Task HashSetAsync(string redisKey, string dataKey, string dataValue, CacheOptions options, CancellationToken cancellationToken = default)
         {
             if (_loadedHSetLuaScript == null)
             {

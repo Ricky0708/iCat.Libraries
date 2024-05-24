@@ -118,7 +118,7 @@ namespace iCat.Cache.Interfaces
         /// <param name="expiredSeconds"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task HashSetAsync(string redisKey, string dataKey, object dataValue, CacheOptions options, CancellationToken cancellationToken = default);
+        Task HashSetAsync(string redisKey, string dataKey, string dataValue, CacheOptions options, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Increase field value
