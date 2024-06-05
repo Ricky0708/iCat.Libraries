@@ -89,7 +89,7 @@ namespace iCat.Cache.Implements
         }
 
         /// <inheritdoc/>
-        public async IAsyncEnumerable<string> GetKeys(string match, [EnumeratorCancellation]CancellationToken cancellationToken = default)
+        public async IAsyncEnumerable<string> GetKeys(string match, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             var points = _connection.GetEndPoints();
             var keys = (_connection.GetServer(points.First())).KeysAsync(_connection.GetDatabase().Database, match);
@@ -138,7 +138,7 @@ namespace iCat.Cache.Implements
                     if @expiredAt ~= '-1' then
                       redis.call('EXPIRE', @redisKey, @expiredAt)
                     end
-";
+                ";
                 LuaScript? prepared = null;
                 StackExchange.Redis.IServer? server;
                 var points = _connection.GetEndPoints();
@@ -151,7 +151,7 @@ namespace iCat.Cache.Implements
             await _loadedHSetLuaScript.EvaluateAsync(_connection.GetDatabase(), new
             {
                 redisKey = (RedisKey)redisKey,
-                dataKey = dataKey,
+                dataKey = (RedisValue)dataKey,
                 dataValue = dataValue,
                 absexpKey = "absexp",
                 absexpValue = absexpValue?.Ticks ?? -1,
@@ -227,7 +227,7 @@ namespace iCat.Cache.Implements
             return await IncreaseValueAsync(redisKey, dataKey, dataValue, options); ;
         }
 
-        private async Task<decimal> IncreaseValueAsync(RedisKey redisKey, RedisKey dataKey, RedisValue dataValue, CacheOptions options, CancellationToken cancellationToken = default)
+        private async Task<decimal> IncreaseValueAsync(RedisKey redisKey, RedisValue dataKey, RedisValue dataValue, CacheOptions options, CancellationToken cancellationToken = default)
         {
             if (_loadedIncreaseValueLuaScript == null)
             {
