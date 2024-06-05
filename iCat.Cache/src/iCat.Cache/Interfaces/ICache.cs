@@ -63,7 +63,7 @@ namespace iCat.Cache.Interfaces
         /// <param name="options"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task SetStringAsync(string key, string value, CacheOptions options, CancellationToken cancellationToken = default);
+        Task SetStringAsync(string key, string value, CacheOptions? options, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Set key value
@@ -74,7 +74,7 @@ namespace iCat.Cache.Interfaces
         /// <param name="options"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task SetStringAsync<T>(string key, T? value, CacheOptions options, CancellationToken cancellationToken = default) where T : class;
+        Task SetStringAsync<T>(string key, T? value, CacheOptions? options, CancellationToken cancellationToken = default) where T : class;
 
         /// <summary>
         /// Refresh
@@ -117,7 +117,7 @@ namespace iCat.Cache.Interfaces
         /// <param name="options"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task HashSetAsync(string redisKey, string dataKey, string dataValue, CacheOptions options, CancellationToken cancellationToken = default);
+        Task HashSetAsync(string redisKey, string dataKey, string dataValue, CacheOptions? options, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Increase field value
@@ -128,7 +128,7 @@ namespace iCat.Cache.Interfaces
         /// <param name="options"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<byte> IncreaseValueAsync(string redisKey, string dataKey, byte dataValue, CacheOptions options, CancellationToken cancellationToken = default);
+        Task<byte> IncreaseValueAsync(string redisKey, string dataKey, byte dataValue, CacheOptions? options, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Increase field value
@@ -139,7 +139,7 @@ namespace iCat.Cache.Interfaces
         /// <param name="options"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<sbyte> IncreaseValueAsync(string redisKey, string dataKey, sbyte dataValue, CacheOptions options, CancellationToken cancellationToken = default);
+        Task<sbyte> IncreaseValueAsync(string redisKey, string dataKey, sbyte dataValue, CacheOptions? options, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Increase field value
@@ -150,7 +150,7 @@ namespace iCat.Cache.Interfaces
         /// <param name="options"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<short> IncreaseValueAsync(string redisKey, string dataKey, short dataValue, CacheOptions options, CancellationToken cancellationToken = default);
+        Task<short> IncreaseValueAsync(string redisKey, string dataKey, short dataValue, CacheOptions? options, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Increase field value
@@ -161,7 +161,7 @@ namespace iCat.Cache.Interfaces
         /// <param name="options"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<ushort> IncreaseValueAsync(string redisKey, string dataKey, ushort dataValue, CacheOptions options, CancellationToken cancellationToken = default);
+        Task<ushort> IncreaseValueAsync(string redisKey, string dataKey, ushort dataValue, CacheOptions? options, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Increase field value
@@ -172,7 +172,7 @@ namespace iCat.Cache.Interfaces
         /// <param name="options"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<int> IncreaseValueAsync(string redisKey, string dataKey, int dataValue, CacheOptions options, CancellationToken cancellationToken = default);
+        Task<int> IncreaseValueAsync(string redisKey, string dataKey, int dataValue, CacheOptions? options, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Increase field value
@@ -183,7 +183,7 @@ namespace iCat.Cache.Interfaces
         /// <param name="options"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<uint> IncreaseValueAsync(string redisKey, string dataKey, uint dataValue, CacheOptions options, CancellationToken cancellationToken = default);
+        Task<uint> IncreaseValueAsync(string redisKey, string dataKey, uint dataValue, CacheOptions? options, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Increase field value
@@ -194,7 +194,7 @@ namespace iCat.Cache.Interfaces
         /// <param name="options"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<long> IncreaseValueAsync(string redisKey, string dataKey, long dataValue, CacheOptions options, CancellationToken cancellationToken = default);
+        Task<long> IncreaseValueAsync(string redisKey, string dataKey, long dataValue, CacheOptions? options, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Increase field value
@@ -205,7 +205,7 @@ namespace iCat.Cache.Interfaces
         /// <param name="options"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<ulong> IncreaseValueAsync(string redisKey, string dataKey, ulong dataValue, CacheOptions options, CancellationToken cancellationToken = default);
+        Task<ulong> IncreaseValueAsync(string redisKey, string dataKey, ulong dataValue, CacheOptions? options, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Increase field value
@@ -216,7 +216,7 @@ namespace iCat.Cache.Interfaces
         /// <param name="options"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<float> IncreaseValueAsync(string redisKey, string dataKey, float dataValue, CacheOptions options, CancellationToken cancellationToken = default);
+        Task<float> IncreaseValueAsync(string redisKey, string dataKey, float dataValue, CacheOptions? options, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Increase field value
@@ -227,7 +227,7 @@ namespace iCat.Cache.Interfaces
         /// <param name="options"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<double> IncreaseValueAsync(string redisKey, string dataKey, double dataValue, CacheOptions options, CancellationToken cancellationToken = default);
+        Task<double> IncreaseValueAsync(string redisKey, string dataKey, double dataValue, CacheOptions? options, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Increase field value
@@ -238,6 +238,6 @@ namespace iCat.Cache.Interfaces
         /// <param name="options"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<decimal> IncreaseValueAsync(string redisKey, string dataKey, decimal dataValue, CacheOptions options, CancellationToken cancellationToken = default);
+        Task<decimal> IncreaseValueAsync(string redisKey, string dataKey, decimal dataValue, CacheOptions? options, CancellationToken cancellationToken = default);
     }
 }
