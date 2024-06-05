@@ -164,70 +164,70 @@ namespace iCat.Cache.Implements
         /// <inheritdoc/>
         public async Task<byte> IncreaseValueAsync(string redisKey, string dataKey, byte dataValue, CacheOptions options, CancellationToken cancellationToken = default)
         {
-            return await IncreaseValueAsync(redisKey, dataKey, dataValue, options); ;
+            return byte.Parse(await IncreaseValueAsync((RedisKey)redisKey, (RedisValue)dataKey, (RedisValue)dataValue.ToString(), options));
         }
 
         /// <inheritdoc/>
         public async Task<sbyte> IncreaseValueAsync(string redisKey, string dataKey, sbyte dataValue, CacheOptions options, CancellationToken cancellationToken = default)
         {
-            return await IncreaseValueAsync(redisKey, dataKey, dataValue, options); ;
+            return sbyte.Parse(await IncreaseValueAsync((RedisKey)redisKey, (RedisValue)dataKey, (RedisValue)dataValue.ToString(), options));
         }
 
         /// <inheritdoc/>
         public async Task<short> IncreaseValueAsync(string redisKey, string dataKey, short dataValue, CacheOptions options, CancellationToken cancellationToken = default)
         {
-            return await IncreaseValueAsync(redisKey, dataKey, dataValue, options); ;
+            return short.Parse(await IncreaseValueAsync((RedisKey)redisKey, (RedisValue)dataKey, (RedisValue)dataValue.ToString(), options));
         }
 
         /// <inheritdoc/>
         public async Task<ushort> IncreaseValueAsync(string redisKey, string dataKey, ushort dataValue, CacheOptions options, CancellationToken cancellationToken = default)
         {
-            return await IncreaseValueAsync(redisKey, dataKey, dataValue, options); ;
+            return ushort.Parse(await IncreaseValueAsync((RedisKey)redisKey, (RedisValue)dataKey, (RedisValue)dataValue.ToString(), options));
         }
 
         /// <inheritdoc/>
         public async Task<int> IncreaseValueAsync(string redisKey, string dataKey, int dataValue, CacheOptions options, CancellationToken cancellationToken = default)
         {
-            return await IncreaseValueAsync(redisKey, dataKey, dataValue, options); ;
+            return int.Parse(await IncreaseValueAsync((RedisKey)redisKey, (RedisValue)dataKey, (RedisValue)dataValue.ToString(), options));
         }
 
         /// <inheritdoc/>
         public async Task<uint> IncreaseValueAsync(string redisKey, string dataKey, uint dataValue, CacheOptions options, CancellationToken cancellationToken = default)
         {
-            return await IncreaseValueAsync(redisKey, dataKey, dataValue, options); ;
+            return uint.Parse(await IncreaseValueAsync((RedisKey)redisKey, (RedisValue)dataKey, (RedisValue)dataValue.ToString(), options));
         }
 
         /// <inheritdoc/>
         public async Task<long> IncreaseValueAsync(string redisKey, string dataKey, long dataValue, CacheOptions options, CancellationToken cancellationToken = default)
         {
-            return await IncreaseValueAsync(redisKey, dataKey, dataValue, options); ;
+            return long.Parse(await IncreaseValueAsync((RedisKey)redisKey, (RedisValue)dataKey, (RedisValue)dataValue.ToString(), options));
         }
 
         /// <inheritdoc/>
         public async Task<ulong> IncreaseValueAsync(string redisKey, string dataKey, ulong dataValue, CacheOptions options, CancellationToken cancellationToken = default)
         {
-            return await IncreaseValueAsync(redisKey, dataKey, dataValue, options); ;
+            return ulong.Parse(await IncreaseValueAsync((RedisKey)redisKey, (RedisValue)dataKey, (RedisValue)dataValue.ToString(), options));
         }
 
         /// <inheritdoc/>
         public async Task<float> IncreaseValueAsync(string redisKey, string dataKey, float dataValue, CacheOptions options, CancellationToken cancellationToken = default)
         {
-            return await IncreaseValueAsync(redisKey, dataKey, dataValue, options); ;
+            return float.Parse(await IncreaseValueAsync((RedisKey)redisKey, (RedisValue)dataKey, (RedisValue)dataValue.ToString(), options));
         }
 
         /// <inheritdoc/>
         public async Task<double> IncreaseValueAsync(string redisKey, string dataKey, double dataValue, CacheOptions options, CancellationToken cancellationToken = default)
         {
-            return await IncreaseValueAsync(redisKey, dataKey, dataValue, options); ;
+            return double.Parse(await IncreaseValueAsync((RedisKey)redisKey, (RedisValue)dataKey, (RedisValue)dataValue.ToString(), options));
         }
 
         /// <inheritdoc/>
         public async Task<decimal> IncreaseValueAsync(string redisKey, string dataKey, decimal dataValue, CacheOptions options, CancellationToken cancellationToken = default)
         {
-            return await IncreaseValueAsync(redisKey, dataKey, dataValue, options); ;
+            return decimal.Parse(await IncreaseValueAsync((RedisKey)redisKey, (RedisValue)dataKey, (RedisValue)dataValue.ToString(), options));
         }
 
-        private async Task<decimal> IncreaseValueAsync(RedisKey redisKey, RedisValue dataKey, RedisValue dataValue, CacheOptions options, CancellationToken cancellationToken = default)
+        private async Task<string> IncreaseValueAsync(RedisKey redisKey, RedisValue dataKey, RedisValue dataValue, CacheOptions options, CancellationToken cancellationToken = default)
         {
             if (_loadedIncreaseValueLuaScript == null)
             {
@@ -259,7 +259,7 @@ namespace iCat.Cache.Implements
                 sldexpValue = options?.SlidingExpiration?.Ticks ?? -1,
                 expiredAt = GetExpirationInSeconds(creationTime, absexpValue, options ?? new CacheOptions()) ?? -1
             }, flags: CommandFlags.None);
-            return decimal.Parse(n?.ToString() ?? "0");
+            return n?.ToString() ?? "0";
         }
 
         private static DateTimeOffset? GetAbsoluteExpiration(DateTimeOffset creationTime, CacheOptions options)
