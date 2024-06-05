@@ -147,7 +147,7 @@ namespace iCat.Cache.Implements
                 _loadedHSetLuaScript = prepared.Load(server, CommandFlags.None);
             }
             var creationTime = DateTimeOffset.UtcNow;
-            var absexpValue = GetAbsoluteExpiration(options?.AbsoluteExpiration ?? DateTimeOffset.Now, options ?? new CacheOptions());
+            var absexpValue = GetAbsoluteExpiration(DateTimeOffset.Now, options ?? new CacheOptions());
             await _loadedHSetLuaScript.EvaluateAsync(_connection.GetDatabase(), new
             {
                 redisKey = (RedisKey)redisKey,
@@ -249,7 +249,7 @@ namespace iCat.Cache.Implements
             }
 
             var creationTime = DateTimeOffset.UtcNow;
-            var absexpValue = GetAbsoluteExpiration(options?.AbsoluteExpiration ?? DateTimeOffset.Now, options ?? new CacheOptions());
+            var absexpValue = GetAbsoluteExpiration(DateTimeOffset.Now, options ?? new CacheOptions());
             var n = await _loadedIncreaseValueLuaScript.EvaluateAsync(_connection.GetDatabase(), new
             {
                 redisKey = redisKey,
