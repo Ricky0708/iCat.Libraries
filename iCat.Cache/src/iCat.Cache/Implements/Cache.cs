@@ -14,10 +14,12 @@ using System.Threading.Tasks;
 
 namespace iCat.Cache.Implements
 {
+        /// <inheritdoc/>
     public class Cache : ICacheBackup
     {
         private readonly IDistributedCache _cache;
 
+        /// <inheritdoc/>
         public Cache(IDistributedCache distributedCache)
         {
             _cache = distributedCache ?? throw new ArgumentNullException(nameof(distributedCache));
