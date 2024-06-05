@@ -236,7 +236,9 @@ namespace iCat.Cache.Implements
                     local newValue = 0
                     if currentValue==false then newValue = @dataValue else newValue = currentValue + @dataValue end
                     redis.call('HSET', @redisKey, @absexpKey, @absexpValue, @sldexpKey, @sldexpValue, @dataKey, newValue)
-                    redis.call('EXPIRE', @redisKey, @expiredAt)
+                    if @expiredAt ~= '-1' then
+                      redis.call('EXPIRE', @redisKey, @expiredAt)
+                    end
                     return tostring(newValue)";
                 LuaScript? prepared = null;
                 StackExchange.Redis.IServer? server;
