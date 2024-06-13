@@ -1,7 +1,7 @@
-using iCat.DB.Client.Extension.Web;
 using iCat.DB.Client.Implements;
 using iCat.DB.Client.Models;
 using Microsoft.Data.SqlClient;
+using iCat.DB.Client.Factory.Extensions;
 namespace iCat.DB.Client.demo
 {
     public class Program

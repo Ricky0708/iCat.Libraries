@@ -12,7 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\iCat.DB.Client.Extension.Web\iCat.DB.Client.Extension.Web.csproj" />
     <ProjectReference Include="..\..\src\iCat.DB.Client.Factory\iCat.DB.Client.Factory.csproj" />
     <ProjectReference Include="..\..\src\iCat.DB.Client\iCat.DB.Client.csproj" />
   </ItemGroup>

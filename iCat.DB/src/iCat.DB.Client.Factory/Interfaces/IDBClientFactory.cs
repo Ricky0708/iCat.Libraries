@@ -10,8 +10,7 @@ namespace iCat.DB.Client.Factory.Interfaces
     /// <summary>
     /// DB Client Factory
     /// </summary>
-    [Obsolete("Please use IConnectionFactory, IUnitOfWorkFactory instead.", false)]
-    public interface IDBClientFactory : IConnectionFactory, IUnitOfWorkFactory
+    internal interface IDBClientFactory : IConnectionFactory, IUnitOfWorkFactory
     {
     }
 }
