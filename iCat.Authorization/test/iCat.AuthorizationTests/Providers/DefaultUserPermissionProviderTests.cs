@@ -178,21 +178,21 @@ namespace iCat.Authorization.Providers.Tests
 
     public enum Permit_Duplicate
     {
-        [Permission(typeof(UserProfileQQ))]
+        [PermissionRelation(typeof(UserProfileQQ))]
         UserProfile = 1,
-        [Permission(typeof(UserProfileQQ))]
+        [PermissionRelation(typeof(UserProfileQQ))]
         Order = 2,
-        [Permission(typeof(DepartmentPP))]
+        [PermissionRelation(typeof(DepartmentPP))]
         Department = 3
     }
 
     public enum Permit
     {
-        [Permission(typeof(UserProfileQQ))]
+        [PermissionRelation(typeof(UserProfileQQ))]
         UserProfile = 1,
-        [Permission(typeof(OrderPe))]
+        [PermissionRelation(typeof(OrderPe))]
         Order = 2,
-        [Permission(typeof(DepartmentPP))]
+        [PermissionRelation(typeof(DepartmentPP))]
         Department = 3
     }
 

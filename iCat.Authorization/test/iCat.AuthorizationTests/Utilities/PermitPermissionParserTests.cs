@@ -304,19 +304,19 @@ namespace iCat.Authorization.Utilities.Tests
 
     public enum Permit_Success
     {
-        [Permission(typeof(UserProfileA))]
+        [PermissionRelation(typeof(UserProfileA))]
         UserProfile = 1,
-        [Permission(typeof(OrderB))]
+        [PermissionRelation(typeof(OrderB))]
         Order = 2,
-        [Permission(typeof(DepartmentC))]
+        [PermissionRelation(typeof(DepartmentC))]
         Department = 3
     }
 
     public enum Permit_Fail
     {
-        [Permission(typeof(UserProfileA))]
+        [PermissionRelation(typeof(UserProfileA))]
         UserProfile = 1,
-        [Permission(typeof(DepartmentC))]
+        [PermissionRelation(typeof(DepartmentC))]
         Department = 3
     }
 

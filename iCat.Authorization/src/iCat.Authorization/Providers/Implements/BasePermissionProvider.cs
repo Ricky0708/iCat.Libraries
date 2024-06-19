@@ -136,7 +136,7 @@ namespace iCat.Authorization.Providers.Implements
 
             foreach (var field in permitEnum.GetFields().Where(p => p.Name != "value__"))
             {
-                var contructorType = field.CustomAttributes.SingleOrDefault(p => p.AttributeType == typeof(PermissionAttribute))?.ConstructorArguments.First().Value as Type ?? throw new ArgumentNullException($"\"{field.Name}\" has no defined permission attribute.");
+                var contructorType = field.CustomAttributes.SingleOrDefault(p => p.AttributeType == typeof(PermissionRelationAttribute))?.ConstructorArguments.First().Value as Type ?? throw new ArgumentNullException($"\"{field.Name}\" has no defined permission attribute.");
                 if (contructorType.GetCustomAttribute<FlagsAttribute>() == null) throw new ArgumentException($"Enum {contructorType.Name} have to be flag enum");
 
                 var permit = new Permit
