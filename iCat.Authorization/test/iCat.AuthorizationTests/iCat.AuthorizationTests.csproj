@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\iCat.Authorization.Web\iCat.Authorization.Web.csproj" />
     <ProjectReference Include="..\..\src\iCat.Authorization\iCat.Authorization.csproj" />
   </ItemGroup>
 

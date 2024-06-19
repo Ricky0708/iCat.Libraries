@@ -1,6 +1,5 @@
-﻿using iCat.Authorization.Constants;
-using iCat.Authorization.Models;
-using Microsoft.AspNetCore.Http;
+﻿using iCat.Authorization.Models;
+using iCat.Authorization.Providers.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,34 +9,22 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace iCat.Authorization.Utilities
+namespace iCat.Authorization.Providers.Implements
 {
     /// <inheritdoc/>
-    public class DefaultPermissionProvider : IPermissionProvider
+    public abstract class BasePermissionProvider : IPermissionProvider
     {
         private readonly List<Permit> _permitData;
 
         /// <inheritdoc/>
-        public DefaultPermissionProvider(Type permitEnum)
+        public BasePermissionProvider(Type permitEnum)
         {
             //_permitData ??= DefaultPermissionProvider.GetDefinitions(permitEnum, DefaultPermissionProvider.GetPermissionEnumList(permitEnum));
             _permitData ??= GetDefinitions(permitEnum);
         }
 
         /// <inheritdoc/>
-        public List<Permit> GetPermissionRequired(params CustomAttributeData[] attributes)
-        {
-            if (attributes.Any(p => !p.AttributeType.Name.StartsWith(nameof(AuthorizationPermissionsAttribute)))) throw new ArgumentException("All attributes must be AuthorizationPermissionsAttribute.");
-
-            var permissionAttrs = attributes.Where(p => p.AttributeType.Name.StartsWith(nameof(AuthorizationPermissionsAttribute)));
-            var args = permissionAttrs.SelectMany(p => p.ConstructorArguments);
-            var permissionNeedsData = new List<Permit>();
-            foreach (var arg in args)
-            {
-                GetAttributePermission(arg, ref permissionNeedsData);
-            }
-            return permissionNeedsData;
-        }
+        public abstract List<Permit> GetPermissionRequired(params CustomAttributeData[] attributes);
 
         /// <inheritdoc/>
         public List<Permit> GetDefinitions()
@@ -53,9 +40,9 @@ namespace iCat.Authorization.Utilities
         }
 
         /// <inheritdoc/>
-        public bool Validate<T>(IEnumerable<IPermit<T>> permits, IPermit<T> permissionRequired) where T : IPermission
+        public bool Validate<T>(IEnumerable<IPermit<T>> permissions, IPermit<T> permissionRequired) where T : IPermission
         {
-            if (permits.Any(p => p.Value == permissionRequired.Value && (p.Permissions & permissionRequired.Permissions) > 0))
+            if (permissions.Any(p => p.Value == permissionRequired.Value && (p.Permissions & permissionRequired.Permissions) > 0))
             {
                 return true;
             }
@@ -71,7 +58,7 @@ namespace iCat.Authorization.Utilities
         /// <param name="arg"></param>
         /// <param name="permissionNeeds"></param>
         /// <exception cref="ArgumentException"></exception>
-        private void GetAttributePermission(CustomAttributeTypedArgument arg, ref List<Permit> permissionNeeds)
+        protected void GetAttributePermission(CustomAttributeTypedArgument arg, ref List<Permit> permissionNeeds)
         {
             if (arg.ArgumentType.IsArray)
             {
@@ -218,8 +205,5 @@ namespace iCat.Authorization.Utilities
         //}
 
         #endregion
-
-
-
     }
 }

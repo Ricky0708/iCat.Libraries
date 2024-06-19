@@ -1,6 +1,6 @@
 ﻿using iCat.Authorization.Constants;
 using iCat.Authorization.Models;
-using iCat.Authorization.Utilities;
+using iCat.Authorization.Providers.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Controllers;
@@ -14,7 +14,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace iCat.Authorization
+namespace iCat.Authorization.Web
 {
     /// <summary>
     /// Authorize AuthorizationPermissionsRequirement

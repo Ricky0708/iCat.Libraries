@@ -12,6 +12,7 @@ using iCat.Authorization.Constants;
 using iCat.Authorization.Models;
 using System.Text.Json;
 using iCat.Authorization.Utilities;
+using iCat.Authorization.Web.Providers;
 
 namespace iCat.Authorization.Providers.Tests
 {
@@ -32,8 +33,8 @@ namespace iCat.Authorization.Providers.Tests
             hc.User = principal;
             var accessor = Substitute.For<IHttpContextAccessor>();
             accessor.HttpContext = hc;
-            var permissionProvider = new DefaultPermissionProvider(typeof(Permit));
-            var permitProvider = new DefaultPermitClaimProcessor(accessor, permissionProvider);
+            var permissionProvider = new PermissionProvider(typeof(Permit));
+            var permitProvider = new PermitClaimProcessor(accessor, permissionProvider);
 
             var expeced = new List<PermitTest> {
                 new() { Name = nameof(UserProfileQQ),
@@ -79,7 +80,7 @@ namespace iCat.Authorization.Providers.Tests
             // arrange
 
             // action
-            var permissionProvider = new DefaultPermissionProvider(typeof(Permit_Duplicate));
+            var permissionProvider = new PermissionProvider(typeof(Permit_Duplicate));
 
             // assert
         }
@@ -96,8 +97,8 @@ namespace iCat.Authorization.Providers.Tests
         {
             // arrange
             var accessor = Substitute.For<IHttpContextAccessor>();
-            var permissionProvider = new DefaultPermissionProvider(typeof(Permit));
-            var permitProvider = new DefaultPermitClaimProcessor(accessor, permissionProvider);
+            var permissionProvider = new PermissionProvider(typeof(Permit));
+            var permitProvider = new PermitClaimProcessor(accessor, permissionProvider);
             var userPermission = new List<PermitTest> {
                 new() {
                     Value = (int)permit,

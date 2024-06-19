@@ -1,5 +1,5 @@
 ﻿using iCat.Authorization.demo.Enums;
-using iCat.Authorization.Utilities;
+using iCat.Authorization.Providers.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;

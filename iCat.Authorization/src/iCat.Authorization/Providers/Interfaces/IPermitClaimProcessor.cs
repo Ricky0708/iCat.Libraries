@@ -6,7 +6,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace iCat.Authorization.Utilities
+namespace iCat.Authorization.Providers.Interfaces
 {
     /// <summary>
     /// Claim Generator
@@ -41,5 +41,13 @@ namespace iCat.Authorization.Utilities
         /// </summary>
         /// <returns></returns>
         IEnumerable<Permit> GetPermits();
+
+        /// <summary>
+        /// Extract to permit from permissions
+        /// </summary>
+        /// <param name="permitValue"></param>
+        /// <param name="permissionsValue"></param>
+        /// <returns></returns>
+        Permit ExtractPermit(int permitValue, int permissionsValue);
     }
 }

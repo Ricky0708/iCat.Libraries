@@ -1,9 +1,9 @@
-using iCat.Authorization.Extensions;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using iCat.Authorization.demo.Enums;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using iCat.Authorization.Models;
+using iCat.Authorization.Web.Extensions;
 namespace iCat.Authorization.demo
 {
     public class Program

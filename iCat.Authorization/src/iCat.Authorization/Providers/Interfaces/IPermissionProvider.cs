@@ -7,7 +7,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace iCat.Authorization.Utilities
+namespace iCat.Authorization.Providers.Interfaces
 {
     /// <summary>
     /// Provide user's permission
@@ -40,9 +40,9 @@ namespace iCat.Authorization.Utilities
         /// Validate Permit
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="permits"></param>
+        /// <param name="permissions"></param>
         /// <param name="permissionRequired"></param>
         /// <returns></returns>
-        bool Validate<T>(IEnumerable<IPermit<T>> permits, IPermit<T> permissionRequired) where T : IPermission;
+        bool Validate<T>(IEnumerable<IPermit<T>> permissions, IPermit<T> permissionRequired) where T : IPermission;
     }
 }

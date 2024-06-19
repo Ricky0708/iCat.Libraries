@@ -1,6 +1,7 @@
 using iCat.Authorization.demo.Enums;
 using iCat.Authorization.Models;
-using iCat.Authorization.Utilities;
+using iCat.Authorization.Providers.Interfaces;
+using iCat.Authorization.Web;
 using Microsoft.AspNetCore.Mvc;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
