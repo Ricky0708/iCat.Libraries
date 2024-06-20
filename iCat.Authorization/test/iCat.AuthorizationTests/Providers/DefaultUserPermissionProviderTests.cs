@@ -12,7 +12,8 @@ using iCat.Authorization.Constants;
 using iCat.Authorization.Models;
 using System.Text.Json;
 using iCat.Authorization.Utilities;
-using iCat.Authorization.Web.Providers;
+using iCat.Authorization.Providers.Implements;
+using iCat.Authorization.Web.Providers.Implements;
 
 namespace iCat.Authorization.Providers.Tests
 {
@@ -33,8 +34,9 @@ namespace iCat.Authorization.Providers.Tests
             hc.User = principal;
             var accessor = Substitute.For<IHttpContextAccessor>();
             accessor.HttpContext = hc;
-            var permissionProvider = new PermissionProvider(typeof(Permit));
-            var permitProvider = new PermitClaimProcessor(accessor, permissionProvider);
+            var permissionProcessor = new PermissionProcessor(typeof(Permit));
+            var claimProcessor = new ClaimProcessor(permissionProcessor);
+            var permitProvider = new PermitProvider(accessor, claimProcessor, permissionProcessor);
 
             var expeced = new List<PermitTest> {
                 new() { Name = nameof(UserProfileQQ),
@@ -80,7 +82,7 @@ namespace iCat.Authorization.Providers.Tests
             // arrange
 
             // action
-            var permissionProvider = new PermissionProvider(typeof(Permit_Duplicate));
+            var permissionProvider = new PermissionProcessor(typeof(Permit_Duplicate));
 
             // assert
         }
@@ -97,8 +99,8 @@ namespace iCat.Authorization.Providers.Tests
         {
             // arrange
             var accessor = Substitute.For<IHttpContextAccessor>();
-            var permissionProvider = new PermissionProvider(typeof(Permit));
-            var permitProvider = new PermitClaimProcessor(accessor, permissionProvider);
+            var permissionProvider = new PermissionProcessor(typeof(Permit));
+            var permitProvider = new ClaimProcessor(permissionProvider);
             var userPermission = new List<PermitTest> {
                 new() {
                     Value = (int)permit,
@@ -112,7 +114,7 @@ namespace iCat.Authorization.Providers.Tests
             };
 
             // action
-            var result = permissionProvider.Validate(userPermission, new PermitTest
+            var result = permissionProvider.ValidatePermission(userPermission, new PermitTest
             {
                 Value = (int)Permit.UserProfile,
                 PermissionsData = new List<PermissionTest> {

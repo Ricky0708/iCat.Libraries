@@ -13,6 +13,7 @@ using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace iCat.Authorization.Web
 {
@@ -23,17 +24,23 @@ namespace iCat.Authorization.Web
     {
         private const string _endWith = "Permission";
         private static readonly ConcurrentDictionary<string, List<Permit>> _routePermissionCache = new();
-        private readonly IPermissionProvider _permissionProvider;
-        private readonly IPermitClaimProcessor _permitClaimProcessor;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IPermissionProcessor _permissionProvider;
+        private readonly IClaimProcessor _permitClaimProcessor;
 
         /// <summary>
         /// Authorize AuthorizationPermissionsRequirement
         /// </summary>
+        /// <param name="httpContextAccessor"></param>
         /// <param name="permissionProvider"></param>
         /// <param name="permitClaimProcessor"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public AuthorizationPermissionsHandler(IPermissionProvider permissionProvider, IPermitClaimProcessor permitClaimProcessor)
+        public AuthorizationPermissionsHandler(
+            IHttpContextAccessor httpContextAccessor,
+            IPermissionProcessor permissionProvider,
+            IClaimProcessor permitClaimProcessor)
         {
+            _httpContextAccessor = httpContextAccessor;
             _permissionProvider = permissionProvider ?? throw new ArgumentNullException(nameof(permissionProvider));
             _permitClaimProcessor = permitClaimProcessor ?? throw new ArgumentNullException(nameof(permitClaimProcessor));
         }
@@ -50,11 +57,11 @@ namespace iCat.Authorization.Web
 
             if (context.Resource is HttpContext httpContext)
             {
-                var routerPermissions = GetRouterPermissions(httpContext);
-                var userPermit = _permitClaimProcessor.GetPermits();
-                foreach (var routerPermission in routerPermissions)
+                var routerPermits = GetRouterPermits(httpContext);
+                var userPermit = GetPermits();
+                foreach (var routerPermit in routerPermits)
                 {
-                    if (_permissionProvider.Validate(userPermit, routerPermission))
+                    if (_permissionProvider.ValidatePermission(userPermit, routerPermit))
                     {
                         context.Succeed(requirement);
                         await Task.FromResult(0);
@@ -70,7 +77,23 @@ namespace iCat.Authorization.Web
             await Task.FromResult(0);
         }
 
-        private List<Permit> GetRouterPermissions(HttpContext httpContext)
+        /// <summary>
+        /// Get currently authenticated user permit
+        /// </summary>
+        /// <returns></returns>
+        private IEnumerable<Permit> GetPermits()
+        {
+            var userPermits = _httpContextAccessor?.HttpContext?.User.Claims.Where(p => p.Type == Constants.ClaimTypes.Permit).Select(p =>
+            {
+                var permitClaimData = p.Value.Split(",");
+                if (!int.TryParse(permitClaimData[0], out var permitValue)) throw new ArgumentException("Invalid Permit claims");
+                if (!int.TryParse(permitClaimData[1], out var permissionsValue)) throw new ArgumentException("Invalid Permit claims");
+                return _permissionProvider.BuildPermit(permitValue, permissionsValue);
+            }) ?? throw new ArgumentNullException(nameof(_httpContextAccessor));
+            return userPermits;
+        }
+
+        private List<Permit> GetRouterPermits(HttpContext httpContext)
         {
             var endpoint = httpContext.GetEndpoint()!;
             var actionDescriptor = endpoint.Metadata.GetMetadata<ControllerActionDescriptor>()!;
@@ -78,8 +101,10 @@ namespace iCat.Authorization.Web
 
             if (!_routePermissionCache.TryGetValue(cacheKey, out var permissionNeedsData))
             {
+                if (!(actionDescriptor!.MethodInfo.CustomAttributes.Any(p => p.AttributeType.Name.StartsWith(nameof(AuthorizationPermissionsAttribute))))) throw new ArgumentException("Not have AuthorizationPermissionsAttribute.");
                 var permissionAttrs = actionDescriptor!.MethodInfo.CustomAttributes.Where(p => p.AttributeType.Name.StartsWith(nameof(AuthorizationPermissionsAttribute)));
-                permissionNeedsData = _permissionProvider.GetPermissionRequired(permissionAttrs.ToArray());
+
+                permissionNeedsData = _permissionProvider.GetPermitFromAttribute(permissionAttrs.ToArray());
                 _routePermissionCache.TryAdd(cacheKey, permissionNeedsData);
             }
             return permissionNeedsData;

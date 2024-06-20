@@ -32,6 +32,7 @@ namespace iCat.Authorization.Web
 
     }
 
+
 #if !NET6_0  
     /// <summary>
     /// iCat authorization attribute, 

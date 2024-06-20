@@ -11,7 +11,7 @@ namespace iCat.Authorization.Providers.Interfaces
     /// <summary>
     /// Claim Generator
     /// </summary>
-    public interface IPermitClaimProcessor
+    public interface IClaimProcessor
     {
         /// <summary>
         /// Generate permit claim
@@ -36,18 +36,6 @@ namespace iCat.Authorization.Providers.Interfaces
         /// <returns></returns>
         Claim GeneratePermitClaim(int permit, int permission);
 
-        /// <summary>
-        /// Get currently authenticated user permit
-        /// </summary>
-        /// <returns></returns>
-        IEnumerable<Permit> GetPermits();
 
-        /// <summary>
-        /// Extract to permit from permissions
-        /// </summary>
-        /// <param name="permitValue"></param>
-        /// <param name="permissionsValue"></param>
-        /// <returns></returns>
-        Permit ExtractPermit(int permitValue, int permissionsValue);
     }
 }

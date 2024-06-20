@@ -21,6 +21,17 @@
 		<Version>1.0.0</Version>
 		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
 	</PropertyGroup>
+
+	<ItemGroup>
+	  <Compile Remove="Providers\**" />
+	  <EmbeddedResource Remove="Providers\**" />
+	  <None Remove="Providers\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Include="Providers\Implements\PermitProvider.cs" />
+	  <Compile Include="Providers\Interfaces\IPermitProvider.cs" />
+	</ItemGroup>
 	<ItemGroup>
 		<None Include="..\..\README.md">
 			<Pack>True</Pack>

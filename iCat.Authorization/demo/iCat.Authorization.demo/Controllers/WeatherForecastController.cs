@@ -2,6 +2,7 @@ using iCat.Authorization.demo.Enums;
 using iCat.Authorization.Models;
 using iCat.Authorization.Providers.Interfaces;
 using iCat.Authorization.Web;
+using iCat.Authorization.Web.Providers.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -11,13 +12,11 @@ namespace iCat.Authorization.demo.Controllers
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
     {
-        private readonly IPermitClaimProcessor _permitClaimProcessor;
-        private readonly IPermissionProvider _permissionProvider;
+        private readonly IPermitProvider _permitProvider;
 
-        public WeatherForecastController(IPermitClaimProcessor permitClaimProcessor, IPermissionProvider permissionProvider)
+        public WeatherForecastController(IClaimProcessor permitClaimProcessor, IPermitProvider permissionProvider)
         {
-            _permitClaimProcessor = permitClaimProcessor ?? throw new ArgumentNullException(nameof(permitClaimProcessor));
-            _permissionProvider = permissionProvider ?? throw new ArgumentNullException(nameof(permissionProvider));
+            _permitProvider = permissionProvider ?? throw new ArgumentNullException(nameof(permissionProvider));
         }
 
         [AuthorizationPermissions(
@@ -26,7 +25,7 @@ namespace iCat.Authorization.demo.Controllers
         [HttpGet]
         public IActionResult GetData()
         {
-            return Ok(_permitClaimProcessor.GetPermits());
+            return Ok(_permitProvider.GetPermits());
         }
     }
 }

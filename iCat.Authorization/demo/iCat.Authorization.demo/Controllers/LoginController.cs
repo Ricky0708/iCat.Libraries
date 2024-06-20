@@ -1,5 +1,6 @@
 ﻿using iCat.Authorization.demo.Enums;
 using iCat.Authorization.Providers.Interfaces;
+using iCat.Authorization.Web.Providers.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -18,14 +19,14 @@ namespace iCat.Authorization.demo.Controllers
     public class LoginController : ControllerBase
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IPermitClaimProcessor _permitClaimProcessor;
+        private readonly IPermitProvider _permitProvider;
 
         public LoginController(
             IHttpContextAccessor httpContextAccessor,
-            IPermitClaimProcessor permitClaimGenerator)
+            IPermitProvider permitProvider)
         {
             _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
-            _permitClaimProcessor = permitClaimGenerator ?? throw new ArgumentNullException(nameof(permitClaimGenerator));
+            _permitProvider = permitProvider ?? throw new ArgumentNullException(nameof(permitProvider));
         }
 
         [AllowAnonymous]
@@ -36,8 +37,8 @@ namespace iCat.Authorization.demo.Controllers
             {
                 new Claim(ClaimTypes.Name, "TestUser"),
                 new Claim("UserId", "TestId"),
-                _permitClaimProcessor.GeneratePermitClaim(UserProfilePermission.Add | UserProfilePermission.ReadAllDetail),
-                _permitClaimProcessor.GeneratePermitClaim(DepartmentPermission.Delete),
+                _permitProvider.GenerateClaim(UserProfilePermission.Add | UserProfilePermission.ReadAllDetail),
+                _permitProvider.GenerateClaim(DepartmentPermission.Delete),
             };
 
 

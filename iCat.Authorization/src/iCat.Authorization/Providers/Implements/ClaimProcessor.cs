@@ -10,15 +10,15 @@ using System.Threading.Tasks;
 namespace iCat.Authorization.Providers.Implements
 {
     /// <inheritdoc/>
-    public abstract class BasePermitClaimProvider : IPermitClaimProcessor
+    public class ClaimProcessor : IClaimProcessor
     {
         /// <summary>
         /// permissionProvider
         /// </summary>
-        private readonly IPermissionProvider _permissionProvider;
+        private readonly IPermissionProcessor _permissionProvider;
 
         /// <inheritdoc/>
-        public BasePermitClaimProvider(IPermissionProvider permissionProvider)
+        public ClaimProcessor(IPermissionProcessor permissionProvider)
         {
             _permissionProvider = permissionProvider ?? throw new ArgumentNullException(nameof(permissionProvider));
         }
@@ -33,7 +33,7 @@ namespace iCat.Authorization.Providers.Implements
         /// <inheritdoc/>
         public Claim GeneratePermitClaim<TPermission>(TPermission permission) where TPermission : Enum
         {
-            var permit = _permissionProvider.GetPermitFromPermission(permission);
+            var permit = _permissionProvider.GetPermitDefinitionFromPermission(permission);
             var claim = GeneratePermitClaim(permit.Value!.Value, (int)(object)permission);
             return claim;
         }
@@ -45,19 +45,6 @@ namespace iCat.Authorization.Providers.Implements
             return claim;
         }
 
-        /// <inheritdoc/>
-        public abstract IEnumerable<Permit> GetPermits();
 
-        /// <inheritdoc/>
-        public Permit ExtractPermit(int permitValue, int permissionsValue)
-        {
-            var permit = _permissionProvider.GetDefinitions().FirstOrDefault(x => x.Value == permitValue) ?? throw new ArgumentException("permit in claims is not in permit list");
-            return new Permit
-            {
-                Value = permitValue,
-                Name = permit.Name,
-                PermissionsData = permit.PermissionsData.Where(x => (x.Value & permissionsValue) > 0).ToList()
-            };
-        }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using iCat.Authorization.Providers.Interfaces;
-using iCat.Authorization.Web.Providers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -10,7 +9,9 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using iCat.Authorization.Extensions;
+using iCat.Authorization.Web.Providers.Implements;
+using iCat.Authorization.Web.Providers.Interfaces;
 namespace iCat.Authorization.Web.Extensions
 {
     /// <summary>
@@ -24,11 +25,11 @@ namespace iCat.Authorization.Web.Extensions
         /// <param name="services"></param>
         /// <param name="permitEnum"></param>
         /// <returns></returns>
-        public static IServiceCollection AddAuthorizationPermission(this IServiceCollection services, Type permitEnum)
+        public static IServiceCollection AddWebAuthorizationPermission(this IServiceCollection services, Type permitEnum)
         {
+            services.AddSingleton<IPermitProvider, PermitProvider>();
             services.AddScoped<IAuthorizationHandler, AuthorizationPermissionsHandler>();
-            services.AddSingleton<IPermissionProvider>(s => new PermissionProvider(permitEnum));
-            services.AddSingleton<IPermitClaimProcessor, PermitClaimProcessor>();
+            services.AddAuthorizationPermission(permitEnum);
             return services;
         }
     }
