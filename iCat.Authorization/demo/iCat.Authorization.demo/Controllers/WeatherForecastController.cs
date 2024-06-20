@@ -1,10 +1,7 @@
 using iCat.Authorization.demo.Enums;
-using iCat.Authorization.Models;
-using iCat.Authorization.Providers.Interfaces;
 using iCat.Authorization.Web;
 using iCat.Authorization.Web.Providers.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace iCat.Authorization.demo.Controllers
 {
@@ -14,7 +11,7 @@ namespace iCat.Authorization.demo.Controllers
     {
         private readonly IPermitProvider _permitProvider;
 
-        public WeatherForecastController(IClaimProcessor permitClaimProcessor, IPermitProvider permissionProvider)
+        public WeatherForecastController(IPermitProvider permissionProvider)
         {
             _permitProvider = permissionProvider ?? throw new ArgumentNullException(nameof(permissionProvider));
         }

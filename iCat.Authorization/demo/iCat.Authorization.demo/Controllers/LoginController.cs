@@ -1,16 +1,10 @@
 ﻿using iCat.Authorization.demo.Enums;
-using iCat.Authorization.Providers.Interfaces;
 using iCat.Authorization.Web.Providers.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace iCat.Authorization.demo.Controllers
 {
@@ -40,7 +34,6 @@ namespace iCat.Authorization.demo.Controllers
                 _permitProvider.GenerateClaim(UserProfilePermission.Add | UserProfilePermission.ReadAllDetail),
                 _permitProvider.GenerateClaim(DepartmentPermission.Delete),
             };
-
 
             ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             ClaimsPrincipal principal = new ClaimsPrincipal(identity);
