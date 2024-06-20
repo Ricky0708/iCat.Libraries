@@ -25,7 +25,7 @@ namespace iCat.Authorization.demo.Controllers
         [HttpGet]
         public IActionResult GetData()
         {
-            return Ok(_permitProvider.GetPermits());
+            return Ok(_permitProvider.GetCurrentUserPermits());
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using iCat.Authorization.Models;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,21 @@ namespace iCat.Authorization.Web.Providers.Interfaces
         /// Get currently authenticated user permit
         /// </summary>
         /// <returns></returns>
-        IEnumerable<Permit> GetPermits();
+        IEnumerable<Permit> GetCurrentUserPermits();
+
+        /// <summary>
+        /// Get currently authenticated user permit
+        /// </summary>
+        /// <param name="httpContext"></param>
+        /// <returns></returns>
+        IEnumerable<Permit> GetUserPermits(HttpContext httpContext);
+
+        /// <summary>
+        /// Get permits required from router
+        /// </summary>
+        /// <param name="endpoint"></param>
+        /// <returns></returns>
+        List<Permit> GetRouterPermitsRequired(Endpoint endpoint);
 
         /// <summary>
         /// Generate permit claim
@@ -42,5 +57,12 @@ namespace iCat.Authorization.Web.Providers.Interfaces
         /// <returns></returns>
         Claim GenerateClaim(int permit, int permission);
 
+        /// <summary>
+        /// Validate Permit
+        /// </summary>
+        /// <param name="userPermit"></param>
+        /// <param name="routerPermit"></param>
+        /// <returns></returns>
+        bool ValidatePermission(IEnumerable<Permit> userPermit, Permit routerPermit);
     }
 }

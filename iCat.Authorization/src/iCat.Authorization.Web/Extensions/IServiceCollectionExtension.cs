@@ -30,6 +30,7 @@ namespace iCat.Authorization.Web.Extensions
             services.AddSingleton<IPermitProvider, PermitProvider>();
             services.AddScoped<IAuthorizationHandler, AuthorizationPermissionsHandler>();
             services.AddAuthorizationPermission(permitEnum);
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             return services;
         }
     }

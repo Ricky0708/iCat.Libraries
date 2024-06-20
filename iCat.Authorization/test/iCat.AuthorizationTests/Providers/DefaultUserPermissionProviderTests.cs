@@ -69,7 +69,7 @@ namespace iCat.Authorization.Providers.Tests
 
 
             // action
-            var result = permitProvider.GetPermits();
+            var result = permitProvider.GetCurrentUserPermits();
 
             // assert
             Assert.AreEqual(JsonSerializer.Serialize(expeced), JsonSerializer.Serialize(result));
