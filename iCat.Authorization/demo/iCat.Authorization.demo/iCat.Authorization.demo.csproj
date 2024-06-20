@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\iCat.Authorization\iCat.Authorization.csproj" />
+    <ProjectReference Include="..\..\src\iCat.Authorization.Web\iCat.Authorization.Web.csproj" />
   </ItemGroup>
 
   <ItemGroup>

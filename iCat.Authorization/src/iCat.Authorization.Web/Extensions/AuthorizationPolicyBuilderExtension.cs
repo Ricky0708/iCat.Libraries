@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace iCat.Authorization.Extensions
+namespace iCat.Authorization.Web.Extensions
 {
     /// <summary>
     /// AuthorizationPolicyBuilder extension for AuthorizationPermissionsRequirement

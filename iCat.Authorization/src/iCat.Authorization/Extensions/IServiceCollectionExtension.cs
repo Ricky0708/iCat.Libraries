@@ -1,7 +1,5 @@
-﻿using iCat.Authorization.Utilities;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
+﻿using iCat.Authorization.Providers.Implements;
+using iCat.Authorization.Providers.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -25,9 +23,8 @@ namespace iCat.Authorization.Extensions
         /// <returns></returns>
         public static IServiceCollection AddAuthorizationPermission(this IServiceCollection services, Type permitEnum)
         {
-            services.AddScoped<IAuthorizationHandler, AuthorizationPermissionsHandler>();
-            services.AddSingleton<IPermissionProvider>(s => new DefaultPermissionProvider(permitEnum));
-            services.AddSingleton<IPermitClaimProcessor, DefaultPermitClaimProcessor>();
+            services.AddSingleton<IPermissionProcessor>(s => new PermissionProcessor(permitEnum));
+            services.AddSingleton<IClaimProcessor, ClaimProcessor>();
             return services;
         }
     }

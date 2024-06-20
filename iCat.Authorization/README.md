@@ -1,11 +1,11 @@
-# iCat.Authorization
+# iCat.Authorization.Web
 
-iCat.Authorization is integrated to the `Policy-based authorization`.<br>
+iCat.Authorization.Web is integrated to the `Policy-based authorization`.<br>
 It customs `IAuthorizationRequirement`, `AuthorizationHandler` and provide provider for processing authorization-related data.
 
 ## Installation
 ```bash
-dotnet add package iCat.Authorization
+dotnet add package iCat.Authorization.Web
 ```
 
 ## Configuration
@@ -15,7 +15,7 @@ dotnet add package iCat.Authorization
 The defination of permits and permissions need to follow these rules.
 
 1. Permission needs to use bit wises value and set `Flags` attribute on the class.
-2. Use the `Permission` attribute to specify the permit's permission.
+2. Use the `Permission` attribute to specify the permissions of the permit .
 
 ```C#
     using iCat.Authorization;
@@ -63,11 +63,11 @@ The defination of permits and permissions need to follow these rules.
 
 ### Configure Requirment and Handler
 
-Register providers and permits/permissions using the `.AddAuthorizationPermission(typeof(Permit))` method, add a requirment to the policies via `.AddAuthorizationPermissionRequirment()`.<br>
-iCat.Authorization needs to use `IHttpContextAccessor` to obtain the current requested permits/permissions.
+Register providers and permits/permissions using the `.AddWebAuthorizationPermission(typeof(PermitEnum))` method, add a requirment to the policies via `.AddAuthorizationPermissionRequirment()`.<br>
+iCat.Authorization.Web needs to use `IHttpContextAccessor` to obtain the current requested permits/permissions.
 
 ```C#
-    using iCat.Authorization.Extensions;
+    using iCat.Authorization.Web.Extensions;
 ```
 
 ```C#
@@ -97,10 +97,10 @@ iCat.Authorization needs to use `IHttpContextAccessor` to obtain the current req
 
 ### AuthorizationPermission on action
 
-Set the permission for the action through the `AuthorizationPermission` attribute.
+Set the permission for the action through the `AuthorizationPermissions` attribute.
 
 ```C#
-    using iCat.Authorization;
+    using iCat.Authorization.Web;
 ```
 
 ```C#
@@ -118,13 +118,11 @@ Set the permission for the action through the `AuthorizationPermission` attribut
 
 ### Obtain current user permits, claims
 
-The `IPermitClaimProcessor` provides a method to obtain the logged in user's claim from the `Permit`. <br>
-The `IPermissionProvider` provides all permits definition.
+The `IPermitProvider` provides methods to obtain the logged user's claim from the `Permit`. <br>
 
 
 ```C#
-    using iCat.Authorization;
-    using iCat.Authorization.Utilities;
+    using iCat.Authorization.Web;
 ```
 
 
@@ -133,13 +131,11 @@ The `IPermissionProvider` provides all permits definition.
    [Route("[controller]")]
    public class TestController : ControllerBase
    {
-        private readonly IPermitClaimProcessor _permitClaimProcessor;
-        private readonly IPermissionProvider _permissionProvider;
+        private readonly IPermitProvider _permitProvider;
 
-       public TestController(IPermitClaimProcessor permitClaimeProcessor, IPermissionProvider permissionProvider)
+       public TestController(IPermitProvider permitProvider, IPermissionProvider permissionProvider)
        {
-            _permitClaimProcessor = permitClaimeProcessor ?? throw new ArgumentNullException(nameof(permitProvider));
-            _permissionProvider = permissionProvider ?? throw new ArgumentNullException(nameof(permissionProvider));
+            _permitProvider = permitProvider ?? throw new ArgumentNullException(nameof(permitProvider));
        }
        
        [AuthorizationPermissions(
@@ -148,17 +144,15 @@ The `IPermissionProvider` provides all permits definition.
        [HttpGet("[action]")]
        public IActionResult GetData()
        {
-            var claim = _permitClaimProcessor.GeneratePermitClaim(new Permit
+            var claims = new List<Claim>
             {
-                Value = (int)PermitEnum.UserProfile,
-                PermissionsData = new List<Permission> { new Permission
-                {
-                    Value = (int)UserProfilePermission.Add,
-                }}
-            });
+                new Claim(ClaimTypes.Name, "TestUser"),
+                new Claim("UserId", "TestId"),
+                _permitProvider.GenerateClaim(UserProfilePermission.Add | UserProfilePermission.ReadAllDetail),
+                _permitProvider.GenerateClaim(DepartmentPermission.Delete),
+            };
 
-            var permits = _permissionProvider.GetDefinitions();
-            var userPermits = _permitClaimProcessor.GetPermit();
+            var userPermits = _permitProvider.GetCurrentUserPermits();
             return Ok(userPermits);
        }
    }

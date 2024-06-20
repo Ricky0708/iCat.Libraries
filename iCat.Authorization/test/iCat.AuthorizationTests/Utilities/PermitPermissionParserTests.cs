@@ -10,6 +10,8 @@ using System.Text.Json;
 using System.Reflection;
 using iCat.Authorization.Utilities;
 using iCat.Authorization.Constants;
+using iCat.Authorization.Web;
+using iCat.Authorization.Providers.Implements;
 
 namespace iCat.Authorization.Utilities.Tests
 {
@@ -20,7 +22,7 @@ namespace iCat.Authorization.Utilities.Tests
         public void GetPermitPermissionDefinitions_Success()
         {
             // arrange
-            var parser = new DefaultPermissionProvider(typeof(Permit_Success));
+            var parser = new PermissionProcessor(typeof(Permit_Success));
             var validationData = new List<PermitTest> {
                 new() {
                     Name = nameof(UserProfileA),
@@ -62,7 +64,7 @@ namespace iCat.Authorization.Utilities.Tests
         public void GetPermitPermissionDefinitions_Fail1()
         {
             // arrange
-            var parser = new DefaultPermissionProvider(typeof(Permit_Fail));
+            var parser = new PermissionProcessor(typeof(Permit_Fail));
             var validationData = new List<PermitTest> {
                 new() {
                     Name = nameof(UserProfileA),
@@ -95,7 +97,7 @@ namespace iCat.Authorization.Utilities.Tests
         public void GetPermitPermissionDefinitions_Fail2()
         {
             // arrange
-            var provider = new DefaultPermissionProvider(typeof(Permit_Fail));
+            var provider = new PermissionProcessor(typeof(Permit_Fail));
             var validationData = new List<PermitTest> {
                 new() {
                     Name = nameof(UserProfileA),
@@ -128,7 +130,7 @@ namespace iCat.Authorization.Utilities.Tests
         public void GetAuthorizationPermissionsDataTest_Success()
         {
             // arrange
-            var parser = new DefaultPermissionProvider(typeof(Permit_Success));
+            var parser = new PermissionProcessor(typeof(Permit_Success));
             var method = typeof(PermitPermissionParserTests).GetMethod(nameof(TestAttributeMethod), BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
 
             var validationData = new List<PermitTest> {
@@ -151,7 +153,7 @@ namespace iCat.Authorization.Utilities.Tests
             };
 
             // action
-            var defintions = parser.GetPermissionRequired(method!.CustomAttributes.ToArray());
+            var defintions = parser.GetPermitFromAttribute(method!.CustomAttributes.ToArray());
 
             // assert
             Assert.AreEqual(JsonSerializer.Serialize(validationData), JsonSerializer.Serialize(defintions));
@@ -161,7 +163,7 @@ namespace iCat.Authorization.Utilities.Tests
         public void GetAuthorizationPermissionsDataTest_Fail()
         {
             // arrange
-            var parser = new DefaultPermissionProvider(typeof(Permit_Success));
+            var parser = new PermissionProcessor(typeof(Permit_Success));
             var method = typeof(PermitPermissionParserTests).GetMethod(nameof(TestAttributeMethod), BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
 
             var validationData = new List<PermitTest> {
@@ -184,7 +186,7 @@ namespace iCat.Authorization.Utilities.Tests
             };
 
             // action
-            var defintions = parser.GetPermissionRequired(method!.CustomAttributes.ToArray());
+            var defintions = parser.GetPermitFromAttribute(method!.CustomAttributes.ToArray());
 
             // assert
             Assert.AreEqual(JsonSerializer.Serialize(validationData), JsonSerializer.Serialize(defintions));
@@ -194,8 +196,8 @@ namespace iCat.Authorization.Utilities.Tests
         public void GetClaimFromPermitDataTest()
         {
             // arrange
-            var permissionProvider = new DefaultPermissionProvider(typeof(Permit_Success));
-            var claimGenerator = new DefaultPermitClaimProcessor(null, permissionProvider);
+            var permissionProvider = new PermissionProcessor(typeof(Permit_Success));
+            var claimGenerator = new ClaimProcessor(permissionProvider);
 
             // action
             var result = claimGenerator.GeneratePermitClaim(new PermitTest
@@ -217,8 +219,8 @@ namespace iCat.Authorization.Utilities.Tests
         public void GetClaimFromPermitDataTest2()
         {
             // arrange
-            var permissionProvider = new DefaultPermissionProvider(typeof(Permit_Success));
-            var claimGenerator = new DefaultPermitClaimProcessor(null, permissionProvider);
+            var permissionProvider = new PermissionProcessor(typeof(Permit_Success));
+            var claimGenerator = new ClaimProcessor(permissionProvider);
 
             // action
             var result = claimGenerator.GeneratePermitClaim(OrderB.Read);
@@ -232,8 +234,8 @@ namespace iCat.Authorization.Utilities.Tests
         public void GetClaimFromPermitDataTest3()
         {
             // arrange
-            var permissionProvider = new DefaultPermissionProvider(typeof(Permit_Success));
-            var claimGenerator = new DefaultPermitClaimProcessor(null, permissionProvider);
+            var permissionProvider = new PermissionProcessor(typeof(Permit_Success));
+            var claimGenerator = new ClaimProcessor(permissionProvider);
 
             // action
             var result = claimGenerator.GeneratePermitClaim(2, 2);
@@ -302,19 +304,19 @@ namespace iCat.Authorization.Utilities.Tests
 
     public enum Permit_Success
     {
-        [Permission(typeof(UserProfileA))]
+        [PermissionRelation(typeof(UserProfileA))]
         UserProfile = 1,
-        [Permission(typeof(OrderB))]
+        [PermissionRelation(typeof(OrderB))]
         Order = 2,
-        [Permission(typeof(DepartmentC))]
+        [PermissionRelation(typeof(DepartmentC))]
         Department = 3
     }
 
     public enum Permit_Fail
     {
-        [Permission(typeof(UserProfileA))]
+        [PermissionRelation(typeof(UserProfileA))]
         UserProfile = 1,
-        [Permission(typeof(DepartmentC))]
+        [PermissionRelation(typeof(DepartmentC))]
         Department = 3
     }
 

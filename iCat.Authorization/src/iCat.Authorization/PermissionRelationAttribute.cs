@@ -10,12 +10,12 @@ namespace iCat.Authorization
     /// 
     /// </summary>
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false, Inherited = false)]
-    public class PermissionAttribute : Attribute
+    public class PermissionRelationAttribute : Attribute
     {
         /// <summary>
         /// 
         /// </summary>
-        public PermissionAttribute(Type permissionEnumTypes)
+        public PermissionRelationAttribute(Type permissionEnumTypes)
         {
         }
     }

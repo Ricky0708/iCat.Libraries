@@ -6,12 +6,12 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace iCat.Authorization.Utilities
+namespace iCat.Authorization.Providers.Interfaces
 {
     /// <summary>
     /// Claim Generator
     /// </summary>
-    public interface IPermitClaimProcessor
+    public interface IClaimProcessor
     {
         /// <summary>
         /// Generate permit claim
@@ -36,10 +36,6 @@ namespace iCat.Authorization.Utilities
         /// <returns></returns>
         Claim GeneratePermitClaim(int permit, int permission);
 
-        /// <summary>
-        /// Get currently authenticated user permit
-        /// </summary>
-        /// <returns></returns>
-        IEnumerable<Permit> GetPermits();
+
     }
 }

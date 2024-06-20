@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace iCat.Authorization
+namespace iCat.Authorization.Web
 {
     /// <summary>
     /// iCat authorization attribute, 
@@ -31,6 +31,7 @@ namespace iCat.Authorization
         }
 
     }
+
 
 #if !NET6_0  
     /// <summary>
