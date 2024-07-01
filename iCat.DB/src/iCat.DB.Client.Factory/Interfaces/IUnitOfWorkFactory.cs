@@ -10,7 +10,7 @@ namespace iCat.DB.Client.Factory.Interfaces
     /// <summary>
     /// Unit Of Work Factory
     /// </summary>
-    public interface IUnitOfWorkFactory
+    public interface IUnitOfWorkFactory : IDisposable
     {
         /// <summary>
         /// Get UnitOfWork by key;
