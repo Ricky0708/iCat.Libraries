@@ -10,7 +10,7 @@ namespace iCat.DB.Client.Factory.Interfaces
     /// <summary>
     /// Connection Factory
     /// </summary>
-    public interface IConnectionFactory
+    public interface IConnectionFactory : IDisposable
     {
         /// <summary>
         /// Get Connection by key;

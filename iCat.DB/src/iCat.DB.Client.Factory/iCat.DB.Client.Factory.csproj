@@ -13,12 +13,12 @@
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<RepositoryUrl>https://github.com/Ricky0708/iCat.Libraries/tree/main/iCat.DB</RepositoryUrl>
 		<PackageTags>UnitOfWork, DB Client</PackageTags>
-		<PackageReleaseNotes>Version 2.3.2</PackageReleaseNotes>
+		<PackageReleaseNotes>Version 2.3.3</PackageReleaseNotes>
 		<PackAsTool>False</PackAsTool>
 		<NeutralLanguage>zh-TW</NeutralLanguage>
-		<AssemblyVersion>2.3.2</AssemblyVersion>
-		<FileVersion>2.3.2</FileVersion>
-		<Version>2.3.2</Version>
+		<AssemblyVersion>2.3.3</AssemblyVersion>
+		<FileVersion>2.3.3</FileVersion>
+		<Version>2.3.3</Version>
 		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
 	</PropertyGroup>
 	<ItemGroup>

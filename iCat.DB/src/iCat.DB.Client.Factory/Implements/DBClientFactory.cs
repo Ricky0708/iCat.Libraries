@@ -15,7 +15,7 @@ namespace iCat.DB.Client.Factory.Implements
     {
         private readonly IDBClientProvider _provider;
         private readonly Dictionary<string, DBClient> _dbClients = new Dictionary<string, DBClient>();
-
+        private bool _disposed = false;
 
         /// <summary>
         /// DBClient factory
@@ -94,5 +94,30 @@ namespace iCat.DB.Client.Factory.Implements
             _dbClients.Remove(key!);
         }
 
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            // Dispose of unmanaged resources.
+            Dispose(true);
+            // Suppress finalization.
+            GC.SuppressFinalize(this);
+        }
+
+
+        /// <inheritdoc/>
+        private void Dispose(bool disposing)
+        {
+            if (_disposed)
+            {
+                return;
+            }
+
+            if (disposing)
+            {
+                foreach (var client in _dbClients) if (client.Value.Connection.State != System.Data.ConnectionState.Closed) client.Value.Close();
+            }
+
+            _disposed = true;
+        }
     }
 }
