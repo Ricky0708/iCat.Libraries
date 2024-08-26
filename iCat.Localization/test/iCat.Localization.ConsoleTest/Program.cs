@@ -1,6 +1,8 @@
 ﻿using iCat.Localization.Extensions;
 using iCat.Localization.Implements;
 using iCat.Localization.Models;
+using System.Linq.Expressions;
+using System.Reflection;
 
 namespace iCat.Localization.ConsoleTest
 {
@@ -30,11 +32,54 @@ namespace iCat.Localization.ConsoleTest
 
             var result = localizer.AddParams("AA{#個人.名字}, BB{#個人.年紀}, CC{#個人.生日.Date}", obj);
 
+            var names = new List<string>();
+            foreach (var prop in obj.GetType().GetProperties())
+            {
+                ParseNames(prop, ref names, "");
+            }
+
             var a = obj.GetType().GetProperty("個人");
 
             Console.WriteLine(result);
             Console.WriteLine(result.Localize());
 
         }
+
+        private static void ParseNames(PropertyInfo prop, ref List<string> lst, string parentName)
+        {
+            parentName = string.IsNullOrEmpty(parentName) ? prop.Name : $"{parentName}.{prop.Name}";
+            var propName = prop.Name;
+            if (prop.PropertyType == typeof(string))
+            {
+                lst.Add(parentName);
+            }
+            else if (prop.PropertyType.IsPrimitive &&
+               (prop.PropertyType == typeof(byte) ||
+                prop.PropertyType == typeof(sbyte) ||
+                prop.PropertyType == typeof(short) ||
+                prop.PropertyType == typeof(ushort) ||
+                prop.PropertyType == typeof(int) ||
+                prop.PropertyType == typeof(uint) ||
+                prop.PropertyType == typeof(long) ||
+                prop.PropertyType == typeof(ulong) ||
+                prop.PropertyType == typeof(float) ||
+                prop.PropertyType == typeof(double) ||
+                prop.PropertyType == typeof(decimal)))
+            {
+                lst.Add(parentName);
+            }
+            else if (prop.PropertyType == typeof(DateTime) || prop.PropertyType == typeof(DateTimeOffset) || prop.PropertyType == typeof(DateTime?) || prop.PropertyType == typeof(DateTimeOffset?))
+            {
+                lst.Add(parentName);
+            }
+            else
+            {
+                foreach (var p in prop.PropertyType.GetProperties())
+                {
+                    ParseNames(p, ref lst, parentName);
+                }
+            }
+        }
     }
+
 }
