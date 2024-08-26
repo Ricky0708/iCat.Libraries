@@ -9,6 +9,7 @@ using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -115,23 +116,28 @@ namespace iCat.Localization.Implements
                         var exprList = new List<Expression>();
                         var targetExpr = Expression.Parameter(typeof(object), "target");
                         var memberExpr = Expression.Convert(targetExpr, paramData.GetType());
+
+                        var test = new Dictionary<string, Expression>();
+
                         var props = paramData.GetType().GetProperties();
                         exprList.Add(Expression.Constant(str));
                         exprList.Add(Expression.Constant("^"));
                         foreach (var prop in props)
                         {
-                            var propExpression = Expression.Property(memberExpr, prop);
-                            var toStringExpression = default(MethodCallExpression);
-                            if (propExpression.Type != typeof(string))
-                            {
-                                var toString = propExpression.Type.GetMethods().First(p => p.Name.ToLower() == "tostring");
-                                toStringExpression = Expression.Call(propExpression, toString);
-                            }
-                            var constExpression = Expression.Constant(propExpression.Member.Name);
-                            exprList.Add(constExpression);
-                            exprList.Add(Expression.Constant("^"));
-                            exprList.Add(toStringExpression != null ? toStringExpression as Expression : propExpression);
-                            exprList.Add(Expression.Constant("^"));
+                            ParseProps(memberExpr, prop, ref exprList, "");
+
+                            //var propExpression = Expression.Property(memberExpr, prop);
+                            //var toStringExpression = default(MethodCallExpression);
+                            //if (propExpression.Type != typeof(string))
+                            //{
+                            //    var toString = propExpression.Type.GetMethods().First(p => p.Name.ToLower() == "tostring");
+                            //    toStringExpression = Expression.Call(propExpression, toString);
+                            //}
+                            //var constExpression = Expression.Constant(propExpression.Member.Name);
+                            //exprList.Add(constExpression);
+                            //exprList.Add(Expression.Constant("^"));
+                            //exprList.Add(toStringExpression != null ? toStringExpression as Expression : propExpression);
+                            //exprList.Add(Expression.Constant("^"));
                         }
                         exprList.RemoveAt(exprList.Count - 1);
                         var method = typeof(string).GetMethod("Concat", new[] { typeof(object[]) });
@@ -273,6 +279,59 @@ namespace iCat.Localization.Implements
         #endregion
 
         #region private methods
+
+        private void ParseProps(Expression parent, PropertyInfo prop, ref List<Expression> lst, string parentName)
+        {
+            var par = Expression.Property(parent, prop);
+            parentName = string.IsNullOrEmpty(parentName) ? prop.Name : $"{parentName}.{prop.Name}";
+            var propName = prop.Name;
+            if (prop.PropertyType == typeof(string))
+            {
+                var constExpression = Expression.Constant(parentName);
+                lst.Add(constExpression);
+                lst.Add(Expression.Constant("^"));
+                lst.Add(par);
+                lst.Add(Expression.Constant("^"));
+            }
+            else if (prop.PropertyType.IsPrimitive &&
+               (prop.PropertyType == typeof(byte) ||
+                prop.PropertyType == typeof(sbyte) ||
+                prop.PropertyType == typeof(short) ||
+                prop.PropertyType == typeof(ushort) ||
+                prop.PropertyType == typeof(int) ||
+                prop.PropertyType == typeof(uint) ||
+                prop.PropertyType == typeof(long) ||
+                prop.PropertyType == typeof(ulong) ||
+                prop.PropertyType == typeof(float) ||
+                prop.PropertyType == typeof(double) ||
+                prop.PropertyType == typeof(decimal)))
+            {
+                var toString = par.Type.GetMethods().First(p => p.Name.ToLower() == "tostring");
+                var toStringExpression = Expression.Call(par, toString);
+                var constExpression = Expression.Constant(parentName);
+                lst.Add(constExpression);
+                lst.Add(Expression.Constant("^"));
+                lst.Add(toStringExpression as Expression);
+                lst.Add(Expression.Constant("^"));
+            }
+            else if (prop.PropertyType == typeof(DateTime) || prop.PropertyType == typeof(DateTimeOffset) || prop.PropertyType == typeof(DateTime?) || prop.PropertyType == typeof(DateTimeOffset?))
+            {
+                var toString = par.Type.GetMethods().First(p => p.Name.ToLower() == "tostring");
+                var toStringExpression = Expression.Call(par, toString);
+                var constExpression = Expression.Constant(parentName);
+                lst.Add(constExpression);
+                lst.Add(Expression.Constant("^"));
+                lst.Add(toStringExpression as Expression);
+                lst.Add(Expression.Constant("^"));
+            }
+            else
+            {
+                foreach (var p in prop.PropertyType.GetProperties())
+                {
+                    ParseProps(par, p, ref lst, parentName);
+                }
+            }
+        }
 
         /// <summary>
         /// renew localization data cache
