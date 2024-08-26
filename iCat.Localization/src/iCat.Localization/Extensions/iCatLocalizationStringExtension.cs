@@ -50,6 +50,17 @@ namespace iCat.Localization.Extensions
         }
 
         /// <summary>
+        /// Localize string by CurrentCulture
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="paramData"></param>
+        /// <returns></returns>
+        public static string Localize(this string str, object paramData)
+        {
+            return _factory?.Create().Localize(str.AddParams(paramData), CultureInfo.CurrentCulture.Name) ?? throw new NotImplementedException("");
+        }
+
+        /// <summary>
         /// Localize string
         /// </summary>
         /// <param name="str"></param>
@@ -58,6 +69,18 @@ namespace iCat.Localization.Extensions
         public static string Localize(this string str, string lang)
         {
             return _factory?.Create().Localize(str, lang) ?? throw new NotImplementedException("");
+        }
+
+        /// <summary>
+        /// Localize string
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="lang"></param>
+        /// <param name="paramData"></param>
+        /// <returns></returns>
+        public static string Localize(this string str, string lang, object paramData)
+        {
+            return _factory?.Create().Localize(str.AddParams(paramData), lang) ?? throw new NotImplementedException("");
         }
     }
 }
