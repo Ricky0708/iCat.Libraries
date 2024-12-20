@@ -16,14 +16,14 @@ using iCat.Authorization.Providers.Implements;
 namespace iCat.Authorization.Utilities.Tests
 {
     [TestClass()]
-    public class PermitPermissionParserTests
+    public class PrivilegePermissionParserTests
     {
         [TestMethod()]
-        public void GetPermitPermissionDefinitions_Success()
+        public void GetPrivilegePermissionDefinitions_Success()
         {
             // arrange
-            var parser = new PermissionProcessor(typeof(Permit_Success));
-            var validationData = new List<PermitTest> {
+            var parser = new PermissionProcessor(typeof(Privilege_Success));
+            var validationData = new List<PrivilegeTest> {
                 new() {
                     Name = nameof(UserProfileA),
                     Value = 1,
@@ -61,11 +61,11 @@ namespace iCat.Authorization.Utilities.Tests
         }
 
         [TestMethod()]
-        public void GetPermitPermissionDefinitions_Fail1()
+        public void GetPrivilegePermissionDefinitions_Fail1()
         {
             // arrange
-            var parser = new PermissionProcessor(typeof(Permit_Fail));
-            var validationData = new List<PermitTest> {
+            var parser = new PermissionProcessor(typeof(Privilege_Fail));
+            var validationData = new List<PrivilegeTest> {
                 new() {
                     Name = nameof(UserProfileA),
                     Value = 1,
@@ -94,11 +94,11 @@ namespace iCat.Authorization.Utilities.Tests
         }
 
         [TestMethod()]
-        public void GetPermitPermissionDefinitions_Fail2()
+        public void GetPrivilegePermissionDefinitions_Fail2()
         {
             // arrange
-            var provider = new PermissionProcessor(typeof(Permit_Fail));
-            var validationData = new List<PermitTest> {
+            var provider = new PermissionProcessor(typeof(Privilege_Fail));
+            var validationData = new List<PrivilegeTest> {
                 new() {
                     Name = nameof(UserProfileA),
                     Value = 1,
@@ -130,10 +130,10 @@ namespace iCat.Authorization.Utilities.Tests
         public void GetAuthorizationPermissionsDataTest_Success()
         {
             // arrange
-            var parser = new PermissionProcessor(typeof(Permit_Success));
-            var method = typeof(PermitPermissionParserTests).GetMethod(nameof(TestAttributeMethod), BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+            var parser = new PermissionProcessor(typeof(Privilege_Success));
+            var method = typeof(PrivilegePermissionParserTests).GetMethod(nameof(TestAttributeMethod), BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
 
-            var validationData = new List<PermitTest> {
+            var validationData = new List<PrivilegeTest> {
                 new() {
                     Name = nameof(UserProfileA),
                     Value = 1,
@@ -153,7 +153,7 @@ namespace iCat.Authorization.Utilities.Tests
             };
 
             // action
-            var defintions = parser.GetPermitFromAttribute(method!.CustomAttributes.ToArray());
+            var defintions = parser.GetPrivilegeFromAttribute(method!.CustomAttributes.ToArray());
 
             // assert
             Assert.AreEqual(JsonSerializer.Serialize(validationData), JsonSerializer.Serialize(defintions));
@@ -163,10 +163,10 @@ namespace iCat.Authorization.Utilities.Tests
         public void GetAuthorizationPermissionsDataTest_Fail()
         {
             // arrange
-            var parser = new PermissionProcessor(typeof(Permit_Success));
-            var method = typeof(PermitPermissionParserTests).GetMethod(nameof(TestAttributeMethod), BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+            var parser = new PermissionProcessor(typeof(Privilege_Success));
+            var method = typeof(PrivilegePermissionParserTests).GetMethod(nameof(TestAttributeMethod), BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
 
-            var validationData = new List<PermitTest> {
+            var validationData = new List<PrivilegeTest> {
                 new() {
                     Name = nameof(UserProfileA),
                     Value = 1,
@@ -186,21 +186,21 @@ namespace iCat.Authorization.Utilities.Tests
             };
 
             // action
-            var defintions = parser.GetPermitFromAttribute(method!.CustomAttributes.ToArray());
+            var defintions = parser.GetPrivilegeFromAttribute(method!.CustomAttributes.ToArray());
 
             // assert
             Assert.AreEqual(JsonSerializer.Serialize(validationData), JsonSerializer.Serialize(defintions));
         }
 
         [TestMethod()]
-        public void GetClaimFromPermitDataTest()
+        public void GetClaimFromPrivilegeDataTest()
         {
             // arrange
-            var permissionProvider = new PermissionProcessor(typeof(Permit_Success));
+            var permissionProvider = new PermissionProcessor(typeof(Privilege_Success));
             var claimGenerator = new ClaimProcessor(permissionProvider);
 
             // action
-            var result = claimGenerator.GeneratePermitClaim(new PermitTest
+            var result = claimGenerator.GeneratePrivilegeClaim(new PrivilegeTest
             {
                 Name = "A",
                 Value = 1,
@@ -211,37 +211,37 @@ namespace iCat.Authorization.Utilities.Tests
             });
 
             // assert
-            Assert.AreEqual(result.Type, Constants.ClaimTypes.Permit);
+            Assert.AreEqual(result.Type, Constants.ClaimTypes.Privilege);
             Assert.AreEqual(result.Value, "1,1");
         }
 
         [TestMethod()]
-        public void GetClaimFromPermitDataTest2()
+        public void GetClaimFromPrivilegeDataTest2()
         {
             // arrange
-            var permissionProvider = new PermissionProcessor(typeof(Permit_Success));
+            var permissionProvider = new PermissionProcessor(typeof(Privilege_Success));
             var claimGenerator = new ClaimProcessor(permissionProvider);
 
             // action
-            var result = claimGenerator.GeneratePermitClaim(OrderB.Read);
+            var result = claimGenerator.GeneratePrivilegeClaim(OrderB.Read);
 
             // assert
-            Assert.AreEqual(result.Type, Constants.ClaimTypes.Permit);
+            Assert.AreEqual(result.Type, Constants.ClaimTypes.Privilege);
             Assert.AreEqual(result.Value, "2,2");
         }
 
         [TestMethod()]
-        public void GetClaimFromPermitDataTest3()
+        public void GetClaimFromPrivilegeDataTest3()
         {
             // arrange
-            var permissionProvider = new PermissionProcessor(typeof(Permit_Success));
+            var permissionProvider = new PermissionProcessor(typeof(Privilege_Success));
             var claimGenerator = new ClaimProcessor(permissionProvider);
 
             // action
-            var result = claimGenerator.GeneratePermitClaim(2, 2);
+            var result = claimGenerator.GeneratePrivilegeClaim(2, 2);
 
             // assert
-            Assert.AreEqual(result.Type, Constants.ClaimTypes.Permit);
+            Assert.AreEqual(result.Type, Constants.ClaimTypes.Privilege);
             Assert.AreEqual(result.Value, "2,2");
         }
 
@@ -261,17 +261,17 @@ namespace iCat.Authorization.Utilities.Tests
     #region test data
 
     /// <summary>
-    /// Permit - Permission information
+    /// Privilege - Permission information
     /// </summary>
-    public class PermitTest : IPermit<PermissionTest>
+    public class PrivilegeTest : IPrivilege<PermissionTest>
     {
         /// <summary>
-        /// Permit name
+        /// Privilege name
         /// </summary>
         public string? Name { get; set; }
 
         /// <summary>
-        /// Permit value
+        /// Privilege value
         /// </summary>
         public int? Value { get; set; }
 
@@ -302,21 +302,21 @@ namespace iCat.Authorization.Utilities.Tests
         public int Value { get; set; }
     }
 
-    public enum Permit_Success
+    public enum Privilege_Success
     {
-        [PermissionRelation(typeof(UserProfileA))]
+        [PrivilegDetail(typeof(UserProfileA))]
         UserProfile = 1,
-        [PermissionRelation(typeof(OrderB))]
+        [PrivilegDetail(typeof(OrderB))]
         Order = 2,
-        [PermissionRelation(typeof(DepartmentC))]
+        [PrivilegDetail(typeof(DepartmentC))]
         Department = 3
     }
 
-    public enum Permit_Fail
+    public enum Privilege_Fail
     {
-        [PermissionRelation(typeof(UserProfileA))]
+        [PrivilegDetail(typeof(UserProfileA))]
         UserProfile = 1,
-        [PermissionRelation(typeof(DepartmentC))]
+        [PrivilegDetail(typeof(DepartmentC))]
         Department = 3
     }
 

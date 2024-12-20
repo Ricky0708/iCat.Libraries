@@ -25,20 +25,20 @@ namespace iCat.Authorization.Web
     {
         private const string _endWith = "Permission";
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IPermitProvider _permitProvider;
+        private readonly IPrivilegeProvider _privilegeProvider;
 
         /// <summary>
         /// Authorize AuthorizationPermissionsRequirement
         /// </summary>
         /// <param name="httpContextAccessor"></param>
-        /// <param name="permitProvider"></param>
+        /// <param name="privilegeProvider"></param>
         /// <exception cref="ArgumentNullException"></exception>
         public AuthorizationPermissionsHandler(
             IHttpContextAccessor httpContextAccessor,
-            IPermitProvider permitProvider)
+            IPrivilegeProvider privilegeProvider)
         {
             _httpContextAccessor = httpContextAccessor;
-            _permitProvider = permitProvider ?? throw new ArgumentNullException(nameof(permitProvider));
+            _privilegeProvider = privilegeProvider ?? throw new ArgumentNullException(nameof(privilegeProvider));
         }
 
         /// <summary>
@@ -54,11 +54,11 @@ namespace iCat.Authorization.Web
             if (context.Resource is HttpContext httpContext)
             {
                 var endpoint = httpContext.GetEndpoint()!;
-                var routerPermits = _permitProvider.GetRouterPermitsRequired(endpoint);
-                var userPermit = _permitProvider.GetCurrentUserPermits();
-                foreach (var routerPermit in routerPermits)
+                var routerPrivileges = _privilegeProvider.GetRouterPrivilegesRequired(endpoint);
+                var userPrivilege = _privilegeProvider.GetCurrentUserPrivileges();
+                foreach (var routerPrivilege in routerPrivileges)
                 {
-                    if (_permitProvider.ValidatePermission(userPermit, routerPermit))
+                    if (_privilegeProvider.ValidatePermission(userPrivilege, routerPrivilege))
                     {
                         context.Succeed(requirement);
                         await Task.FromResult(0);

@@ -8,17 +8,17 @@
 		<GeneratePackageOnBuild>False</GeneratePackageOnBuild>
 		<Title>iCat.Authorization.Web</Title>
 		<Authors>Ricky0708</Authors>
-		<Description>Permit Permission Authorization For Web</Description>
+		<Description>Privilege Permission Authorization For Web</Description>
 		<PackageProjectUrl>https://github.com/Ricky0708/iCat.Libraries/tree/main/iCat.Authorization.Web</PackageProjectUrl>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<RepositoryUrl>https://github.com/Ricky0708/iCat.Libraries/tree/main/iCat.Authorization.Web</RepositoryUrl>
 		<PackageTags>Authorization</PackageTags>
-		<PackageReleaseNotes>Version 1.0.0</PackageReleaseNotes>
+		<PackageReleaseNotes>Version 1.1.0</PackageReleaseNotes>
 		<PackAsTool>False</PackAsTool>
 		<NeutralLanguage>zh-TW</NeutralLanguage>
-		<AssemblyVersion>1.0.0</AssemblyVersion>
-		<FileVersion>1.0.0</FileVersion>
-		<Version>1.0.0</Version>
+		<AssemblyVersion>1.1.0</AssemblyVersion>
+		<FileVersion>1.1.0</FileVersion>
+		<Version>1.1.0</Version>
 		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
 	</PropertyGroup>
 
@@ -29,8 +29,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Include="Providers\Implements\PermitProvider.cs" />
-	  <Compile Include="Providers\Interfaces\IPermitProvider.cs" />
+	  <Compile Include="Providers\Implements\PrivilegeProvider.cs" />
+	  <Compile Include="Providers\Interfaces\IPrivilegeProvider.cs" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Include="..\..\README.md">

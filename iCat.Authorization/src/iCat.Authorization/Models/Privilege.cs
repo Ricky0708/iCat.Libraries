@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 namespace iCat.Authorization.Models
 {
     /// <summary>
-    /// Permit - Permission information
+    /// Privilege - Permission information
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public interface IPermit<T> where T : IPermission
+    public interface IPrivilege<T> where T : IPermission
     {
         /// <summary>
-        /// Permit value
+        /// Privilege value
         /// </summary>
         int? Value { get; }
 
@@ -29,17 +29,17 @@ namespace iCat.Authorization.Models
     }
 
     /// <summary>
-    /// Permit - Permission information
+    /// Privilege - Permission information
     /// </summary>
-    public class Permit : IPermit<Permission>
+    public class Privilege : IPrivilege<Permission>
     {
         /// <summary>
-        /// Permit name
+        /// Privilege name
         /// </summary>
         public string? Name { get; internal set; }
 
         /// <summary>
-        /// Permit value
+        /// Privilege value
         /// </summary>
         public int? Value { get; internal set; }
 
