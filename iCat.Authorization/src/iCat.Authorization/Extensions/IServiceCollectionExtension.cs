@@ -16,14 +16,14 @@ namespace iCat.Authorization.Extensions
     public static class IServiceCollectionExtension
     {
         /// <summary>
-        /// Register AuthorizationPermissionsHandler, DefaultPermissionProvider, DefaultPermitProvider
+        /// Register AuthorizationPermissionsHandler, DefaultPermissionProvider, DefaultPrivilegeProvider
         /// </summary>
         /// <param name="services"></param>
-        /// <param name="permitEnum"></param>
+        /// <param name="privilegeEnum"></param>
         /// <returns></returns>
-        public static IServiceCollection AddAuthorizationPermission(this IServiceCollection services, Type permitEnum)
+        public static IServiceCollection AddAuthorizationPermission(this IServiceCollection services, Type privilegeEnum)
         {
-            services.AddSingleton<IPermissionProcessor>(s => new PermissionProcessor(permitEnum));
+            services.AddSingleton<IPermissionProcessor>(s => new PermissionProcessor(privilegeEnum));
             services.AddSingleton<IClaimProcessor, ClaimProcessor>();
             return services;
         }

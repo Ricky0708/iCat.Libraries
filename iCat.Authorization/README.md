@@ -10,19 +10,19 @@ dotnet add package iCat.Authorization.Web
 
 ## Configuration
 
-### Define permits and permissions enums mapping
+### Define privileges and permissions enums mapping
 
-The defination of permits and permissions need to follow these rules.
+The defination of privileges and permissions need to follow these rules.
 
 1. Permission needs to use bit wises value and set `Flags` attribute on the class.
-2. Use the `Permission` attribute to specify the permissions of the permit .
+2. Use the `Permission` attribute to specify the permissions of the privilege .
 
 ```C#
     using iCat.Authorization;
 ```
 
 ```C#
-    public enum PermitEnum
+    public enum PrivilegeEnum
     {
         [Permission(typeof(UserProfilePermission))]
         UserProfile = 1,
@@ -63,8 +63,8 @@ The defination of permits and permissions need to follow these rules.
 
 ### Configure Requirment and Handler
 
-Register providers and permits/permissions using the `.AddWebAuthorizationPermission(typeof(PermitEnum))` method, add a requirment to the policies via `.AddAuthorizationPermissionRequirment()`.<br>
-iCat.Authorization.Web needs to use `IHttpContextAccessor` to obtain the current requested permits/permissions.
+Register providers and privileges/permissions using the `.AddWebAuthorizationPermission(typeof(PrivilegeEnum))` method, add a requirment to the policies via `.AddAuthorizationPermissionRequirment()`.<br>
+iCat.Authorization.Web needs to use `IHttpContextAccessor` to obtain the current requested privileges/permissions.
 
 ```C#
     using iCat.Authorization.Web.Extensions;
@@ -78,7 +78,7 @@ iCat.Authorization.Web needs to use `IHttpContextAccessor` to obtain the current
         // Add services to the container.
         builder.Services
             .AddSingleton<IHttpContextAccessor, HttpContextAccessor>()
-            .AddAuthorizationPermission(typeof(PermitEnum))
+            .AddAuthorizationPermission(typeof(PrivilegeEnum))
             .AddAuthorization(options =>
             {
                 options.DefaultPolicy = new AuthorizationPolicyBuilder()
@@ -116,9 +116,9 @@ Set the permission for the action through the `AuthorizationPermissions` attribu
     }
 ```
 
-### Obtain current user permits, claims
+### Obtain current user privileges, claims
 
-The `IPermitProvider` provides methods to obtain the logged user's claim from the `Permit`. <br>
+The `IPrivilegeProvider` provides methods to obtain the logged user's claim from the `Privilege`. <br>
 
 
 ```C#
@@ -131,11 +131,11 @@ The `IPermitProvider` provides methods to obtain the logged user's claim from th
    [Route("[controller]")]
    public class TestController : ControllerBase
    {
-        private readonly IPermitProvider _permitProvider;
+        private readonly IPrivilegeProvider _privilegeProvider;
 
-       public TestController(IPermitProvider permitProvider, IPermissionProvider permissionProvider)
+       public TestController(IPrivilegeProvider privilegeProvider, IPermissionProvider permissionProvider)
        {
-            _permitProvider = permitProvider ?? throw new ArgumentNullException(nameof(permitProvider));
+            _privilegeProvider = privilegeProvider ?? throw new ArgumentNullException(nameof(privilegeProvider));
        }
        
        [AuthorizationPermissions(
@@ -148,12 +148,12 @@ The `IPermitProvider` provides methods to obtain the logged user's claim from th
             {
                 new Claim(ClaimTypes.Name, "TestUser"),
                 new Claim("UserId", "TestId"),
-                _permitProvider.GenerateClaim(UserProfilePermission.Add | UserProfilePermission.ReadAllDetail),
-                _permitProvider.GenerateClaim(DepartmentPermission.Delete),
+                _privilegeProvider.GenerateClaim(UserProfilePermission.Add | UserProfilePermission.ReadAllDetail),
+                _privilegeProvider.GenerateClaim(DepartmentPermission.Delete),
             };
 
-            var userPermits = _permitProvider.GetCurrentUserPermits();
-            return Ok(userPermits);
+            var userPrivileges = _privilegeProvider.GetCurrentUserPrivileges();
+            return Ok(userPrivileges);
        }
    }
 ```

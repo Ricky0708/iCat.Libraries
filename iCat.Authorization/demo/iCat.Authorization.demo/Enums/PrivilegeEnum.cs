@@ -7,13 +7,13 @@ using iCat.Authorization;
 
 namespace iCat.Authorization.demo.Enums
 {
-    public enum PermitEnum
+    public enum PrivilegeEnum
     {
-        [PermissionRelation(typeof(UserProfilePermission))]
+        [PrivilegDetail(typeof(UserProfilePermission))]
         UserProfile = 1,
-        [PermissionRelation(typeof(OrderPermission))]
+        [PrivilegDetail(typeof(OrderPermission))]
         Order = 2,
-        [PermissionRelation(typeof(DepartmentPermission))]
+        [PrivilegDetail(typeof(DepartmentPermission))]
         Department = 3
     }
 

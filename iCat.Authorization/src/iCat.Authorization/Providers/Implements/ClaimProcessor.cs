@@ -24,24 +24,24 @@ namespace iCat.Authorization.Providers.Implements
         }
 
         /// <inheritdoc/>
-        public Claim GeneratePermitClaim<T>(IPermit<T> permission) where T : IPermission
+        public Claim GeneratePrivilegeClaim<T>(IPrivilege<T> permission) where T : IPermission
         {
-            var claim = GeneratePermitClaim(permission.Value!.Value, permission.Permissions);
+            var claim = GeneratePrivilegeClaim(permission.Value!.Value, permission.Permissions);
             return claim;
         }
 
         /// <inheritdoc/>
-        public Claim GeneratePermitClaim<TPermission>(TPermission permission) where TPermission : Enum
+        public Claim GeneratePrivilegeClaim<TPermission>(TPermission permission) where TPermission : Enum
         {
-            var permit = _permissionProvider.GetPermitDefinitionFromPermission(permission);
-            var claim = GeneratePermitClaim(permit.Value!.Value, (int)(object)permission);
+            var privilege = _permissionProvider.GetPrivilegeDefinitionFromPermission(permission);
+            var claim = GeneratePrivilegeClaim(privilege.Value!.Value, (int)(object)permission);
             return claim;
         }
 
         /// <inheritdoc/>
-        public Claim GeneratePermitClaim(int permit, int permission)
+        public Claim GeneratePrivilegeClaim(int privilege, int permission)
         {
-            var claim = new Claim(Constants.ClaimTypes.Permit, $"{permit},{permission}");
+            var claim = new Claim(Constants.ClaimTypes.Privilege, $"{privilege},{permission}");
             return claim;
         }
 

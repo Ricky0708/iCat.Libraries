@@ -32,7 +32,7 @@ namespace iCat.Authorization.demo
         {
             services
                 .AddSingleton<IHttpContextAccessor, HttpContextAccessor>()
-                .AddWebAuthorizationPermission(typeof(PermitEnum))
+                .AddWebAuthorizationPermission(typeof(PrivilegeEnum))
                 .AddAuthorization(options =>
                 {
                     options.DefaultPolicy = new AuthorizationPolicyBuilder()
