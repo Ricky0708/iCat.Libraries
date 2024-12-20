@@ -20,7 +20,7 @@ namespace iCat.Authorization.Web
 
         /// <summary>
         /// Fill in the permission enumeration in the constructor.
-        /// The permission enum name needs to match the permit enum name and end with "Permission"
+        /// The permission enum name needs to match the privilege enum name and end with "Permission"
         /// example: UserProfile : UserProfilePermission
         /// [AuthorizationPermissions(UserProfilePermission.Add | UserProfilePermission.Read)]
         /// </summary>
@@ -47,7 +47,7 @@ namespace iCat.Authorization.Web
 
         /// <summary>
         /// Fill in the permission enumeration in the constructor.
-        /// The permission enum name needs to match the permit enum name and end with "Permission"
+        /// The permission enum name needs to match the privilege enum name and end with "Permission"
         /// example: UserProfile : UserProfilePermission
         /// <![CDATA[[AuthorizationPermissions<UserProfilePermission>(UserProfilePermission.Add | UserProfilePermission.Read)]]]>
         /// </summary>
@@ -73,7 +73,7 @@ namespace iCat.Authorization.Web
 
         /// <summary>
         /// Fill in the permission enumeration in the constructor.
-        /// The permission enum name needs to match the permit enum name and end with "Permission"
+        /// The permission enum name needs to match the privilege enum name and end with "Permission"
         /// example: UserProfile : UserProfilePermission
         /// <![CDATA[[AuthorizationPermissions<UserProfilePermission, OrderPermission>(UserProfilePermission.Add | UserProfilePermission.Read, OrderPermission.Add)]]]>
         /// </summary>
@@ -100,7 +100,7 @@ namespace iCat.Authorization.Web
 
         /// <summary>
         /// Fill in the permission enumeration in the constructor.
-        /// The permission enum name needs to match the permit enum name and end with "Permission"
+        /// The permission enum name needs to match the privilege enum name and end with "Permission"
         /// example: UserProfile : UserProfilePermission
         /// <![CDATA[[AuthorizationPermissions<UserProfilePermission, OrderPermission, DepartmentPermission>((UserProfilePermission)int.MaxValue, (OrderPermission)int.MaxValue, (DepartmentPermission)int.MaxValue)]]]>
         /// </summary>
@@ -127,7 +127,7 @@ namespace iCat.Authorization.Web
 
         /// <summary>
         /// Fill in the permission enumeration in the constructor.
-        /// The permission enum name needs to match the permit enum name and end with "Permission"
+        /// The permission enum name needs to match the privilege enum name and end with "Permission"
         /// example: UserProfile : UserProfilePermission
         /// <![CDATA[[AuthorizationPermissions<UserProfilePermission, OrderPermission, DepartmentPermission, PagePermission>((UserProfilePermission)int.MaxValue, (OrderPermission)int.MaxValue, (DepartmentPermission)int.MaxValue, PagePermission.Add)]]]>
         /// </summary>

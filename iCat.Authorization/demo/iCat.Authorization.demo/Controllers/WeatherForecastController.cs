@@ -9,11 +9,11 @@ namespace iCat.Authorization.demo.Controllers
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
     {
-        private readonly IPermitProvider _permitProvider;
+        private readonly IPrivilegeProvider _privilegeProvider;
 
-        public WeatherForecastController(IPermitProvider permissionProvider)
+        public WeatherForecastController(IPrivilegeProvider permissionProvider)
         {
-            _permitProvider = permissionProvider ?? throw new ArgumentNullException(nameof(permissionProvider));
+            _privilegeProvider = permissionProvider ?? throw new ArgumentNullException(nameof(permissionProvider));
         }
 
         [AuthorizationPermissions(
@@ -22,7 +22,7 @@ namespace iCat.Authorization.demo.Controllers
         [HttpGet]
         public IActionResult GetData()
         {
-            return Ok(_permitProvider.GetCurrentUserPermits());
+            return Ok(_privilegeProvider.GetCurrentUserPrivileges());
         }
     }
 }

@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace iCat.Authorization.ConsoleTest.Enum
 {
-    public enum Permit
+    public enum Privilege
     {
-        [PermissionRelation(typeof(UserProfilePermission))]
+        [PrivilegDetail(typeof(UserProfilePermission))]
         UserProfile = 1,
-        [PermissionRelation(typeof(OrderPermission))]
+        [PrivilegDetail(typeof(OrderPermission))]
         Order = 2,
-        [PermissionRelation(typeof(DepartmentPermission))]
+        [PrivilegDetail(typeof(DepartmentPermission))]
         Department = 3
     }
 

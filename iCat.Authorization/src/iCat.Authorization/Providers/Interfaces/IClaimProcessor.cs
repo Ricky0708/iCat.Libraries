@@ -14,27 +14,27 @@ namespace iCat.Authorization.Providers.Interfaces
     public interface IClaimProcessor
     {
         /// <summary>
-        /// Generate permit claim
+        /// Generate privilege claim
         /// </summary>
         /// <param name="permission"></param>
         /// <returns></returns>
-        Claim GeneratePermitClaim<T>(IPermit<T> permission) where T : IPermission;
+        Claim GeneratePrivilegeClaim<T>(IPrivilege<T> permission) where T : IPermission;
 
         /// <summary>
-        /// Generate permit claim
+        /// Generate privilege claim
         /// </summary>
         /// <typeparam name="TPermission"></typeparam>
         /// <param name="permission"></param>
         /// <returns></returns>
-        Claim GeneratePermitClaim<TPermission>(TPermission permission) where TPermission : Enum;
+        Claim GeneratePrivilegeClaim<TPermission>(TPermission permission) where TPermission : Enum;
 
         /// <summary>
-        /// Generate permit claim
+        /// Generate privilege claim
         /// </summary>
-        /// <param name="permit"></param>
+        /// <param name="privilege"></param>
         /// <param name="permission"></param>
         /// <returns></returns>
-        Claim GeneratePermitClaim(int permit, int permission);
+        Claim GeneratePrivilegeClaim(int privilege, int permission);
 
 
     }

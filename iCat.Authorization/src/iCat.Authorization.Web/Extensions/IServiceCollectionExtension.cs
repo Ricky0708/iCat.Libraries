@@ -20,16 +20,16 @@ namespace iCat.Authorization.Web.Extensions
     public static class IServiceCollectionExtension
     {
         /// <summary>
-        /// Register AuthorizationPermissionsHandler, DefaultPermissionProvider, DefaultPermitProvider
+        /// Register AuthorizationPermissionsHandler, DefaultPermissionProvider, DefaultPrivilegeProvider
         /// </summary>
         /// <param name="services"></param>
-        /// <param name="permitEnum"></param>
+        /// <param name="privilegeEnum"></param>
         /// <returns></returns>
-        public static IServiceCollection AddWebAuthorizationPermission(this IServiceCollection services, Type permitEnum)
+        public static IServiceCollection AddWebAuthorizationPermission(this IServiceCollection services, Type privilegeEnum)
         {
-            services.AddSingleton<IPermitProvider, PermitProvider>();
+            services.AddSingleton<IPrivilegeProvider, PrivilegeProvider>();
             services.AddScoped<IAuthorizationHandler, AuthorizationPermissionsHandler>();
-            services.AddAuthorizationPermission(permitEnum);
+            services.AddAuthorizationPermission(privilegeEnum);
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             return services;
         }

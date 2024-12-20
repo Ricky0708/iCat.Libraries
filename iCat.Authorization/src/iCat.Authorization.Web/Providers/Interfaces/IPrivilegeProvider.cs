@@ -10,39 +10,39 @@ using System.Threading.Tasks;
 namespace iCat.Authorization.Web.Providers.Interfaces
 {
     /// <summary>
-    /// provider permit info
+    /// provider Privilege info
     /// </summary>
-    public interface IPermitProvider
+    public interface IPrivilegeProvider
     {
         /// <summary>
-        /// Get currently authenticated user permit
+        /// Get currently authenticated user privilege
         /// </summary>
         /// <returns></returns>
-        IEnumerable<Permit> GetCurrentUserPermits();
+        IEnumerable<Privilege> GetCurrentUserPrivileges();
 
         /// <summary>
-        /// Get currently authenticated user permit
+        /// Get currently authenticated user privilege
         /// </summary>
         /// <param name="httpContext"></param>
         /// <returns></returns>
-        IEnumerable<Permit> GetUserPermits(HttpContext httpContext);
+        IEnumerable<Privilege> GetUserPrivileges(HttpContext httpContext);
 
         /// <summary>
-        /// Get permits required from router
+        /// Get privileges required from router
         /// </summary>
         /// <param name="endpoint"></param>
         /// <returns></returns>
-        List<Permit> GetRouterPermitsRequired(Endpoint endpoint);
+        List<Privilege> GetRouterPrivilegesRequired(Endpoint endpoint);
 
         /// <summary>
-        /// Generate permit claim
+        /// Generate privilege claim
         /// </summary>
         /// <param name="permission"></param>
         /// <returns></returns>
-        Claim GenerateClaim<T>(IPermit<T> permission) where T : IPermission;
+        Claim GenerateClaim<T>(IPrivilege<T> permission) where T : IPermission;
 
         /// <summary>
-        /// Generate permit claim
+        /// Generate privilege claim
         /// </summary>
         /// <typeparam name="TPermission"></typeparam>
         /// <param name="permission"></param>
@@ -50,19 +50,19 @@ namespace iCat.Authorization.Web.Providers.Interfaces
         Claim GenerateClaim<TPermission>(TPermission permission) where TPermission : Enum;
 
         /// <summary>
-        /// Generate permit claim
+        /// Generate privilege claim
         /// </summary>
-        /// <param name="permit"></param>
+        /// <param name="privilege"></param>
         /// <param name="permission"></param>
         /// <returns></returns>
-        Claim GenerateClaim(int permit, int permission);
+        Claim GenerateClaim(int privilege, int permission);
 
         /// <summary>
-        /// Validate Permit
+        /// Validate privilege
         /// </summary>
-        /// <param name="userPermit"></param>
-        /// <param name="routerPermit"></param>
+        /// <param name="userPrivilege"></param>
+        /// <param name="routerPrivilege"></param>
         /// <returns></returns>
-        bool ValidatePermission(IEnumerable<Permit> userPermit, Permit routerPermit);
+        bool ValidatePermission(IEnumerable<Privilege> userPrivilege, Privilege routerPrivilege);
     }
 }

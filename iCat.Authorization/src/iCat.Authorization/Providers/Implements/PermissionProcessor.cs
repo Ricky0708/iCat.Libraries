@@ -14,43 +14,42 @@ namespace iCat.Authorization.Providers.Implements
     /// <inheritdoc/>
     public class PermissionProcessor : IPermissionProcessor
     {
-        private readonly List<Permit> _permitData;
+        private readonly List<Privilege> _privilegeData;
 
         /// <inheritdoc/>
-        public PermissionProcessor(Type permitEnum)
+        public PermissionProcessor(Type privilegeEnum)
         {
-            //_permitData ??= DefaultPermissionProvider.GetDefinitions(permitEnum, DefaultPermissionProvider.GetPermissionEnumList(permitEnum));
-            _permitData ??= GetDefinitions(permitEnum);
+            _privilegeData ??= GetDefinitions(privilegeEnum);
         }
 
         /// <inheritdoc/>
-        public List<Permit> GetDefinitions()
+        public List<Privilege> GetDefinitions()
         {
-            return _permitData;
+            return _privilegeData;
         }
 
         /// <inheritdoc/>
-        public Permit GetPermitDefinitionFromPermission<T>(T permission) where T : Enum
+        public Privilege GetPrivilegeDefinitionFromPermission<T>(T permission) where T : Enum
         {
-            var permit = GetPermitDefinitionFromPermission(permission.GetType());
-            return permit;
+            var privilege = GetPrivilegeDefinitionFromPermission(typeof(T));
+            return privilege;
         }
 
         /// <inheritdoc/>
-        public Permit GetPermitDefinitionFromPermission(Type permissionType)
+        public Privilege GetPrivilegeDefinitionFromPermission(Type permissionType)
         {
-            var permit = _permitData.Any(p => p.Name == permissionType.Name) ?
-                 _permitData.First(p => p.Name == permissionType.Name)
-                 : throw new ArgumentException("Permissions is not in the permit list.");
-            return permit;
+            var privilege = _privilegeData.Any(p => p.Name == permissionType.Name) ?
+                 _privilegeData.First(p => p.Name == permissionType.Name)
+                 : throw new ArgumentException("Permissions is not in the privilege list.");
+            return privilege;
         }
 
         /// <inheritdoc/>
-        public List<Permit> GetPermitFromAttribute(params CustomAttributeData[] attributes)
+        public List<Privilege> GetPrivilegeFromAttribute(params CustomAttributeData[] attributes)
         {
             var permissionAttrs = attributes;
             var args = permissionAttrs.SelectMany(p => p.ConstructorArguments);
-            var permissionNeedsData = new List<Permit>();
+            var permissionNeedsData = new List<Privilege>();
             foreach (var arg in args)
             {
                 GetAttributePermission(arg, ref permissionNeedsData);
@@ -59,33 +58,33 @@ namespace iCat.Authorization.Providers.Implements
         }
 
         /// <inheritdoc/>
-        public Permit BuildPermit(int permitValue, int permissionsValue)
+        public Privilege BuildPrivilege(int privilegeValue, int permissionsValue)
         {
-            var permit = GetDefinitions().FirstOrDefault(x => x.Value == permitValue) ?? throw new ArgumentException("permit in claims is not in permit list");
-            return new Permit
+            var privilege = GetDefinitions().FirstOrDefault(x => x.Value == privilegeValue) ?? throw new ArgumentException("Privilege in claims is not in privilege list");
+            return new Privilege
             {
-                Value = permitValue,
-                Name = permit.Name,
-                PermissionsData = permit.PermissionsData.Where(x => (x.Value & permissionsValue) > 0).ToList()
+                Value = privilegeValue,
+                Name = privilege.Name,
+                PermissionsData = privilege.PermissionsData.Where(x => (x.Value & permissionsValue) > 0).ToList()
             };
         }
 
         /// <inheritdoc/>
-        public Permit BuildPermit<T>(T permission) where T : Enum
+        public Privilege BuildPrivilege<T>(T permission) where T : Enum
         {
-            var permit = GetPermitDefinitionFromPermission(permission.GetType()) ?? throw new ArgumentException("permit in claims is not in permit list");
-            return new Permit
+            var privilege = GetPrivilegeDefinitionFromPermission(permission.GetType()) ?? throw new ArgumentException("Privilege in claims is not in privilege list");
+            return new Privilege
             {
-                Value = permit.Value,
-                Name = permit.Name,
-                PermissionsData = permit.PermissionsData.Where(x => (x.Value & Convert.ToInt64(permission)) > 0).ToList()
+                Value = privilege.Value,
+                Name = privilege.Name,
+                PermissionsData = privilege.PermissionsData.Where(x => (x.Value & Convert.ToInt64(permission)) > 0).ToList()
             };
         }
 
         /// <inheritdoc/>
-        public bool ValidatePermission<T>(IEnumerable<IPermit<T>> ownPermits, IPermit<T> requiredPermit) where T : IPermission
+        public bool ValidatePermission<T>(IEnumerable<IPrivilege<T>> ownPrivileges, IPrivilege<T> requiredPrivilege) where T : IPermission
         {
-            if (ownPermits.Any(p => p.Value == requiredPermit.Value && (p.Permissions & requiredPermit.Permissions) > 0))
+            if (ownPrivileges.Any(p => p.Value == requiredPrivilege.Value && (p.Permissions & requiredPrivilege.Permissions) > 0))
             {
                 return true;
             }
@@ -95,62 +94,39 @@ namespace iCat.Authorization.Providers.Implements
         #region private methods
 
         /// <summary>
-        /// Parsing permit and permission mapping
+        /// Parsing privilege and permission mapping
         /// </summary>
-        /// <param name="permitEnum"></param>
+        /// <param name="privilegeEnum"></param>
         /// <returns></returns>
-        private static List<Permit> GetDefinitions(Type permitEnum)
+        private static List<Privilege> GetDefinitions(Type privilegeEnum)
         {
-            var permitData = new List<Permit>();
+            var privilegeData = new List<Privilege>();
 
-            foreach (var field in permitEnum.GetFields().Where(p => p.Name != "value__"))
+            foreach (var field in privilegeEnum.GetFields().Where(p => p.Name != "value__"))
             {
-                var contructorType = field.CustomAttributes.SingleOrDefault(p => p.AttributeType == typeof(PermissionRelationAttribute))?.ConstructorArguments.First().Value as Type ?? throw new ArgumentNullException($"\"{field.Name}\" has no defined permission attribute.");
+                var contructorType = field.CustomAttributes.SingleOrDefault(p => p.AttributeType == typeof(PrivilegDetailAttribute))?.ConstructorArguments.First().Value as Type ?? throw new ArgumentNullException($"\"{field.Name}\" has no defined permission attribute.");
                 if (contructorType.GetCustomAttribute<FlagsAttribute>() == null) throw new ArgumentException($"Enum {contructorType.Name} have to be flag enum");
 
-                var permit = new Permit
+                var privilege = new Privilege
                 {
                     Name = contructorType.Name,
-                    Value = (int)Enum.Parse(permitEnum, Enum.GetName(permitEnum, field.GetValue(field)!)!),
+                    Value = (int)Enum.Parse(privilegeEnum, Enum.GetName(privilegeEnum, field.GetValue(field)!)!),
                 };
 
-                if (permitData.Any(p => p.Name == permit.Name)) throw new ArgumentException($"Enum {contructorType.Name} is duplicate");
+                if (privilegeData.Any(p => p.Name == privilege.Name)) throw new ArgumentException($"Enum {contructorType.Name} is duplicate");
 
                 foreach (var PermissionItem in Enum.GetValues(contructorType))
                 {
-                    permit.PermissionsData.Add(new Permission
+                    privilege.PermissionsData.Add(new Permission
                     {
                         Name = Enum.GetName(contructorType, PermissionItem),
                         Value = (int)Enum.Parse(contructorType, Enum.GetName(contructorType, PermissionItem)!),
                     });
                 }
 
-                permitData.Add(permit);
+                privilegeData.Add(privilege);
             }
-
-            //foreach (var permitItem in Enum.GetValues(permitEnum))
-            //{
-            //    var permit = new Permit
-            //    {
-            //        Name = Enum.GetName(permitEnum, permitItem),
-            //        Value = (int)Enum.Parse(permitEnum, Enum.GetName(permitEnum, permitItem)!),
-            //    };
-
-            //    foreach (var permissionType in permissionEnums.Where(p => p.Name.Replace(_endWith, "") == permit.Name))
-            //    {
-            //        foreach (var PermissionItem in Enum.GetValues(permissionType))
-            //        {
-            //            permit.PermissionsData.Add(new Permission
-            //            {
-            //                Name = Enum.GetName(permissionType, PermissionItem),
-            //                Value = (int)Enum.Parse(permissionType, Enum.GetName(permissionType, PermissionItem)!),
-            //            });
-            //        }
-            //    }
-
-            //    permitData.Add(permit);
-            //}
-            return permitData;
+            return privilegeData;
         }
 
         /// <summary>
@@ -159,7 +135,7 @@ namespace iCat.Authorization.Providers.Implements
         /// <param name="arg"></param>
         /// <param name="permissionNeeds"></param>
         /// <exception cref="ArgumentException"></exception>
-        private void GetAttributePermission(CustomAttributeTypedArgument arg, ref List<Permit> permissionNeeds)
+        private void GetAttributePermission(CustomAttributeTypedArgument arg, ref List<Privilege> permissionNeeds)
         {
             if (arg.ArgumentType.IsArray)
             {
@@ -169,22 +145,22 @@ namespace iCat.Authorization.Providers.Implements
             }
             else if (arg.ArgumentType.IsEnum)
             {
-                // permit definition
-                var permitDefinition = GetPermitDefinitionFromPermission(arg.ArgumentType);
+                // Privilege definition
+                var privilegeDefinition = GetPrivilegeDefinitionFromPermission(arg.ArgumentType);
 
                 // The permission list
                 var permissions = (IEnumerable<int>)Enum.GetValues(arg.ArgumentType);
 
                 // permission data exists
-                var permissionNeed = permissionNeeds.FirstOrDefault(p => p.Value == permitDefinition.Value);
+                var permissionNeed = permissionNeeds.FirstOrDefault(p => p.Value == privilegeDefinition.Value);
 
                 if (permissionNeed == null)
                 {
                     permissionNeeds.Add(
-                             new Permit
+                             new Privilege
                              {
-                                 Name = permitDefinition.Name,
-                                 Value = permitDefinition.Value,
+                                 Name = privilegeDefinition.Name,
+                                 Value = privilegeDefinition.Value,
                                  PermissionsData = permissions
                                     .Where(p => ((int)arg.Value! & p) > 0)
                                     .Select(p => new Permission
@@ -212,25 +188,7 @@ namespace iCat.Authorization.Providers.Implements
             }
         }
 
-        ///// <summary>
-        ///// Get permission enum type list from permit 
-        ///// </summary>
-        ///// <param name="permitEnumType"></param>
-        ///// <returns></returns>
-        ///// <exception cref="ArgumentNullException"></exception>
-        ///// <exception cref="ArgumentException"></exception>
-        //private static Type[] GetPermissionEnumList(Type permitEnumType)
-        //{
-        //    var permissionList = new List<Type>();
-        //    foreach (var field in permitEnumType.GetFields().Where(p => p.Name != "value__"))
-        //    {
-        //        var permissionAttribute = field.CustomAttributes.SingleOrDefault(p => p.AttributeType == typeof(PermissionAttribute)) ?? throw new ArgumentNullException($"\"{field.Name}\" has no defined permission attribute.");
-        //        var value = permissionAttribute.ConstructorArguments.FirstOrDefault().Value as Type ?? throw new ArgumentException($"\"{field.Name}\" has no specify permission.");
-        //        if (value.GetCustomAttribute<FlagsAttribute>() == null) throw new ArgumentException($"Enum {value.Name} have to be flag enum");
-        //        permissionList.Add(value);
-        //    }
-        //    return permissionList.ToArray();
-        //}
+
 
         #endregion
     }
