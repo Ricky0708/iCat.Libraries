@@ -230,21 +230,6 @@ namespace iCat.Authorization.Utilities.Tests
             Assert.AreEqual(result.Value, "2,2");
         }
 
-        [TestMethod()]
-        public void GetClaimFromPrivilegeDataTest3()
-        {
-            // arrange
-            var permissionProvider = new PermissionProcessor(typeof(Privilege_Success));
-            var claimGenerator = new ClaimProcessor(permissionProvider);
-
-            // action
-            var result = claimGenerator.GeneratePrivilegeClaim(2, 2);
-
-            // assert
-            Assert.AreEqual(result.Type, Constants.ClaimTypes.Privilege);
-            Assert.AreEqual(result.Value, "2,2");
-        }
-
         [AuthorizationPermissions(
         UserProfileA.Add | UserProfileA.Read,
         OrderB.Edit | OrderB.Delete,

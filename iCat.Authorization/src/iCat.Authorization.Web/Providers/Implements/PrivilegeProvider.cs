@@ -78,9 +78,9 @@ namespace iCat.Authorization.Web.Providers.Implements
         }
 
         /// <inheritdoc/>
-        public Claim GenerateClaim<T>(IPrivilege<T> permission) where T : IPermission
+        public Claim GenerateClaim<T>(IPrivilege<T> privilege) where T : IPermission
         {
-            var claim = _claimProcessor.GeneratePrivilegeClaim(permission.Value!.Value, permission.Permissions);
+            var claim = _claimProcessor.GeneratePrivilegeClaim(privilege);
             return claim;
         }
 
@@ -88,14 +88,7 @@ namespace iCat.Authorization.Web.Providers.Implements
         public Claim GenerateClaim<TPermission>(TPermission permission) where TPermission : Enum
         {
             var privilege = _permissionProcessor.GetPrivilegeDefinitionFromPermission(permission);
-            var claim = _claimProcessor.GeneratePrivilegeClaim(privilege.Value!.Value, (int)(object)permission);
-            return claim;
-        }
-
-        /// <inheritdoc/>
-        public Claim GenerateClaim(int privilege, int permission)
-        {
-            var claim = _claimProcessor.GeneratePrivilegeClaim(privilege, permission);
+            var claim = _claimProcessor.GeneratePrivilegeClaim(privilege);
             return claim;
         }
 

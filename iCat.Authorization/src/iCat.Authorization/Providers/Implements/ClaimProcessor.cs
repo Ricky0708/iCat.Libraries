@@ -24,9 +24,9 @@ namespace iCat.Authorization.Providers.Implements
         }
 
         /// <inheritdoc/>
-        public Claim GeneratePrivilegeClaim<T>(IPrivilege<T> permission) where T : IPermission
+        public Claim GeneratePrivilegeClaim<T>(IPrivilege<T> privilege) where T : IPermission
         {
-            var claim = GeneratePrivilegeClaim(permission.Value!.Value, permission.Permissions);
+            var claim = GeneratePrivilegeClaim(privilege.Value!.Value, privilege.Permissions);
             return claim;
         }
 
@@ -39,7 +39,7 @@ namespace iCat.Authorization.Providers.Implements
         }
 
         /// <inheritdoc/>
-        public Claim GeneratePrivilegeClaim(int privilege, int permission)
+        internal Claim GeneratePrivilegeClaim(int privilege, int permission)
         {
             var claim = new Claim(Constants.ClaimTypes.Privilege, $"{privilege},{permission}");
             return claim;

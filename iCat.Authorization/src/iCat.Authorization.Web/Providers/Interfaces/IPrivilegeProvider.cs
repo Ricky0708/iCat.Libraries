@@ -37,9 +37,9 @@ namespace iCat.Authorization.Web.Providers.Interfaces
         /// <summary>
         /// Generate privilege claim
         /// </summary>
-        /// <param name="permission"></param>
+        /// <param name="privilege"></param>
         /// <returns></returns>
-        Claim GenerateClaim<T>(IPrivilege<T> permission) where T : IPermission;
+        Claim GenerateClaim<T>(IPrivilege<T> privilege) where T : IPermission;
 
         /// <summary>
         /// Generate privilege claim
@@ -48,14 +48,6 @@ namespace iCat.Authorization.Web.Providers.Interfaces
         /// <param name="permission"></param>
         /// <returns></returns>
         Claim GenerateClaim<TPermission>(TPermission permission) where TPermission : Enum;
-
-        /// <summary>
-        /// Generate privilege claim
-        /// </summary>
-        /// <param name="privilege"></param>
-        /// <param name="permission"></param>
-        /// <returns></returns>
-        Claim GenerateClaim(int privilege, int permission);
 
         /// <summary>
         /// Validate privilege
