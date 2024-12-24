@@ -253,12 +253,12 @@ namespace iCat.Authorization.Utilities.Tests
         /// <summary>
         /// Privilege name
         /// </summary>
-        public string? Name { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Privilege value
         /// </summary>
-        public int? Value { get; set; }
+        public int Value { get; set; }
 
         /// <summary>
         /// permission detail

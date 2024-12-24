@@ -25,7 +25,7 @@ namespace iCat.Authorization.Models
         /// <summary>
         /// Permission name
         /// </summary>
-        public string? Name { get; internal set; }
+        public string Name { get; internal set; } = default!;
 
         /// <summary>
         /// Permission

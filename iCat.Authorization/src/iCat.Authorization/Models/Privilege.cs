@@ -15,7 +15,7 @@ namespace iCat.Authorization.Models
         /// <summary>
         /// Privilege value
         /// </summary>
-        int? Value { get; }
+        int Value { get; }
 
         /// <summary>
         /// permission detail
@@ -36,12 +36,12 @@ namespace iCat.Authorization.Models
         /// <summary>
         /// Privilege name
         /// </summary>
-        public string? Name { get; internal set; }
+        public string Name { get; internal set; } = default!;   
 
         /// <summary>
         /// Privilege value
         /// </summary>
-        public int? Value { get; internal set; }
+        public int Value { get; internal set; }
 
         /// <summary>
         /// permission detail
