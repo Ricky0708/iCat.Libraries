@@ -29,7 +29,7 @@ namespace iCat.Authorization.Providers.Implements
         }
 
         /// <inheritdoc/>
-        public Privilege GetPrivilegeDefinitionFromPermission<T>(T permission) where T : Enum
+        public Privilege GetPrivilegeDefinitionFromPermission<T>(T permissionEnum) where T : Enum
         {
             var privilege = GetPrivilegeDefinitionFromPermission(typeof(T));
             return privilege;
@@ -70,19 +70,19 @@ namespace iCat.Authorization.Providers.Implements
         }
 
         /// <inheritdoc/>
-        public Privilege BuildPrivilege<T>(T permission) where T : Enum
+        public Privilege BuildPrivilege<T>(T permissionEnum) where T : Enum
         {
-            var privilege = GetPrivilegeDefinitionFromPermission(permission.GetType()) ?? throw new ArgumentException("Privilege in claims is not in privilege list");
+            var privilege = GetPrivilegeDefinitionFromPermission(permissionEnum.GetType()) ?? throw new ArgumentException("Privilege in claims is not in privilege list");
             return new Privilege
             {
                 Value = privilege.Value,
                 Name = privilege.Name,
-                PermissionsData = privilege.PermissionsData.Where(x => (x.Value & Convert.ToInt64(permission)) > 0).ToList()
+                PermissionsData = privilege.PermissionsData.Where(x => (x.Value & Convert.ToInt64(permissionEnum)) > 0).ToList()
             };
         }
 
         /// <inheritdoc/>
-        public bool ValidatePermission<T>(IEnumerable<IPrivilege<T>> ownPrivileges, IPrivilege<T> requiredPrivilege) where T : IPermission
+        public bool ValidatePermission(IEnumerable<Privilege> ownPrivileges, Privilege requiredPrivilege)
         {
             if (ownPrivileges.Any(p => p.Value == requiredPrivilege.Value && (p.Permissions & requiredPrivilege.Permissions) > 0))
             {

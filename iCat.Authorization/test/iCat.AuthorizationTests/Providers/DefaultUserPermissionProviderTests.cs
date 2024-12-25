@@ -25,8 +25,8 @@ namespace iCat.Authorization.Providers.Tests
         {
             // arrange
             var claims = new List<Claim>() {
-                new (Constants.ClaimTypes.Privilege, $"{(int)Privilege.UserProfile},{(int)(UserProfileQQ.Add | UserProfileQQ.Read)}"),
-                new (Constants.ClaimTypes.Privilege, $"{(int)Privilege.Order},{(int)(OrderPe.Add | OrderPe.Read)}"),
+                new (Constants.ClaimTypes.Privilege, $"{(int)PrivilegeEnum.UserProfile},{(int)(UserProfileQQ.Add | UserProfileQQ.Read)}"),
+                new (Constants.ClaimTypes.Privilege, $"{(int)PrivilegeEnum.Order},{(int)(OrderPe.Add | OrderPe.Read)}"),
             };
             var claimIdentity = new ClaimsIdentity(claims);
             var principal = new ClaimsPrincipal(claimIdentity);
@@ -34,7 +34,7 @@ namespace iCat.Authorization.Providers.Tests
             hc.User = principal;
             var accessor = Substitute.For<IHttpContextAccessor>();
             accessor.HttpContext = hc;
-            var permissionProcessor = new PermissionProcessor(typeof(Privilege));
+            var permissionProcessor = new PermissionProcessor(typeof(PrivilegeEnum));
             var claimProcessor = new ClaimProcessor(permissionProcessor);
             var privilegeProvider = new PrivilegeProvider(accessor, claimProcessor, permissionProcessor);
 
@@ -87,19 +87,19 @@ namespace iCat.Authorization.Providers.Tests
             // assert
         }
 
-        [DataRow(Privilege.UserProfile, UserProfileQQ.Add, true)]
-        [DataRow(Privilege.UserProfile, UserProfileQQ.Edit, true)]
-        [DataRow(Privilege.UserProfile, UserProfileQQ.Read, false)]
-        [DataRow(Privilege.UserProfile, UserProfileQQ.Delete, false)]
-        [DataRow(Privilege.UserProfile, UserProfileQQ.Delete | UserProfileQQ.Read, false)]
-        [DataRow(Privilege.UserProfile, UserProfileQQ.Delete | UserProfileQQ.Read | UserProfileQQ.Add, true)]
-        [DataRow(Privilege.Order, OrderPe.Add, false)]
+        [DataRow(PrivilegeEnum.UserProfile, UserProfileQQ.Add, true)]
+        [DataRow(PrivilegeEnum.UserProfile, UserProfileQQ.Edit, true)]
+        [DataRow(PrivilegeEnum.UserProfile, UserProfileQQ.Read, false)]
+        [DataRow(PrivilegeEnum.UserProfile, UserProfileQQ.Delete, false)]
+        [DataRow(PrivilegeEnum.UserProfile, UserProfileQQ.Delete | UserProfileQQ.Read, false)]
+        [DataRow(PrivilegeEnum.UserProfile, UserProfileQQ.Delete | UserProfileQQ.Read | UserProfileQQ.Add, true)]
+        [DataRow(PrivilegeEnum.Order, OrderPe.Add, false)]
         [TestMethod()]
-        public void ValidateTest_Success(Privilege privilege, UserProfileQQ permission, bool expected)
+        public void ValidateTest_Success(PrivilegeEnum privilege, UserProfileQQ permission, bool expected)
         {
             // arrange
             var accessor = Substitute.For<IHttpContextAccessor>();
-            var permissionProvider = new PermissionProcessor(typeof(Privilege));
+            var permissionProvider = new PermissionProcessor(typeof(PrivilegeEnum));
             var PrivilegeProvider = new ClaimProcessor(permissionProvider);
             var userPermission = new List<PrivilegeTest> {
                 new() {
@@ -116,7 +116,7 @@ namespace iCat.Authorization.Providers.Tests
             // action
             var result = permissionProvider.ValidatePermission(userPermission, new PrivilegeTest
             {
-                Value = (int)Privilege.UserProfile,
+                Value = (int)PrivilegeEnum.UserProfile,
                 PermissionsData = new List<PermissionTest> {
                     new(){
                         Value = (int)UserProfileQQ.Add,
@@ -139,43 +139,92 @@ namespace iCat.Authorization.Providers.Tests
     /// <summary>
     /// Privilege - Permission information
     /// </summary>
-    public class PrivilegeTest : IPrivilege<PermissionTest>
+    public class PrivilegeTest : Privilege
     {
         /// <summary>
         /// Privilege name
         /// </summary>
-        public string Name { get; set; }
+        public new string Name
+        {
+            get
+            {
+                return base.Name;
+            }
+            set
+            {
+                base.Name = value;
+            }
+        }
 
         /// <summary>
         /// Privilege value
         /// </summary>
-        public int Value { get; set; }
+        public new int Value
+        {
+            get
+            {
+                return base.Value;
+            }
+            set
+            {
+                base.Value = value;
+            }
+        }
 
         /// <summary>
         /// permission detail
         /// </summary>
-        public List<PermissionTest> PermissionsData { get; set; } = new List<PermissionTest>();
-
-        /// <summary>
-        /// Permissions
-        /// </summary>
-        public int Permissions => PermissionsData?.Sum(p => p.Value) ?? 0;
+        public new List<PermissionTest> PermissionsData
+        {
+            get
+            {
+                return base.PermissionsData.Select(p => new PermissionTest
+                {
+                    Name = p.Name,
+                    Value = p.Value
+                }).ToList();
+            }
+            set
+            {
+                base.PermissionsData = value.Select(p => (Permission)p).ToList();
+            }
+        }
     }
 
     /// <summary>
     /// Permission detail
     /// </summary>
-    public class PermissionTest : IPermission
+    public class PermissionTest : Permission
     {
         /// <summary>
         /// Permission name
         /// </summary>
-        public string? Name { get; set; }
+        public new string Name
+        {
+            get
+            {
+                return base.Name;
+            }
+            set
+            {
+                base.Name = value;
+            }
+        }
 
         /// <summary>
         /// Permission
         /// </summary>
-        public int Value { get; set; }
+        public new int Value
+        {
+            get
+            {
+                return base.Value;
+            }
+            set
+            {
+                base.Value = value;
+            }
+        }
     }
 
     public enum Privilege_Duplicate
@@ -188,7 +237,7 @@ namespace iCat.Authorization.Providers.Tests
         Department = 3
     }
 
-    public enum Privilege
+    public enum PrivilegeEnum
     {
         [PrivilegDetail(typeof(UserProfileQQ))]
         UserProfile = 1,

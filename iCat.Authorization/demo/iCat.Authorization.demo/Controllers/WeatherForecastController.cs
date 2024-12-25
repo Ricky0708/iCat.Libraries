@@ -1,4 +1,5 @@
 using iCat.Authorization.demo.Enums;
+using iCat.Authorization.Providers.Interfaces;
 using iCat.Authorization.Web;
 using iCat.Authorization.Web.Providers.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -10,10 +11,14 @@ namespace iCat.Authorization.demo.Controllers
     public class WeatherForecastController : ControllerBase
     {
         private readonly IPrivilegeProvider _privilegeProvider;
+        private readonly IPermissionProcessor _permissionProcessor;
 
-        public WeatherForecastController(IPrivilegeProvider permissionProvider)
+        public WeatherForecastController(
+            IPrivilegeProvider permissionProvider,
+            IPermissionProcessor permissionProcessor)
         {
             _privilegeProvider = permissionProvider ?? throw new ArgumentNullException(nameof(permissionProvider));
+            _permissionProcessor = permissionProcessor ?? throw new ArgumentNullException(nameof(permissionProcessor));
         }
 
         [AuthorizationPermissions(

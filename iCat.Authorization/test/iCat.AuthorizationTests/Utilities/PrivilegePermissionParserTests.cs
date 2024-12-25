@@ -248,43 +248,92 @@ namespace iCat.Authorization.Utilities.Tests
     /// <summary>
     /// Privilege - Permission information
     /// </summary>
-    public class PrivilegeTest : IPrivilege<PermissionTest>
+    public class PrivilegeTest : Privilege
     {
         /// <summary>
         /// Privilege name
         /// </summary>
-        public string Name { get; set; }
+        public new string Name
+        {
+            get
+            {
+                return base.Name;
+            }
+            set
+            {
+                base.Name = value;
+            }
+        }
 
         /// <summary>
         /// Privilege value
         /// </summary>
-        public int Value { get; set; }
+        public new int Value
+        {
+            get
+            {
+                return base.Value;
+            }
+            set
+            {
+                base.Value = value;
+            }
+        }
 
         /// <summary>
         /// permission detail
         /// </summary>
-        public List<PermissionTest> PermissionsData { get; set; } = new List<PermissionTest>();
-
-        /// <summary>
-        /// Permissions
-        /// </summary>
-        public int Permissions => PermissionsData?.Sum(p => p.Value) ?? 0;
+        public new List<PermissionTest> PermissionsData
+        {
+            get
+            {
+                return base.PermissionsData.Select(p => new PermissionTest
+                {
+                    Name = p.Name,
+                    Value = p.Value
+                }).ToList();
+            }
+            set
+            {
+                base.PermissionsData = value.Select(p => (Permission)p).ToList();
+            }
+        }
     }
 
     /// <summary>
     /// Permission detail
     /// </summary>
-    public class PermissionTest : IPermission
+    public class PermissionTest : Permission
     {
         /// <summary>
         /// Permission name
         /// </summary>
-        public string? Name { get; set; }
+        public new string Name
+        {
+            get
+            {
+                return base.Name;
+            }
+            set
+            {
+                base.Name = value;
+            }
+        }
 
         /// <summary>
         /// Permission
         /// </summary>
-        public int Value { get; set; }
+        public new int Value
+        {
+            get
+            {
+                return base.Value;
+            }
+            set
+            {
+                base.Value = value;
+            }
+        }
     }
 
     public enum Privilege_Success

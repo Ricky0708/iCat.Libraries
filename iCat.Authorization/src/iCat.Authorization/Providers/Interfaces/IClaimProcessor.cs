@@ -18,7 +18,7 @@ namespace iCat.Authorization.Providers.Interfaces
         /// </summary>
         /// <param name="privilege"></param>
         /// <returns></returns>
-        Claim GeneratePrivilegeClaim<T>(IPrivilege<T> privilege) where T : IPermission;
+        Claim GeneratePrivilegeClaim(Privilege privilege);
 
         /// <summary>
         /// Generate privilege claim

@@ -24,9 +24,9 @@ namespace iCat.Authorization.Providers.Interfaces
         /// Get privilege definition from permission
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="permission"></param>
+        /// <param name="permissionEnum"></param>
         /// <returns></returns>
-        Privilege GetPrivilegeDefinitionFromPermission<T>(T permission) where T : Enum;
+        Privilege GetPrivilegeDefinitionFromPermission<T>(T permissionEnum) where T : Enum;
 
         /// <summary>
         /// Get privilege definition from permission
@@ -55,9 +55,9 @@ namespace iCat.Authorization.Providers.Interfaces
         /// Build privilege from permissions
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="permission"></param>
+        /// <param name="permissionEnum"></param>
         /// <returns></returns>
-        Privilege BuildPrivilege<T>(T permission) where T : Enum;
+        Privilege BuildPrivilege<T>(T permissionEnum) where T : Enum;
 
         /// <summary>
         /// Validate privilege
@@ -66,6 +66,6 @@ namespace iCat.Authorization.Providers.Interfaces
         /// <param name="permissions"></param>
         /// <param name="permissionRequired"></param>
         /// <returns></returns>
-        bool ValidatePermission<T>(IEnumerable<IPrivilege<T>> permissions, IPrivilege<T> permissionRequired) where T : IPermission;
+        bool ValidatePermission(IEnumerable<Privilege> permissions, Privilege permissionRequired);
     }
 }

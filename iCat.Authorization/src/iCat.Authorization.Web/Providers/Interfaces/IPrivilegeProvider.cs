@@ -39,7 +39,7 @@ namespace iCat.Authorization.Web.Providers.Interfaces
         /// </summary>
         /// <param name="privilege"></param>
         /// <returns></returns>
-        Claim GenerateClaim<T>(IPrivilege<T> privilege) where T : IPermission;
+        Claim GenerateClaim(Privilege privilege);
 
         /// <summary>
         /// Generate privilege claim
