@@ -1,4 +1,5 @@
 ﻿using iCat.Authorization.demo.Enums;
+using iCat.Authorization.demo.Wrap;
 using iCat.Authorization.Web.Providers.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -31,8 +32,8 @@ namespace iCat.Authorization.demo.Controllers
             {
                 new Claim(ClaimTypes.Name, "TestUser"),
                 new Claim("UserId", "TestId"),
-                _privilegeProvider.GenerateClaim(UserProfilePermission.Add | UserProfilePermission.ReadAllDetail),
-                _privilegeProvider.GenerateClaim(DepartmentPermission.Delete),
+                //_privilegeProvider.GenerateClaim(UserProfilePermission.Add | UserProfilePermission.ReadAllDetail),
+                _privilegeProvider.GenerateClaim(DepartmentPermission.Add),
             };
 
             ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

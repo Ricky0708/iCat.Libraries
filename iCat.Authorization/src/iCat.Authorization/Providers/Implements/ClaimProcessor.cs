@@ -10,23 +10,23 @@ using System.Threading.Tasks;
 namespace iCat.Authorization.Providers.Implements
 {
     /// <inheritdoc/>
-    public class ClaimProcessor : IClaimProcessor
+    public class ClaimProcessor<T> : IClaimProcessor<T> where T : Enum
     {
         /// <summary>
         /// permissionProvider
         /// </summary>
-        private readonly IPermissionProcessor _permissionProvider;
+        private readonly IPrivilegeProcessor<T> _permissionProvider;
 
         /// <inheritdoc/>
-        public ClaimProcessor(IPermissionProcessor permissionProvider)
+        public ClaimProcessor(IPrivilegeProcessor<T> permissionProvider)
         {
             _permissionProvider = permissionProvider ?? throw new ArgumentNullException(nameof(permissionProvider));
         }
 
         /// <inheritdoc/>
-        public Claim GeneratePrivilegeClaim(Privilege privilege)
+        public Claim GeneratePrivilegeClaim(Privilege<T> privilege)
         {
-            var claim = GeneratePrivilegeClaim(privilege.Value!, privilege.Permissions);
+            var claim = GeneratePrivilegeClaim((int)(object)privilege.Value!, privilege.Permissions);
             return claim;
         }
 
@@ -34,7 +34,7 @@ namespace iCat.Authorization.Providers.Implements
         public Claim GeneratePrivilegeClaim<TPermission>(TPermission permission) where TPermission : Enum
         {
             var privilege = _permissionProvider.GetPrivilegeDefinitionFromPermission(permission);
-            var claim = GeneratePrivilegeClaim(privilege.Value!, (int)(object)permission);
+            var claim = GeneratePrivilegeClaim((int)(object)privilege.Value!, (int)(object)permission);
             return claim;
         }
 

@@ -22,14 +22,43 @@ namespace iCat.Authorization.Web.Extensions
         /// <summary>
         /// Register AuthorizationPermissionsHandler, DefaultPermissionProvider, DefaultPrivilegeProvider
         /// </summary>
+        /// <typeparam name="TPrivilegeEnum"></typeparam>
         /// <param name="services"></param>
-        /// <param name="privilegeEnum"></param>
         /// <returns></returns>
-        public static IServiceCollection AddWebAuthorizationPermission(this IServiceCollection services, Type privilegeEnum)
+        public static IServiceCollection AddWebAuthorizationPermission<TPrivilegeEnum>(this IServiceCollection services) where TPrivilegeEnum : Enum
         {
-            services.AddSingleton<IPrivilegeProvider, PrivilegeProvider>();
-            services.AddScoped<IAuthorizationHandler, AuthorizationPermissionsHandler>();
-            services.AddAuthorizationPermission(privilegeEnum);
+            services.AddSingleton<IPrivilegeProvider<TPrivilegeEnum>, PrivilegeProvider<TPrivilegeEnum>>();
+            services.AddScoped<IAuthorizationHandler, AuthorizationPermissionsHandler<TPrivilegeEnum>>();
+            services.AddAuthorizationPermission<TPrivilegeEnum>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            return services;
+        }
+
+        /// <summary>
+        /// Register AuthorizationPermissionsHandler, DefaultPermissionProvider, DefaultPrivilegeProvider
+        /// </summary>
+        /// <typeparam name="TPrivilegeEnum"></typeparam>
+        /// <typeparam name="TPrivilegeProviderType"></typeparam>
+        /// <typeparam name="TPrivilegeProcessorType"></typeparam>
+        /// <typeparam name="TClaimProcessorType"></typeparam>
+        /// <param name="services"></param>
+        /// <returns></returns>
+        public static IServiceCollection AddWebAuthorizationPermission<
+              TPrivilegeEnum
+            , TPrivilegeProviderType
+            , TPrivilegeProcessorType
+            , TClaimProcessorType>(
+            this IServiceCollection services
+            )
+            where TPrivilegeEnum : Enum
+            where TPrivilegeProviderType : IPrivilegeProvider<TPrivilegeEnum>
+            where TPrivilegeProcessorType : IPrivilegeProcessor<TPrivilegeEnum>
+            where TClaimProcessorType : IClaimProcessor<TPrivilegeEnum>
+
+        {
+            services.AddSingleton<IPrivilegeProvider<TPrivilegeEnum>>(p => p.GetRequiredService<TPrivilegeProviderType>());
+            services.AddScoped<IAuthorizationHandler, AuthorizationPermissionsHandler<TPrivilegeEnum>>();
+            services.AddAuthorizationPermission<TPrivilegeEnum, TPrivilegeProcessorType, TClaimProcessorType>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             return services;
         }

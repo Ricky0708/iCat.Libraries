@@ -15,19 +15,19 @@ using System.Threading.Tasks;
 namespace iCat.Authorization.Web.Providers.Implements
 {
     /// <inheritdoc/>
-    public class PrivilegeProvider : IPrivilegeProvider
+    public class PrivilegeProvider<T> : IPrivilegeProvider<T> where T : Enum
     {
 
-        private static readonly ConcurrentDictionary<string, List<Privilege>> _routePermissionCache = new();
+        private static readonly ConcurrentDictionary<string, List<Privilege<T>>> _routePermissionCache = new();
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IClaimProcessor _claimProcessor;
-        private readonly IPermissionProcessor _permissionProcessor;
+        private readonly IClaimProcessor<T> _claimProcessor;
+        private readonly IPrivilegeProcessor<T> _permissionProcessor;
 
         /// <inheritdoc/>
         public PrivilegeProvider(
             IHttpContextAccessor httpContextAccessor,
-            IClaimProcessor claimProcessor,
-            IPermissionProcessor permissionProcessor)
+            IClaimProcessor<T> claimProcessor,
+            IPrivilegeProcessor<T> permissionProcessor)
         {
             _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
             _claimProcessor = claimProcessor ?? throw new ArgumentNullException(nameof(claimProcessor));
@@ -35,7 +35,7 @@ namespace iCat.Authorization.Web.Providers.Implements
         }
 
         /// <inheritdoc/>
-        public IEnumerable<Privilege> GetCurrentUserPrivileges()
+        public IEnumerable<Privilege<T>> GetCurrentUserPrivileges()
         {
             var userPrivileges = _httpContextAccessor?.HttpContext?.User.Claims.Where(p => p.Type == Constants.ClaimTypes.Privilege).Select(p =>
             {
@@ -48,7 +48,7 @@ namespace iCat.Authorization.Web.Providers.Implements
         }
 
         /// <inheritdoc/>
-        public IEnumerable<Privilege> GetUserPrivileges(HttpContext httpContext)
+        public IEnumerable<Privilege<T>> GetUserPrivileges(HttpContext httpContext)
         {
             var userPrivileges = httpContext.User.Claims.Where(p => p.Type == Constants.ClaimTypes.Privilege).Select(p =>
             {
@@ -61,7 +61,7 @@ namespace iCat.Authorization.Web.Providers.Implements
         }
 
         /// <inheritdoc/>
-        public List<Privilege> GetRouterPrivilegesRequired(Endpoint endpoint)
+        public List<Privilege<T>> GetRouterPrivilegesRequired(Endpoint endpoint)
         {
             var actionDescriptor = endpoint.Metadata.GetMetadata<ControllerActionDescriptor>()!;
             var cacheKey = $"{actionDescriptor.ControllerName}{actionDescriptor.ActionName}{string.Join("-", actionDescriptor.Parameters.Select(p => p.ParameterType.Name))}";
@@ -78,22 +78,22 @@ namespace iCat.Authorization.Web.Providers.Implements
         }
 
         /// <inheritdoc/>
-        public Claim GenerateClaim(Privilege privilege)
+        public Claim GenerateClaim(Privilege<T> privilege)
         {
             var claim = _claimProcessor.GeneratePrivilegeClaim(privilege);
             return claim;
         }
 
         /// <inheritdoc/>
-        public Claim GenerateClaim<TPermission>(TPermission permission) where TPermission : Enum
+        public Claim GenerateClaim<TPermission>(TPermission permissionEnum) where TPermission : Enum
         {
-            var privilege = _permissionProcessor.GetPrivilegeDefinitionFromPermission(permission);
+            var privilege = _permissionProcessor.BuildPrivilege(permissionEnum);
             var claim = _claimProcessor.GeneratePrivilegeClaim(privilege);
             return claim;
         }
 
         /// <inheritdoc/>
-        public bool ValidatePermission(IEnumerable<Privilege> userPrivilege, Privilege routerPrivilege)
+        public bool ValidatePermission(IEnumerable<Privilege<T>> userPrivilege, Privilege<T> routerPrivilege)
         {
             return _permissionProcessor.ValidatePermission(userPrivilege, routerPrivilege);
         }

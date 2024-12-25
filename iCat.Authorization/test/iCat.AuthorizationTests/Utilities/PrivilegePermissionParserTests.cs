@@ -22,11 +22,11 @@ namespace iCat.Authorization.Utilities.Tests
         public void GetPrivilegePermissionDefinitions_Success()
         {
             // arrange
-            var parser = new PermissionProcessor(typeof(Privilege_Success));
+            var parser = new PrivilegeProcessor<Privilege_Success>();
             var validationData = new List<PrivilegeTest> {
                 new() {
                     Name = nameof(UserProfileA),
-                    Value = 1,
+                    Value = Privilege_Success.UserProfile,
                     PermissionsData = new List<PermissionTest> {
                         new() { Name = "Add", Value = 1 },
                         new() { Name = "Edit", Value = 2 },
@@ -35,7 +35,7 @@ namespace iCat.Authorization.Utilities.Tests
                 }},
                 new() {
                     Name = nameof(OrderB),
-                    Value = 2,
+                    Value = Privilege_Success.Order,
                     PermissionsData = new List<PermissionTest> {
                         new() { Name = "Add", Value = 1 },
                         new() { Name = "Read", Value = 2 },
@@ -44,7 +44,7 @@ namespace iCat.Authorization.Utilities.Tests
                 }},
                 new() {
                     Name = nameof(DepartmentC),
-                    Value = 3,
+                    Value = Privilege_Success.Department,
                     PermissionsData = new List<PermissionTest> {
                         new() { Name = "Add", Value = 1 },
                         new() { Name = "Edit", Value = 2 },
@@ -64,11 +64,11 @@ namespace iCat.Authorization.Utilities.Tests
         public void GetPrivilegePermissionDefinitions_Fail1()
         {
             // arrange
-            var parser = new PermissionProcessor(typeof(Privilege_Fail));
+            var parser = new PrivilegeProcessor<Privilege_Fail>();
             var validationData = new List<PrivilegeTest> {
                 new() {
                     Name = nameof(UserProfileA),
-                    Value = 1,
+                    Value = Privilege_Success.UserProfile,
                     PermissionsData = new List<PermissionTest> {
                         new() { Name = "Add", Value = 1 },
                         new() { Name = "Edit", Value = 2 },
@@ -77,7 +77,7 @@ namespace iCat.Authorization.Utilities.Tests
                 }},
                 new() {
                     Name = nameof(DepartmentC),
-                    Value = 3,
+                    Value = Privilege_Success.Department,
                     PermissionsData = new List<PermissionTest> {
                         new() { Name = "Add", Value = 1 },
                         new() { Name = "Edit", Value = 2 },
@@ -97,11 +97,11 @@ namespace iCat.Authorization.Utilities.Tests
         public void GetPrivilegePermissionDefinitions_Fail2()
         {
             // arrange
-            var provider = new PermissionProcessor(typeof(Privilege_Fail));
+            var provider = new PrivilegeProcessor<Privilege_Fail>();
             var validationData = new List<PrivilegeTest> {
                 new() {
                     Name = nameof(UserProfileA),
-                    Value = 1,
+                    Value = Privilege_Success.UserProfile,
                     PermissionsData = new List<PermissionTest> {
                         new() { Name = "Add", Value = 1 },
                         new() { Name = "Edit", Value = 2 },
@@ -110,7 +110,7 @@ namespace iCat.Authorization.Utilities.Tests
                 }},
                 new() {
                     Name = nameof(DepartmentC),
-                    Value = 3,
+                    Value = Privilege_Success.Department,
                     PermissionsData = new List<PermissionTest> {
                         new() { Name = "Add", Value = 1 },
                         new() { Name = "Edit", Value = 2 },
@@ -130,13 +130,13 @@ namespace iCat.Authorization.Utilities.Tests
         public void GetAuthorizationPermissionsDataTest_Success()
         {
             // arrange
-            var parser = new PermissionProcessor(typeof(Privilege_Success));
+            var parser = new PrivilegeProcessor<Privilege_Success>();
             var method = typeof(PrivilegePermissionParserTests).GetMethod(nameof(TestAttributeMethod), BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
 
             var validationData = new List<PrivilegeTest> {
                 new() {
                     Name = nameof(UserProfileA),
-                    Value = 1,
+                    Value = Privilege_Success.UserProfile,
                     PermissionsData = new List<PermissionTest> {
                         new() { Name = "Add", Value = 1 },
                         new() { Name = "Read", Value = 4 },
@@ -145,7 +145,7 @@ namespace iCat.Authorization.Utilities.Tests
                 }},
                 new() {
                     Name = nameof(OrderB),
-                    Value = 2,
+                    Value = Privilege_Success.Order,
                     PermissionsData = new List<PermissionTest> {
                         new() { Name = "Edit", Value = 4 },
                         new() { Name = "Delete", Value = 8 },
@@ -163,13 +163,13 @@ namespace iCat.Authorization.Utilities.Tests
         public void GetAuthorizationPermissionsDataTest_Fail()
         {
             // arrange
-            var parser = new PermissionProcessor(typeof(Privilege_Success));
+            var parser = new PrivilegeProcessor<Privilege_Success>();
             var method = typeof(PrivilegePermissionParserTests).GetMethod(nameof(TestAttributeMethod), BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
 
             var validationData = new List<PrivilegeTest> {
                 new() {
                     Name = nameof(UserProfileA),
-                    Value = 1,
+                    Value = Privilege_Success.UserProfile,
                     PermissionsData = new List<PermissionTest> {
                         new() { Name = "Add", Value = 1 },
                         new() { Name = "Read", Value = 4 },
@@ -178,7 +178,7 @@ namespace iCat.Authorization.Utilities.Tests
                 }},
                 new() {
                     Name = nameof(OrderB),
-                    Value = 2,
+                    Value = Privilege_Success.Order,
                     PermissionsData = new List<PermissionTest> {
                         new() { Name = "Edit", Value = 4 },
                         new() { Name = "Delete", Value = 8 },
@@ -196,14 +196,14 @@ namespace iCat.Authorization.Utilities.Tests
         public void GetClaimFromPrivilegeDataTest()
         {
             // arrange
-            var permissionProvider = new PermissionProcessor(typeof(Privilege_Success));
-            var claimGenerator = new ClaimProcessor(permissionProvider);
+            var permissionProvider = new PrivilegeProcessor<Privilege_Success>();
+            var claimGenerator = new ClaimProcessor<Privilege_Success>(permissionProvider);
 
             // action
             var result = claimGenerator.GeneratePrivilegeClaim(new PrivilegeTest
             {
                 Name = "A",
-                Value = 1,
+                Value = Privilege_Success.UserProfile,
                 PermissionsData = new List<PermissionTest>
                 {
                     new() { Name = "Add", Value = 1}
@@ -219,8 +219,8 @@ namespace iCat.Authorization.Utilities.Tests
         public void GetClaimFromPrivilegeDataTest2()
         {
             // arrange
-            var permissionProvider = new PermissionProcessor(typeof(Privilege_Success));
-            var claimGenerator = new ClaimProcessor(permissionProvider);
+            var permissionProvider = new PrivilegeProcessor<Privilege_Success>();
+            var claimGenerator = new ClaimProcessor<Privilege_Success>(permissionProvider);
 
             // action
             var result = claimGenerator.GeneratePrivilegeClaim(OrderB.Read);
@@ -248,7 +248,7 @@ namespace iCat.Authorization.Utilities.Tests
     /// <summary>
     /// Privilege - Permission information
     /// </summary>
-    public class PrivilegeTest : Privilege
+    public class PrivilegeTest : Privilege<Privilege_Success>
     {
         /// <summary>
         /// Privilege name
@@ -268,7 +268,7 @@ namespace iCat.Authorization.Utilities.Tests
         /// <summary>
         /// Privilege value
         /// </summary>
-        public new int Value
+        public new Privilege_Success Value
         {
             get
             {

@@ -34,13 +34,13 @@ namespace iCat.Authorization.Providers.Tests
             hc.User = principal;
             var accessor = Substitute.For<IHttpContextAccessor>();
             accessor.HttpContext = hc;
-            var permissionProcessor = new PermissionProcessor(typeof(PrivilegeEnum));
-            var claimProcessor = new ClaimProcessor(permissionProcessor);
-            var privilegeProvider = new PrivilegeProvider(accessor, claimProcessor, permissionProcessor);
+            var permissionProcessor = new PrivilegeProcessor<PrivilegeEnum>();
+            var claimProcessor = new ClaimProcessor<PrivilegeEnum>(permissionProcessor);
+            var privilegeProvider = new PrivilegeProvider<PrivilegeEnum>(accessor, claimProcessor, permissionProcessor);
 
             var expeced = new List<PrivilegeTest> {
                 new() { Name = nameof(UserProfileQQ),
-                    Value = 1,
+                    Value = PrivilegeEnum.UserProfile,
                     PermissionsData = new List<PermissionTest> {
                         new() {
                             Name = "Add",
@@ -53,7 +53,7 @@ namespace iCat.Authorization.Providers.Tests
                     },
                 },
                 new() { Name = nameof(OrderPe),
-                    Value = 2,
+                    Value = PrivilegeEnum.Order,
                     PermissionsData = new List<PermissionTest> {
                         new(){
                             Name = "Add",
@@ -82,7 +82,7 @@ namespace iCat.Authorization.Providers.Tests
             // arrange
 
             // action
-            var permissionProvider = new PermissionProcessor(typeof(Privilege_Duplicate));
+            var permissionProvider = new PrivilegeProcessor<Privilege_Duplicate>();
 
             // assert
         }
@@ -99,11 +99,11 @@ namespace iCat.Authorization.Providers.Tests
         {
             // arrange
             var accessor = Substitute.For<IHttpContextAccessor>();
-            var permissionProvider = new PermissionProcessor(typeof(PrivilegeEnum));
-            var PrivilegeProvider = new ClaimProcessor(permissionProvider);
+            var permissionProvider = new PrivilegeProcessor<PrivilegeEnum>();
+            var PrivilegeProvider = new ClaimProcessor<PrivilegeEnum>(permissionProvider);
             var userPermission = new List<PrivilegeTest> {
                 new() {
-                    Value = (int)privilege,
+                    Value = privilege,
                     PermissionsData = new List<PermissionTest>
                     {
                         new(){
@@ -116,7 +116,7 @@ namespace iCat.Authorization.Providers.Tests
             // action
             var result = permissionProvider.ValidatePermission(userPermission, new PrivilegeTest
             {
-                Value = (int)PrivilegeEnum.UserProfile,
+                Value = PrivilegeEnum.UserProfile,
                 PermissionsData = new List<PermissionTest> {
                     new(){
                         Value = (int)UserProfileQQ.Add,
@@ -139,7 +139,7 @@ namespace iCat.Authorization.Providers.Tests
     /// <summary>
     /// Privilege - Permission information
     /// </summary>
-    public class PrivilegeTest : Privilege
+    public class PrivilegeTest : Privilege<PrivilegeEnum>
     {
         /// <summary>
         /// Privilege name
@@ -159,7 +159,7 @@ namespace iCat.Authorization.Providers.Tests
         /// <summary>
         /// Privilege value
         /// </summary>
-        public new int Value
+        public new PrivilegeEnum Value
         {
             get
             {

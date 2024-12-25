@@ -21,11 +21,11 @@ namespace iCat.Authorization.Web
     /// <summary>
     /// Authorize AuthorizationPermissionsRequirement
     /// </summary>
-    public class AuthorizationPermissionsHandler : AuthorizationHandler<AuthorizationPermissionsRequirement>
+    public class AuthorizationPermissionsHandler<TPrivilegeEnum> : AuthorizationHandler<AuthorizationPermissionsRequirement> where TPrivilegeEnum : Enum
     {
         private const string _endWith = "Permission";
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IPrivilegeProvider _privilegeProvider;
+        private readonly IPrivilegeProvider<TPrivilegeEnum> _privilegeProvider;
 
         /// <summary>
         /// Authorize AuthorizationPermissionsRequirement
@@ -35,7 +35,7 @@ namespace iCat.Authorization.Web
         /// <exception cref="ArgumentNullException"></exception>
         public AuthorizationPermissionsHandler(
             IHttpContextAccessor httpContextAccessor,
-            IPrivilegeProvider privilegeProvider)
+            IPrivilegeProvider<TPrivilegeEnum> privilegeProvider)
         {
             _httpContextAccessor = httpContextAccessor;
             _privilegeProvider = privilegeProvider ?? throw new ArgumentNullException(nameof(privilegeProvider));

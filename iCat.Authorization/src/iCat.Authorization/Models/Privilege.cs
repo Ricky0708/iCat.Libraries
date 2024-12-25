@@ -10,17 +10,17 @@ namespace iCat.Authorization.Models
     /// <summary>
     /// Privilege - Permission information
     /// </summary>
-    public class Privilege
+    public class Privilege<T>
     {
         /// <summary>
         /// Privilege name
         /// </summary>
-        public string Name { get; internal protected set; } = default!;   
+        public string Name { get; internal protected set; } = default!;
 
         /// <summary>
         /// Privilege value
         /// </summary>
-        public int Value { get; internal protected set; }
+        public T Value { get; internal protected set; } = default!;
 
         /// <summary>
         /// permission detail
@@ -30,6 +30,6 @@ namespace iCat.Authorization.Models
         /// <summary>
         /// Permissions
         /// </summary>
-        public int Permissions => PermissionsData?.Sum(p => p.Value) ?? 0;
+        public int Permissions => (int)PermissionsData?.Sum(p => p.Value)!;
     }
 }

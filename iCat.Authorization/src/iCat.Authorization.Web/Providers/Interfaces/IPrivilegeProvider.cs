@@ -12,42 +12,42 @@ namespace iCat.Authorization.Web.Providers.Interfaces
     /// <summary>
     /// provider Privilege info
     /// </summary>
-    public interface IPrivilegeProvider
+    public interface IPrivilegeProvider<T> where T : Enum
     {
         /// <summary>
         /// Get currently authenticated user privilege
         /// </summary>
         /// <returns></returns>
-        IEnumerable<Privilege> GetCurrentUserPrivileges();
+        IEnumerable<Privilege<T>> GetCurrentUserPrivileges();
 
         /// <summary>
         /// Get currently authenticated user privilege
         /// </summary>
         /// <param name="httpContext"></param>
         /// <returns></returns>
-        IEnumerable<Privilege> GetUserPrivileges(HttpContext httpContext);
+        IEnumerable<Privilege<T>> GetUserPrivileges(HttpContext httpContext);
 
         /// <summary>
         /// Get privileges required from router
         /// </summary>
         /// <param name="endpoint"></param>
         /// <returns></returns>
-        List<Privilege> GetRouterPrivilegesRequired(Endpoint endpoint);
+        List<Privilege<T>> GetRouterPrivilegesRequired(Endpoint endpoint);
 
         /// <summary>
         /// Generate privilege claim
         /// </summary>
         /// <param name="privilege"></param>
         /// <returns></returns>
-        Claim GenerateClaim(Privilege privilege);
+        Claim GenerateClaim(Privilege<T> privilege);
 
         /// <summary>
         /// Generate privilege claim
         /// </summary>
         /// <typeparam name="TPermission"></typeparam>
-        /// <param name="permission"></param>
+        /// <param name="permissionEnum"></param>
         /// <returns></returns>
-        Claim GenerateClaim<TPermission>(TPermission permission) where TPermission : Enum;
+        Claim GenerateClaim<TPermission>(TPermission permissionEnum) where TPermission : Enum;
 
         /// <summary>
         /// Validate privilege
@@ -55,6 +55,6 @@ namespace iCat.Authorization.Web.Providers.Interfaces
         /// <param name="userPrivilege"></param>
         /// <param name="routerPrivilege"></param>
         /// <returns></returns>
-        bool ValidatePermission(IEnumerable<Privilege> userPrivilege, Privilege routerPrivilege);
+        bool ValidatePermission(IEnumerable<Privilege<T>> userPrivilege, Privilege<T> routerPrivilege);
     }
 }

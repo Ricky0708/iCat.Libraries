@@ -11,14 +11,14 @@ namespace iCat.Authorization.Providers.Interfaces
     /// <summary>
     /// Claim Generator
     /// </summary>
-    public interface IClaimProcessor
+    public interface IClaimProcessor<T> where T : Enum
     {
         /// <summary>
         /// Generate privilege claim
         /// </summary>
         /// <param name="privilege"></param>
         /// <returns></returns>
-        Claim GeneratePrivilegeClaim(Privilege privilege);
+        Claim GeneratePrivilegeClaim(Privilege<T> privilege);
 
         /// <summary>
         /// Generate privilege claim

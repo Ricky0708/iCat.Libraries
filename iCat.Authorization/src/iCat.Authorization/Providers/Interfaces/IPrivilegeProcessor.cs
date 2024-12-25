@@ -12,28 +12,28 @@ namespace iCat.Authorization.Providers.Interfaces
     /// <summary>
     /// Provide user's permission
     /// </summary>
-    public interface IPermissionProcessor
+    public interface IPrivilegeProcessor<T> where T : Enum
     {
         /// <summary>
         /// Get privilege and permission mapping
         /// </summary>
         /// <returns></returns>
-        List<Privilege> GetDefinitions();
+        List<Privilege<T>> GetDefinitions();
 
         /// <summary>
         /// Get privilege definition from permission
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="E"></typeparam>
         /// <param name="permissionEnum"></param>
         /// <returns></returns>
-        Privilege GetPrivilegeDefinitionFromPermission<T>(T permissionEnum) where T : Enum;
+        Privilege<T> GetPrivilegeDefinitionFromPermission<E>(E permissionEnum) where E : Enum;
 
         /// <summary>
         /// Get privilege definition from permission
         /// </summary>
         /// <param name="permissionType"></param>
         /// <returns></returns>
-        Privilege GetPrivilegeDefinitionFromPermission(Type permissionType);
+        Privilege<T> GetPrivilegeDefinitionFromPermission(Type permissionType);
 
         /// <summary>
         /// Get permissions information on attribute
@@ -41,7 +41,7 @@ namespace iCat.Authorization.Providers.Interfaces
         /// <param name="attributes"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        List<Privilege> GetPrivilegeFromAttribute(params CustomAttributeData[] attributes);
+        List<Privilege<T>> GetPrivilegeFromAttribute(params CustomAttributeData[] attributes);
 
         /// <summary>
         /// Build privilege from permissions
@@ -49,15 +49,15 @@ namespace iCat.Authorization.Providers.Interfaces
         /// <param name="privilegeValue"></param>
         /// <param name="permissionsValue"></param>
         /// <returns></returns>
-        Privilege BuildPrivilege(int privilegeValue, int permissionsValue);
+        Privilege<T> BuildPrivilege(int privilegeValue, int permissionsValue);
 
         /// <summary>
         /// Build privilege from permissions
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="E"></typeparam>
         /// <param name="permissionEnum"></param>
         /// <returns></returns>
-        Privilege BuildPrivilege<T>(T permissionEnum) where T : Enum;
+        Privilege<T> BuildPrivilege<E>(E permissionEnum) where E : Enum;
 
         /// <summary>
         /// Validate privilege
@@ -66,6 +66,6 @@ namespace iCat.Authorization.Providers.Interfaces
         /// <param name="permissions"></param>
         /// <param name="permissionRequired"></param>
         /// <returns></returns>
-        bool ValidatePermission(IEnumerable<Privilege> permissions, Privilege permissionRequired);
+        bool ValidatePermission(IEnumerable<Privilege<T>> permissions, Privilege<T> permissionRequired);
     }
 }
