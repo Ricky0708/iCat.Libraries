@@ -11,17 +11,17 @@ using System.Threading.Tasks;
 namespace iCat.Authorization.Extensions
 {
     /// <summary>
-    /// IServiceCollection extension for AuthorizationPermission
+    /// IServiceCollection extension for PermissionAuthorization
     /// </summary>
     public static class IServiceCollectionExtension
     {
         /// <summary>
-        /// Register AuthorizationPermissionsHandler, DefaultPermissionProvider, DefaultPrivilegeProvider
+        /// Register PermissionAuthorizationHandler, DefaultPermissionProvider, DefaultPrivilegeProvider
         /// </summary>
         /// <typeparam name="TPrivilegeEnum"></typeparam>
         /// <param name="services"></param>
         /// <returns></returns>
-        public static IServiceCollection AddAuthorizationPermission<TPrivilegeEnum>(this IServiceCollection services) where TPrivilegeEnum : Enum
+        public static IServiceCollection AddPermissionAuthorization<TPrivilegeEnum>(this IServiceCollection services) where TPrivilegeEnum : Enum
         {
             services.AddSingleton<IPrivilegeProcessor<TPrivilegeEnum>, PrivilegeProcessor<TPrivilegeEnum>>();
             services.AddSingleton<IClaimProcessor<TPrivilegeEnum>, ClaimProcessor<TPrivilegeEnum>>();
@@ -29,14 +29,14 @@ namespace iCat.Authorization.Extensions
         }
 
         /// <summary>
-        /// Register AuthorizationPermissionsHandler, DefaultPermissionProvider, DefaultPrivilegeProvider
+        /// Register PermissionsAuthorizationHandler, DefaultPermissionProvider, DefaultPrivilegeProvider
         /// </summary>
         /// <typeparam name="TPrivilegeEnum"></typeparam>
         /// <typeparam name="TPrivilegeProcessorType"></typeparam>
         /// <typeparam name="TClaimProcessorType"></typeparam>
         /// <param name="services"></param>
         /// <returns></returns>
-        public static IServiceCollection AddAuthorizationPermission<
+        public static IServiceCollection AddPermissionAuthorization<
               TPrivilegeEnum
             , TPrivilegeProcessorType
             , TClaimProcessorType>(

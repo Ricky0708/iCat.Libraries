@@ -76,8 +76,8 @@ namespace iCat.Authorization.Web.Providers.Implements
 
             if (!_routePermissionCache.TryGetValue(cacheKey, out var permissionNeedsData))
             {
-                if (!(actionDescriptor!.MethodInfo.CustomAttributes.Any(p => p.AttributeType.Name.StartsWith(nameof(AuthorizationPermissionsAttribute))))) throw new ArgumentException("Not have AuthorizationPermissionsAttribute.");
-                var permissionAttrs = actionDescriptor!.MethodInfo.CustomAttributes.Where(p => p.AttributeType.Name.StartsWith(nameof(AuthorizationPermissionsAttribute)));
+                if (!(actionDescriptor!.MethodInfo.CustomAttributes.Any(p => p.AttributeType.Name.StartsWith(nameof(PermissionsAuthorizationAttribute))))) throw new ArgumentException("Not have PermissionsAuthorizationAttribute.");
+                var permissionAttrs = actionDescriptor!.MethodInfo.CustomAttributes.Where(p => p.AttributeType.Name.StartsWith(nameof(PermissionsAuthorizationAttribute)));
 
                 permissionNeedsData = _privilegeProcessor.GetPrivilegeFromAttribute(permissionAttrs.ToArray());
                 _routePermissionCache.TryAdd(cacheKey, permissionNeedsData);

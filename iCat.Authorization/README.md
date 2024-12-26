@@ -63,7 +63,7 @@ The defination of privileges and permissions need to follow these rules.
 
 ### Configure Requirment and Handler
 
-Register providers and privileges/permissions using the `.AddWebAuthorizationPermission(typeof(PrivilegeEnum))` method, add a requirment to the policies via `.AddAuthorizationPermissionRequirment()`.<br>
+Register providers and privileges/permissions using the `.AddWebPermissionAuthorization(typeof(PrivilegeEnum))` method, add a requirment to the policies via `.AddPermissionAuthorizationRequirment()`.<br>
 iCat.Authorization.Web needs to use `IHttpContextAccessor` to obtain the current requested privileges/permissions.
 
 ```C#
@@ -78,12 +78,12 @@ iCat.Authorization.Web needs to use `IHttpContextAccessor` to obtain the current
         // Add services to the container.
         builder.Services
             .AddSingleton<IHttpContextAccessor, HttpContextAccessor>()
-            .AddAuthorizationPermission(typeof(PrivilegeEnum))
+            .AddPermissionAuthorization(typeof(PrivilegeEnum))
             .AddAuthorization(options =>
             {
                 options.DefaultPolicy = new AuthorizationPolicyBuilder()
                     .AddAuthenticationSchemes(CookieAuthenticationDefaults.AuthenticationScheme, "Bearer")
-                    .AddAuthorizationPermissionRequirment()
+                    .AddPermissionAuthorizationRequirment()
                     .RequireAuthenticatedUser()
                     .Build();
 
@@ -95,9 +95,9 @@ iCat.Authorization.Web needs to use `IHttpContextAccessor` to obtain the current
     }
 ```
 
-### AuthorizationPermission on action
+### PermissionAuthorization on action
 
-Set the permission for the action through the `AuthorizationPermissions` attribute.
+Set the permission for the action through the `PermissionsAuthorization` attribute.
 
 ```C#
     using iCat.Authorization.Web;
@@ -106,7 +106,7 @@ Set the permission for the action through the `AuthorizationPermissions` attribu
 ```C#
     ...
 
-    [AuthorizationPermissions(
+    [PermissionsAuthorization(
         DepartmentPermission.Read | DepartmentPermission.Delete,
         UserProfilePermission.Add | UserProfilePermission.Edit | UserProfilePermission.Read)]
     [HttpGet("[action]")]
@@ -138,7 +138,7 @@ The `IPrivilegeProvider` provides methods to obtain the logged user's claim from
             _privilegeProvider = privilegeProvider ?? throw new ArgumentNullException(nameof(privilegeProvider));
        }
        
-       [AuthorizationPermissions(
+       [PermissionsAuthorization(
             DepartmentPermission.Read | DepartmentPermission.Delete,
             UserProfilePermission.Add | UserProfilePermission.Edit | UserProfilePermission.ReadPartialDetail)]
        [HttpGet("[action]")]

@@ -130,7 +130,7 @@ namespace iCat.Authorization.Providers.Implements
         }
 
         /// <summary>
-        /// Parser AuthorizationPermission constructor
+        /// Parser PermissionAuthorization constructor
         /// </summary>
         /// <param name="arg"></param>
         /// <param name="permissionNeeds"></param>

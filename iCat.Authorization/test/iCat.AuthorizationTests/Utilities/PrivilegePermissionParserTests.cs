@@ -127,7 +127,7 @@ namespace iCat.Authorization.Utilities.Tests
         }
 
         [TestMethod()]
-        public void GetAuthorizationPermissionsDataTest_Success()
+        public void GetPermissionsAuthorizationDataTest_Success()
         {
             // arrange
             var parser = new PrivilegeProcessor<Privilege_Success>();
@@ -160,7 +160,7 @@ namespace iCat.Authorization.Utilities.Tests
         }
 
         [TestMethod()]
-        public void GetAuthorizationPermissionsDataTest_Fail()
+        public void GetPermissionsAuthorizationDataTest_Fail()
         {
             // arrange
             var parser = new PrivilegeProcessor<Privilege_Success>();
@@ -230,7 +230,7 @@ namespace iCat.Authorization.Utilities.Tests
             Assert.AreEqual(result.Value, "2,2");
         }
 
-        [AuthorizationPermissions(
+        [PermissionsAuthorization(
         UserProfileA.Add | UserProfileA.Read,
         OrderB.Edit | OrderB.Delete,
         UserProfileA.Edit | UserProfileA.Delete)]

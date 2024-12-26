@@ -19,21 +19,21 @@ using System.Xml.Linq;
 namespace iCat.Authorization.Web
 {
     /// <summary>
-    /// Authorize AuthorizationPermissionsRequirement
+    /// Authorize PermissionsAuthorizationRequirement
     /// </summary>
-    public class AuthorizationPermissionsHandler<TPrivilegeEnum> : AuthorizationHandler<AuthorizationPermissionsRequirement> where TPrivilegeEnum : Enum
+    public class PermissionsAuthorizationHandler<TPrivilegeEnum> : AuthorizationHandler<PermissionsAuthorizationRequirement> where TPrivilegeEnum : Enum
     {
         private const string _endWith = "Permission";
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IPrivilegeProvider<TPrivilegeEnum> _privilegeProvider;
 
         /// <summary>
-        /// Authorize AuthorizationPermissionsRequirement
+        /// Authorize PermissionsAuthorizationRequirement
         /// </summary>
         /// <param name="httpContextAccessor"></param>
         /// <param name="privilegeProvider"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public AuthorizationPermissionsHandler(
+        public PermissionsAuthorizationHandler(
             IHttpContextAccessor httpContextAccessor,
             IPrivilegeProvider<TPrivilegeEnum> privilegeProvider)
         {
@@ -47,7 +47,7 @@ namespace iCat.Authorization.Web
         /// <param name="context"></param>
         /// <param name="requirement"></param>
         /// <returns></returns>
-        protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, AuthorizationPermissionsRequirement requirement)
+        protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, PermissionsAuthorizationRequirement requirement)
         {
             if (!context.User.Identity?.IsAuthenticated ?? false) { context.Fail(); return; }
 

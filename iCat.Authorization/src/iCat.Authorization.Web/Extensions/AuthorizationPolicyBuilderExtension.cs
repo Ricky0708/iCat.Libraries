@@ -9,18 +9,18 @@ using System.Threading.Tasks;
 namespace iCat.Authorization.Web.Extensions
 {
     /// <summary>
-    /// AuthorizationPolicyBuilder extension for AuthorizationPermissionsRequirement
+    /// AuthorizationPolicyBuilder extension for PermissionsAuthorizationRequirement
     /// </summary>
     public static class AuthorizationPolicyBuilderExtension
     {
         /// <summary>
-        /// Add AuthorizationPermissionsRequirement
+        /// Add PermissionsAuthorizationRequirement
         /// </summary>
         /// <param name="builder"></param>
         /// <returns></returns>
-        public static AuthorizationPolicyBuilder AddAuthorizationPermissionRequirment(this AuthorizationPolicyBuilder builder)
+        public static AuthorizationPolicyBuilder AddPermissionsAuthorizationRequirment(this AuthorizationPolicyBuilder builder)
         {
-            builder.AddRequirements(new AuthorizationPermissionsRequirement());
+            builder.AddRequirements(new PermissionsAuthorizationRequirement());
             return builder;
         }
     }

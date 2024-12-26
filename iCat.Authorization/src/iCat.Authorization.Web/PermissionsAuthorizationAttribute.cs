@@ -11,7 +11,7 @@ namespace iCat.Authorization.Web
     /// iCat authorization attribute, 
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
-    public class AuthorizationPermissionsAttribute : AuthorizeAttribute
+    public class PermissionsAuthorizationAttribute : AuthorizeAttribute
     {
         /// <summary>
         /// Permission
@@ -22,10 +22,10 @@ namespace iCat.Authorization.Web
         /// Fill in the permission enumeration in the constructor.
         /// The permission enum name needs to match the privilege enum name and end with "Permission"
         /// example: UserProfile : UserProfilePermission
-        /// [AuthorizationPermissions(UserProfilePermission.Add | UserProfilePermission.Read)]
+        /// [PermissionsAuthorization(UserProfilePermission.Add | UserProfilePermission.Read)]
         /// </summary>
         /// <param name="permissions"></param>
-        public AuthorizationPermissionsAttribute(params object[] permissions)
+        public PermissionsAuthorizationAttribute(params object[] permissions)
         {
             Permission = permissions;
         }
@@ -38,7 +38,7 @@ namespace iCat.Authorization.Web
     /// iCat authorization attribute, 
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
-    public class AuthorizationPermissionsAttribute<T1> : AuthorizeAttribute where T1 : Enum
+    public class PermissionsAuthorizationAttribute<T1> : AuthorizeAttribute where T1 : Enum
     {
         /// <summary>
         /// Permission
@@ -49,10 +49,10 @@ namespace iCat.Authorization.Web
         /// Fill in the permission enumeration in the constructor.
         /// The permission enum name needs to match the privilege enum name and end with "Permission"
         /// example: UserProfile : UserProfilePermission
-        /// <![CDATA[[AuthorizationPermissions<UserProfilePermission>(UserProfilePermission.Add | UserProfilePermission.Read)]]]>
+        /// <![CDATA[[PermissionsAuthorization<UserProfilePermission>(UserProfilePermission.Add | UserProfilePermission.Read)]]]>
         /// </summary>
         /// <param name="permission"></param>
-        public AuthorizationPermissionsAttribute(T1 permission)
+        public PermissionsAuthorizationAttribute(T1 permission)
         {
             Permission = permission;
         }
@@ -63,7 +63,7 @@ namespace iCat.Authorization.Web
     /// iCat authorization attribute, 
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
-    public class AuthorizationPermissionsAttribute<T1, T2> : AuthorizationPermissionsAttribute<T1> where T1 : Enum where T2 : Enum
+    public class PermissionsAuthorizationAttribute<T1, T2> : PermissionsAuthorizationAttribute<T1> where T1 : Enum where T2 : Enum
     {
 
         /// <summary>
@@ -75,11 +75,11 @@ namespace iCat.Authorization.Web
         /// Fill in the permission enumeration in the constructor.
         /// The permission enum name needs to match the privilege enum name and end with "Permission"
         /// example: UserProfile : UserProfilePermission
-        /// <![CDATA[[AuthorizationPermissions<UserProfilePermission, OrderPermission>(UserProfilePermission.Add | UserProfilePermission.Read, OrderPermission.Add)]]]>
+        /// <![CDATA[[PermissionsAuthorization<UserProfilePermission, OrderPermission>(UserProfilePermission.Add | UserProfilePermission.Read, OrderPermission.Add)]]]>
         /// </summary>
         /// <param name="permission1"></param>
         /// <param name="permission2"></param>
-        public AuthorizationPermissionsAttribute(T1 permission1, T2 permission2) : base(permission1)
+        public PermissionsAuthorizationAttribute(T1 permission1, T2 permission2) : base(permission1)
         {
             Permission2 = permission2;
         }
@@ -90,7 +90,7 @@ namespace iCat.Authorization.Web
     /// iCat authorization attribute, 
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
-    public class AuthorizationPermissionsAttribute<T1, T2, T3> : AuthorizationPermissionsAttribute<T1, T2> where T1 : Enum where T2 : Enum where T3 : Enum
+    public class PermissionsAuthorizationAttribute<T1, T2, T3> : PermissionsAuthorizationAttribute<T1, T2> where T1 : Enum where T2 : Enum where T3 : Enum
     {
 
         /// <summary>
@@ -102,12 +102,12 @@ namespace iCat.Authorization.Web
         /// Fill in the permission enumeration in the constructor.
         /// The permission enum name needs to match the privilege enum name and end with "Permission"
         /// example: UserProfile : UserProfilePermission
-        /// <![CDATA[[AuthorizationPermissions<UserProfilePermission, OrderPermission, DepartmentPermission>((UserProfilePermission)int.MaxValue, (OrderPermission)int.MaxValue, (DepartmentPermission)int.MaxValue)]]]>
+        /// <![CDATA[[PermissionsAuthorization<UserProfilePermission, OrderPermission, DepartmentPermission>((UserProfilePermission)int.MaxValue, (OrderPermission)int.MaxValue, (DepartmentPermission)int.MaxValue)]]]>
         /// </summary>
         /// <param name="permission1"></param>
         /// <param name="permission2"></param>
         /// <param name="permission3"></param>
-        public AuthorizationPermissionsAttribute(T1 permission1, T2 permission2, T3 permission3) : base(permission1, permission2)
+        public PermissionsAuthorizationAttribute(T1 permission1, T2 permission2, T3 permission3) : base(permission1, permission2)
         {
             Permission3 = permission3;
         }
@@ -117,7 +117,7 @@ namespace iCat.Authorization.Web
     /// iCat authorization attribute, 
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
-    public class AuthorizationPermissionsAttribute<T1, T2, T3, T4> : AuthorizationPermissionsAttribute<T1, T2, T3> where T1 : Enum where T2 : Enum where T3 : Enum where T4 : Enum
+    public class PermissionsAuthorizationAttribute<T1, T2, T3, T4> : PermissionsAuthorizationAttribute<T1, T2, T3> where T1 : Enum where T2 : Enum where T3 : Enum where T4 : Enum
     {
 
         /// <summary>
@@ -129,13 +129,13 @@ namespace iCat.Authorization.Web
         /// Fill in the permission enumeration in the constructor.
         /// The permission enum name needs to match the privilege enum name and end with "Permission"
         /// example: UserProfile : UserProfilePermission
-        /// <![CDATA[[AuthorizationPermissions<UserProfilePermission, OrderPermission, DepartmentPermission, PagePermission>((UserProfilePermission)int.MaxValue, (OrderPermission)int.MaxValue, (DepartmentPermission)int.MaxValue, PagePermission.Add)]]]>
+        /// <![CDATA[[PermissionsAuthorization<UserProfilePermission, OrderPermission, DepartmentPermission, PagePermission>((UserProfilePermission)int.MaxValue, (OrderPermission)int.MaxValue, (DepartmentPermission)int.MaxValue, PagePermission.Add)]]]>
         /// </summary>
         /// <param name="permission1"></param>
         /// <param name="permission2"></param>
         /// <param name="permission3"></param>
         /// <param name="permission4"></param>
-        public AuthorizationPermissionsAttribute(T1 permission1, T2 permission2, T3 permission3, T4 permission4) : base(permission1, permission2, permission3)
+        public PermissionsAuthorizationAttribute(T1 permission1, T2 permission2, T3 permission3, T4 permission4) : base(permission1, permission2, permission3)
         {
             Permission4 = permission4;
         }

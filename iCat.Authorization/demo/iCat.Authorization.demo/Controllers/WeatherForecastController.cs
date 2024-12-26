@@ -22,7 +22,7 @@ namespace iCat.Authorization.demo.Controllers
             _permissionProcessor = permissionProcessor ?? throw new ArgumentNullException(nameof(permissionProcessor));
         }
 
-        [AuthorizationPermissions(
+        [PermissionsAuthorization(
             DepartmentPermission.Read | DepartmentPermission.Delete,
             UserProfilePermission.Add | UserProfilePermission.Edit | UserProfilePermission.ReadPartialDetail)]
         [HttpGet]

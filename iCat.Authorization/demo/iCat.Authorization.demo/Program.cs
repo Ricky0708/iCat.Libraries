@@ -36,12 +36,12 @@ namespace iCat.Authorization.demo
                 .AddSingleton<IPrivilegeProvider, PrivilegeProvider>()
                 .AddSingleton<IPrivilegeProcessor, PrivilegeProcessor>()
                 .AddSingleton<IClaimProcessor, ClaimProcessor>()
-                .AddWebAuthorizationPermission<PrivilegeEnum, IPrivilegeProvider, IPrivilegeProcessor, IClaimProcessor>()
+                .AddWebPermissionAuthorization<PrivilegeEnum, IPrivilegeProvider, IPrivilegeProcessor, IClaimProcessor>()
                 .AddAuthorization(options =>
                 {
                     options.DefaultPolicy = new AuthorizationPolicyBuilder()
                         .AddAuthenticationSchemes(CookieAuthenticationDefaults.AuthenticationScheme)
-                        .AddAuthorizationPermissionRequirment()
+                        .AddPermissionsAuthorizationRequirment()
                         .RequireAuthenticatedUser()
                         .Build();
 
