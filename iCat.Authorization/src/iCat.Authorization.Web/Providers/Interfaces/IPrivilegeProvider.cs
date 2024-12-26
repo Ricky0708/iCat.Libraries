@@ -15,6 +15,22 @@ namespace iCat.Authorization.Web.Providers.Interfaces
     public interface IPrivilegeProvider<T> where T : Enum
     {
         /// <summary>
+        /// Build privilege
+        /// </summary>
+        /// <param name="privilegeValue"></param>
+        /// <param name="permissionsValue"></param>
+        /// <returns></returns>
+        Privilege<T> BuildPrivilege(int privilegeValue, int permissionsValue);
+
+        /// <summary>
+        /// Build privilege from permissions
+        /// </summary>
+        /// <typeparam name="E"></typeparam>
+        /// <param name="permissionEnum"></param>
+        /// <returns></returns>
+        Privilege<T> BuildPrivilege<E>(E permissionEnum) where E : Enum;
+
+        /// <summary>
         /// Get currently authenticated user privilege
         /// </summary>
         /// <returns></returns>

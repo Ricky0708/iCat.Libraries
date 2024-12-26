@@ -60,7 +60,7 @@ namespace iCat.Authorization.Providers.Implements
         /// <inheritdoc/>
         public Privilege<T> BuildPrivilege(int privilegeValue, int permissionsValue)
         {
-            var privilege = GetDefinitions().FirstOrDefault(x => x.Value.Equals((T)(object)privilegeValue)) ?? throw new ArgumentException("Privilege in claims is not in privilege list");
+            var privilege = GetDefinitions().FirstOrDefault(x => x.Value.Equals((T)(object)privilegeValue)) ?? throw new ArgumentException("The privilege value is not in this privilege list");
             return new Privilege<T>
             {
                 Value = (T)(object)privilegeValue,
@@ -72,7 +72,7 @@ namespace iCat.Authorization.Providers.Implements
         /// <inheritdoc/>
         public Privilege<T> BuildPrivilege<E>(E permissionEnum) where E : Enum
         {
-            var privilege = GetPrivilegeDefinitionFromPermission(typeof(E)) ?? throw new ArgumentException("Privilege in claims is not in privilege list");
+            var privilege = GetPrivilegeDefinitionFromPermission(typeof(E)) ?? throw new ArgumentException("The privilege value is not in this privilege list");
             return new Privilege<T>
             {
                 Value = privilege.Value,
@@ -104,7 +104,7 @@ namespace iCat.Authorization.Providers.Implements
 
             foreach (var field in privilegeEnum.GetFields().Where(p => p.Name != "value__"))
             {
-                var contructorType = field.CustomAttributes.SingleOrDefault(p => p.AttributeType == typeof(PrivilegDetailAttribute))?.ConstructorArguments.First().Value as Type ?? throw new ArgumentNullException($"\"{field.Name}\" has no defined permission attribute.");
+                var contructorType = field.CustomAttributes.SingleOrDefault(p => p.AttributeType == typeof(PrivilegeDetailAttribute))?.ConstructorArguments.First().Value as Type ?? throw new ArgumentNullException($"\"{field.Name}\" has no defined permission attribute.");
                 if (contructorType.GetCustomAttribute<FlagsAttribute>() == null) throw new ArgumentException($"Enum {contructorType.Name} have to be flag enum");
 
                 var privilege = new Privilege<T>
@@ -119,7 +119,7 @@ namespace iCat.Authorization.Providers.Implements
                 {
                     privilege.PermissionsData.Add(new Permission
                     {
-                        Name = Enum.GetName(contructorType, PermissionItem),
+                        Name = Enum.GetName(contructorType, PermissionItem)!,
                         Value = (int)Enum.Parse(contructorType, Enum.GetName(contructorType, PermissionItem)!),
                     });
                 }

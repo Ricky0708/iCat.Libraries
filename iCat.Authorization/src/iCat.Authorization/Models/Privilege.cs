@@ -10,7 +10,7 @@ namespace iCat.Authorization.Models
     /// <summary>
     /// Privilege - Permission information
     /// </summary>
-    public class Privilege<T>
+    public class Privilege<T> where T : Enum
     {
         /// <summary>
         /// Privilege name

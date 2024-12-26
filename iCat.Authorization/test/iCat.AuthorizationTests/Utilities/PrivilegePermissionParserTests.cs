@@ -338,19 +338,19 @@ namespace iCat.Authorization.Utilities.Tests
 
     public enum Privilege_Success
     {
-        [PrivilegDetail(typeof(UserProfileA))]
+        [PrivilegeDetail(typeof(UserProfileA))]
         UserProfile = 1,
-        [PrivilegDetail(typeof(OrderB))]
+        [PrivilegeDetail(typeof(OrderB))]
         Order = 2,
-        [PrivilegDetail(typeof(DepartmentC))]
+        [PrivilegeDetail(typeof(DepartmentC))]
         Department = 3
     }
 
     public enum Privilege_Fail
     {
-        [PrivilegDetail(typeof(UserProfileA))]
+        [PrivilegeDetail(typeof(UserProfileA))]
         UserProfile = 1,
-        [PrivilegDetail(typeof(DepartmentC))]
+        [PrivilegeDetail(typeof(DepartmentC))]
         Department = 3
     }
 

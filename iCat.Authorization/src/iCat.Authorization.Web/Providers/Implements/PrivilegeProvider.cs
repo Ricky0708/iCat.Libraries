@@ -21,30 +21,36 @@ namespace iCat.Authorization.Web.Providers.Implements
         private static readonly ConcurrentDictionary<string, List<Privilege<T>>> _routePermissionCache = new();
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IClaimProcessor<T> _claimProcessor;
-        private readonly IPrivilegeProcessor<T> _permissionProcessor;
+        private readonly IPrivilegeProcessor<T> _privilegeProcessor;
 
         /// <inheritdoc/>
         public PrivilegeProvider(
             IHttpContextAccessor httpContextAccessor,
             IClaimProcessor<T> claimProcessor,
-            IPrivilegeProcessor<T> permissionProcessor)
+            IPrivilegeProcessor<T> privilegeProcessor)
         {
             _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
             _claimProcessor = claimProcessor ?? throw new ArgumentNullException(nameof(claimProcessor));
-            _permissionProcessor = permissionProcessor ?? throw new ArgumentNullException(nameof(permissionProcessor));
+            _privilegeProcessor = privilegeProcessor ?? throw new ArgumentNullException(nameof(privilegeProcessor));
+        }
+
+
+        /// <inheritdoc/>
+        public Privilege<T> BuildPrivilege(int privilegeValue, int permissionsValue)
+        {
+            return _privilegeProcessor.BuildPrivilege(privilegeValue, permissionsValue);
+        }
+
+        /// <inheritdoc/>
+        public Privilege<T> BuildPrivilege<E>(E permissionEnum) where E : Enum
+        {
+            return _privilegeProcessor.BuildPrivilege(permissionEnum);
         }
 
         /// <inheritdoc/>
         public IEnumerable<Privilege<T>> GetCurrentUserPrivileges()
         {
-            var userPrivileges = _httpContextAccessor?.HttpContext?.User.Claims.Where(p => p.Type == Constants.ClaimTypes.Privilege).Select(p =>
-            {
-                var PrivilegeClaimData = p.Value.Split(",");
-                if (!int.TryParse(PrivilegeClaimData[0], out var privilegeValue)) throw new ArgumentException("Invalid Privilege claims");
-                if (!int.TryParse(PrivilegeClaimData[1], out var permissionsValue)) throw new ArgumentException("Invalid Privilege claims");
-                return _permissionProcessor.BuildPrivilege(privilegeValue, permissionsValue);
-            }) ?? throw new ArgumentNullException(nameof(_httpContextAccessor));
-            return userPrivileges;
+            return GetUserPrivileges(_httpContextAccessor.HttpContext!);
         }
 
         /// <inheritdoc/>
@@ -55,7 +61,9 @@ namespace iCat.Authorization.Web.Providers.Implements
                 var privilegeClaimData = p.Value.Split(",");
                 if (!int.TryParse(privilegeClaimData[0], out var privilegeValue)) throw new ArgumentException("Invalid Privilege claims");
                 if (!int.TryParse(privilegeClaimData[1], out var permissionsValue)) throw new ArgumentException("Invalid Privilege claims");
-                return _permissionProcessor.BuildPrivilege(privilegeValue, permissionsValue);
+                //var enumValue = (T)(object)privilegeValue;
+                //var contructorType = enumValue.GetType().GetMember(enumValue.ToString())[0].CustomAttributes.SingleOrDefault(p => p.AttributeType == typeof(PrivilegeDetailAttribute))?.ConstructorArguments.First().Value as Type;
+                return _privilegeProcessor.BuildPrivilege(privilegeValue, permissionsValue);
             }) ?? throw new ArgumentNullException(nameof(_httpContextAccessor));
             return userPrivileges;
         }
@@ -71,7 +79,7 @@ namespace iCat.Authorization.Web.Providers.Implements
                 if (!(actionDescriptor!.MethodInfo.CustomAttributes.Any(p => p.AttributeType.Name.StartsWith(nameof(AuthorizationPermissionsAttribute))))) throw new ArgumentException("Not have AuthorizationPermissionsAttribute.");
                 var permissionAttrs = actionDescriptor!.MethodInfo.CustomAttributes.Where(p => p.AttributeType.Name.StartsWith(nameof(AuthorizationPermissionsAttribute)));
 
-                permissionNeedsData = _permissionProcessor.GetPrivilegeFromAttribute(permissionAttrs.ToArray());
+                permissionNeedsData = _privilegeProcessor.GetPrivilegeFromAttribute(permissionAttrs.ToArray());
                 _routePermissionCache.TryAdd(cacheKey, permissionNeedsData);
             }
             return permissionNeedsData;
@@ -87,7 +95,7 @@ namespace iCat.Authorization.Web.Providers.Implements
         /// <inheritdoc/>
         public Claim GenerateClaim<TPermission>(TPermission permissionEnum) where TPermission : Enum
         {
-            var privilege = _permissionProcessor.BuildPrivilege(permissionEnum);
+            var privilege = _privilegeProcessor.BuildPrivilege(permissionEnum);
             var claim = _claimProcessor.GeneratePrivilegeClaim(privilege);
             return claim;
         }
@@ -95,9 +103,8 @@ namespace iCat.Authorization.Web.Providers.Implements
         /// <inheritdoc/>
         public bool ValidatePermission(IEnumerable<Privilege<T>> userPrivilege, Privilege<T> routerPrivilege)
         {
-            return _permissionProcessor.ValidatePermission(userPrivilege, routerPrivilege);
+            return _privilegeProcessor.ValidatePermission(userPrivilege, routerPrivilege);
         }
-
 
     }
 }

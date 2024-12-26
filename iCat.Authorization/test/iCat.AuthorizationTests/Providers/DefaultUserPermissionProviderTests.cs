@@ -229,21 +229,21 @@ namespace iCat.Authorization.Providers.Tests
 
     public enum Privilege_Duplicate
     {
-        [PrivilegDetail(typeof(UserProfileQQ))]
+        [PrivilegeDetail(typeof(UserProfileQQ))]
         UserProfile = 1,
-        [PrivilegDetail(typeof(UserProfileQQ))]
+        [PrivilegeDetail(typeof(UserProfileQQ))]
         Order = 2,
-        [PrivilegDetail(typeof(DepartmentPP))]
+        [PrivilegeDetail(typeof(DepartmentPP))]
         Department = 3
     }
 
     public enum PrivilegeEnum
     {
-        [PrivilegDetail(typeof(UserProfileQQ))]
+        [PrivilegeDetail(typeof(UserProfileQQ))]
         UserProfile = 1,
-        [PrivilegDetail(typeof(OrderPe))]
+        [PrivilegeDetail(typeof(OrderPe))]
         Order = 2,
-        [PrivilegDetail(typeof(DepartmentPP))]
+        [PrivilegeDetail(typeof(DepartmentPP))]
         Department = 3
     }
 

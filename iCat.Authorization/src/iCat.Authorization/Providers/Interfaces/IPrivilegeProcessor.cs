@@ -44,7 +44,7 @@ namespace iCat.Authorization.Providers.Interfaces
         List<Privilege<T>> GetPrivilegeFromAttribute(params CustomAttributeData[] attributes);
 
         /// <summary>
-        /// Build privilege from permissions
+        /// Build privilege
         /// </summary>
         /// <param name="privilegeValue"></param>
         /// <param name="permissionsValue"></param>
