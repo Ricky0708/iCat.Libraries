@@ -55,10 +55,10 @@ namespace iCat.Authorization.Web
             {
                 var endpoint = httpContext.GetEndpoint()!;
                 var routerPrivileges = _privilegeProvider.GetRouterPrivilegesRequired(endpoint);
-                var userPrivilege = _privilegeProvider.GetCurrentUserPrivileges();
+                var userPrivileges = _privilegeProvider.GetCurrentUserPrivileges();
                 foreach (var routerPrivilege in routerPrivileges)
                 {
-                    if (_privilegeProvider.ValidatePermission(userPrivilege, routerPrivilege))
+                    if (_privilegeProvider.Validate(userPrivileges, routerPrivilege))
                     {
                         context.Succeed(requirement);
                         await Task.FromResult(0);

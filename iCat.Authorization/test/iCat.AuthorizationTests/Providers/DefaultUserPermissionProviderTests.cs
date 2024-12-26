@@ -114,7 +114,7 @@ namespace iCat.Authorization.Providers.Tests
             };
 
             // action
-            var result = permissionProvider.ValidatePermission(userPermission, new PrivilegeTest
+            var result = permissionProvider.Validate(userPermission, new PrivilegeTest
             {
                 Value = PrivilegeEnum.UserProfile,
                 PermissionsData = new List<PermissionTest> {

@@ -66,6 +66,6 @@ namespace iCat.Authorization.Providers.Interfaces
         /// <param name="permissions"></param>
         /// <param name="permissionRequired"></param>
         /// <returns></returns>
-        bool ValidatePermission(IEnumerable<Privilege<T>> permissions, Privilege<T> permissionRequired);
+        bool Validate(IEnumerable<Privilege<T>> permissions, Privilege<T> permissionRequired);
     }
 }

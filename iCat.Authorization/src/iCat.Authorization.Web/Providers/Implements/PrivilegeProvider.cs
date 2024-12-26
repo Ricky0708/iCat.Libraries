@@ -101,9 +101,15 @@ namespace iCat.Authorization.Web.Providers.Implements
         }
 
         /// <inheritdoc/>
-        public bool ValidatePermission(IEnumerable<Privilege<T>> userPrivilege, Privilege<T> routerPrivilege)
+        public bool Validate(IEnumerable<Privilege<T>> privileges, Privilege<T> privilegeRequired)
         {
-            return _privilegeProcessor.ValidatePermission(userPrivilege, routerPrivilege);
+            return _privilegeProcessor.Validate(privileges, privilegeRequired);
+        }
+
+        /// <inheritdoc/>
+        public bool Validate(Privilege<T> privilegeRequired)
+        {
+            return _privilegeProcessor.Validate(GetCurrentUserPrivileges(), privilegeRequired);
         }
 
     }

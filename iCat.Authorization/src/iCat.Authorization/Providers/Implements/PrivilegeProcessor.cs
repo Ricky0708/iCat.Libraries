@@ -82,7 +82,7 @@ namespace iCat.Authorization.Providers.Implements
         }
 
         /// <inheritdoc/>
-        public bool ValidatePermission(IEnumerable<Privilege<T>> ownPrivileges, Privilege<T> requiredPrivilege)
+        public bool Validate(IEnumerable<Privilege<T>> ownPrivileges, Privilege<T> requiredPrivilege)
         {
             if (ownPrivileges.Any(p => p.Value.Equals(requiredPrivilege.Value) && (p.Permissions & requiredPrivilege.Permissions) > 0))
             {
