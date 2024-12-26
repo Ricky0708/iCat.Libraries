@@ -11,7 +11,6 @@ using System.Security.Claims;
 using iCat.Authorization.Constants;
 using iCat.Authorization.Models;
 using System.Text.Json;
-using iCat.Authorization.Utilities;
 using iCat.Authorization.Providers.Implements;
 using iCat.Authorization.Web.Providers.Implements;
 

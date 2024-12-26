@@ -1,23 +1,70 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using iCat.Authorization;
+using iCat.Authorization.Providers.Implements;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using iCat.Authorization.Models;
-using System.Text.Json;
 using System.Reflection;
-using iCat.Authorization.Utilities;
-using iCat.Authorization.Constants;
+using System.Text.Json;
 using iCat.Authorization.Web;
-using iCat.Authorization.Providers.Implements;
+using iCat.Authorization.Models;
 
-namespace iCat.Authorization.Utilities.Tests
+namespace iCat.Authorization.Providers.Implements.Tests
 {
     [TestClass()]
-    public class PrivilegePermissionParserTests
+    public class PrivilegeProcessorTests
     {
+        [TestMethod()]
+        public void GetPrivilegeDefinitionFromPermissionTest()
+        {
+            // arrange
+            var parser = new PrivilegeProcessor<Privilege_Success>();
+            var validationData =
+                new PrivilegeTest()
+                {
+                    Name = nameof(UserProfileA),
+                    Value = Privilege_Success.UserProfile,
+                    PermissionsData = new List<PermissionTest> {
+                        new() { Name = nameof( UserProfileA.Add), Value = (int) UserProfileA.Add },
+                        new() { Name = nameof(UserProfileA.Edit), Value = (int)UserProfileA.Edit },
+                        new() { Name = nameof(UserProfileA.Read), Value = (int)UserProfileA.Read },
+                        new() { Name = nameof(UserProfileA.Delete), Value = (int)UserProfileA.Delete },
+                }
+                };
+
+            // action
+            var defintions = parser.GetPrivilegeDefinitionFromPermission(UserProfileA.Read | UserProfileA.Add);
+
+            // assert
+            Assert.AreEqual(JsonSerializer.Serialize(validationData), JsonSerializer.Serialize(defintions));
+        }
+
+        [TestMethod()]
+        public void GetPrivilegeDefinitionFromPermissionTest1()
+        {
+            // arrange
+            var parser = new PrivilegeProcessor<Privilege_Success>();
+            var validationData =
+                new PrivilegeTest()
+                {
+                    Name = nameof(UserProfileA),
+                    Value = Privilege_Success.UserProfile,
+                    PermissionsData = new List<PermissionTest> {
+                        new() { Name = nameof( UserProfileA.Add), Value = (int) UserProfileA.Add },
+                        new() { Name = nameof(UserProfileA.Edit), Value = (int)UserProfileA.Edit },
+                        new() { Name = nameof(UserProfileA.Read), Value = (int)UserProfileA.Read },
+                        new() { Name = nameof(UserProfileA.Delete), Value = (int)UserProfileA.Delete },
+                }
+                };
+
+            // action
+            var defintions = parser.GetPrivilegeDefinitionFromPermission(typeof(UserProfileA));
+
+            // assert
+            Assert.AreEqual(JsonSerializer.Serialize(validationData), JsonSerializer.Serialize(defintions));
+        }
+
         [TestMethod()]
         public void GetPrivilegePermissionDefinitions_Success()
         {
@@ -131,7 +178,7 @@ namespace iCat.Authorization.Utilities.Tests
         {
             // arrange
             var parser = new PrivilegeProcessor<Privilege_Success>();
-            var method = typeof(PrivilegePermissionParserTests).GetMethod(nameof(TestAttributeMethod), BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+            var method = typeof(PrivilegeProcessorTests).GetMethod(nameof(TestAttributeMethod), BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
 
             var validationData = new List<PrivilegeTest> {
                 new() {
@@ -164,7 +211,7 @@ namespace iCat.Authorization.Utilities.Tests
         {
             // arrange
             var parser = new PrivilegeProcessor<Privilege_Success>();
-            var method = typeof(PrivilegePermissionParserTests).GetMethod(nameof(TestAttributeMethod), BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+            var method = typeof(PrivilegeProcessorTests).GetMethod(nameof(TestAttributeMethod), BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
 
             var validationData = new List<PrivilegeTest> {
                 new() {
@@ -240,9 +287,7 @@ namespace iCat.Authorization.Utilities.Tests
         }
 
 
-
     }
-
     #region test data
 
     /// <summary>
@@ -382,5 +427,4 @@ namespace iCat.Authorization.Utilities.Tests
     }
 
     #endregion
-
 }
