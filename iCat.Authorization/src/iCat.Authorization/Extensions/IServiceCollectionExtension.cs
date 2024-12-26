@@ -32,6 +32,8 @@ namespace iCat.Authorization.Extensions
         /// Register AuthorizationPermissionsHandler, DefaultPermissionProvider, DefaultPrivilegeProvider
         /// </summary>
         /// <typeparam name="TPrivilegeEnum"></typeparam>
+        /// <typeparam name="TPrivilegeProcessorType"></typeparam>
+        /// <typeparam name="TClaimProcessorType"></typeparam>
         /// <param name="services"></param>
         /// <returns></returns>
         public static IServiceCollection AddAuthorizationPermission<
