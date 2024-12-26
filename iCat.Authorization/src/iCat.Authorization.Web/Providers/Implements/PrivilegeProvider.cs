@@ -107,10 +107,23 @@ namespace iCat.Authorization.Web.Providers.Implements
         }
 
         /// <inheritdoc/>
+        public bool Validate<E>(IEnumerable<Privilege<T>> privileges, E permissionRequired) where E : Enum
+        {
+            var privilegeRequired = _privilegeProcessor.BuildPrivilege(permissionRequired);
+            return _privilegeProcessor.Validate(privileges, privilegeRequired);
+        }
+
+        /// <inheritdoc/>
         public bool Validate(Privilege<T> privilegeRequired)
         {
             return _privilegeProcessor.Validate(GetCurrentUserPrivileges(), privilegeRequired);
         }
 
+        /// <inheritdoc/>
+        public bool Validate<E>(E permissionRequired) where E : Enum
+        {
+            var privilegeRequired = _privilegeProcessor.BuildPrivilege(permissionRequired);
+            return _privilegeProcessor.Validate(GetCurrentUserPrivileges(), privilegeRequired);
+        }
     }
 }

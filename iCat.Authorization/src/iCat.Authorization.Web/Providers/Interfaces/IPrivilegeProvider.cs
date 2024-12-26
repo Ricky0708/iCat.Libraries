@@ -74,10 +74,27 @@ namespace iCat.Authorization.Web.Providers.Interfaces
         bool Validate(IEnumerable<Privilege<T>> userPrivilege, Privilege<T> routerPrivilege);
 
         /// <summary>
+        /// Validate permission
+        /// </summary>
+        /// <typeparam name="E"></typeparam>
+        /// <param name="privileges"></param>
+        /// <param name="permissionRequired"></param>
+        /// <returns></returns>
+        bool Validate<E>(IEnumerable<Privilege<T>> privileges, E permissionRequired) where E : Enum;
+
+        /// <summary>
         /// Validate privilege from current user
         /// </summary>
         /// <param name="privilegeRequired"></param>
         /// <returns></returns>
         bool Validate(Privilege<T> privilegeRequired);
+
+        /// <summary>
+        /// Validate permission from current user
+        /// </summary>
+        /// <typeparam name="E"></typeparam>
+        /// <param name="permissionRRequired"></param>
+        /// <returns></returns>
+        bool Validate<E>(E permissionRRequired) where E : Enum;
     }
 }

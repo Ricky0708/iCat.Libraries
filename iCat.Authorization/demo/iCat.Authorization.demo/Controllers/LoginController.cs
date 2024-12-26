@@ -31,7 +31,6 @@ namespace iCat.Authorization.demo.Controllers
         {
             var privilegeFromPermission = _privilegeProvider.BuildPrivilege(UserProfilePermission.Add | UserProfilePermission.Delete);
             var privilegeFromDB = _privilegeProvider.BuildPrivilege((int)PrivilegeEnum.Department, (int)(DepartmentPermission.Delete | DepartmentPermission.Edit));
-
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, "TestUser"),
