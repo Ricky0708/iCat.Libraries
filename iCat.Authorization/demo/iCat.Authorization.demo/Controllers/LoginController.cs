@@ -33,7 +33,7 @@ namespace iCat.Authorization.demo.Controllers
                 new Claim(ClaimTypes.Name, "TestUser"),
                 new Claim("UserId", "TestId"),
                 //_privilegeProvider.GenerateClaim(UserProfilePermission.Add | UserProfilePermission.ReadAllDetail),
-                _privilegeProvider.GenerateClaim(DepartmentPermission.Add),
+                _privilegeProvider.GenerateClaim(DepartmentPermission.Add | DepartmentPermission.Delete),
             };
 
             ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

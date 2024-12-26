@@ -14,8 +14,8 @@ dotnet add package iCat.Authorization.Web
 
 The defination of privileges and permissions need to follow these rules.
 
-1. Permission needs to use bit wises value and set `Flags` attribute on the class.
-2. Use the `Permission` attribute to specify the permissions of the privilege .
+1. Use bitwise values to define permissions and apply the `Flags` attribute to the enum.
+2. Use the Permission attribute to assign specific privileges based on the defined permissions.
 
 ```C#
     using iCat.Authorization;
