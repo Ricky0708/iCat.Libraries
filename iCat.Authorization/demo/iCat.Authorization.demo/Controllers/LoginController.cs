@@ -1,4 +1,5 @@
 ﻿using iCat.Authorization.demo.Enums;
+using iCat.Authorization.demo.Models;
 using iCat.Authorization.demo.Wrap;
 using iCat.Authorization.Models;
 using iCat.Authorization.Web.Providers.Interfaces;
@@ -16,13 +17,16 @@ namespace iCat.Authorization.demo.Controllers
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IPrivilegeProvider _privilegeProvider;
+        private readonly CurrentUserData _currentUserData;
 
         public LoginController(
             IHttpContextAccessor httpContextAccessor,
-            IPrivilegeProvider privilegeProvider)
+            IPrivilegeProvider privilegeProvider,
+            CurrentUserData currentUserData)
         {
             _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
             _privilegeProvider = privilegeProvider ?? throw new ArgumentNullException(nameof(privilegeProvider));
+            _currentUserData = currentUserData;
         }
 
         [AllowAnonymous]
@@ -42,7 +46,7 @@ namespace iCat.Authorization.demo.Controllers
             ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             ClaimsPrincipal principal = new ClaimsPrincipal(identity);
             _httpContextAccessor.HttpContext?.SignInAsync(principal);
-            return Ok();
+            return Ok(_currentUserData);
         }
 
     }

@@ -1,4 +1,5 @@
 using iCat.Authorization.demo.Enums;
+using iCat.Authorization.demo.Models;
 using iCat.Authorization.demo.Wrap;
 using iCat.Authorization.Providers.Interfaces;
 using iCat.Authorization.Web;
@@ -13,13 +14,16 @@ namespace iCat.Authorization.demo.Controllers
     {
         private readonly IPrivilegeProvider _privilegeProvider;
         private readonly IPrivilegeProcessor _permissionProcessor;
+        private readonly CurrentUserData _currentUserData;
 
         public WeatherForecastController(
             IPrivilegeProvider permissionProvider,
-            IPrivilegeProcessor permissionProcessor)
+            IPrivilegeProcessor permissionProcessor,
+            CurrentUserData currentUserData)
         {
             _privilegeProvider = permissionProvider ?? throw new ArgumentNullException(nameof(permissionProvider));
             _permissionProcessor = permissionProcessor ?? throw new ArgumentNullException(nameof(permissionProcessor));
+            _currentUserData = currentUserData ?? throw new ArgumentNullException(nameof(currentUserData));
         }
 
         [PermissionsAuthorization(
@@ -28,7 +32,7 @@ namespace iCat.Authorization.demo.Controllers
         [HttpGet]
         public IActionResult GetData()
         {
-            return Ok(_privilegeProvider.GetCurrentUserPrivileges());
+            return Ok(_currentUserData);
         }
     }
 }
