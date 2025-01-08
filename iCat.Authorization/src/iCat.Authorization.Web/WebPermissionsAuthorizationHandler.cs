@@ -19,25 +19,21 @@ using System.Xml.Linq;
 namespace iCat.Authorization.Web
 {
     /// <summary>
-    /// Authorize AuthorizationPermissionsRequirement
+    /// Authorize PermissionsAuthorizationRequirement
     /// </summary>
-    public class AuthorizationPermissionsHandler : AuthorizationHandler<AuthorizationPermissionsRequirement>
+    public class WebPermissionsAuthorizationHandler<TPrivilegeEnum> : AuthorizationHandler<PermissionsAuthorizationRequirement> where TPrivilegeEnum : Enum
     {
         private const string _endWith = "Permission";
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IPrivilegeProvider _privilegeProvider;
+        private readonly IPrivilegeProvider<TPrivilegeEnum> _privilegeProvider;
 
         /// <summary>
-        /// Authorize AuthorizationPermissionsRequirement
+        /// Authorize PermissionsAuthorizationRequirement
         /// </summary>
-        /// <param name="httpContextAccessor"></param>
         /// <param name="privilegeProvider"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public AuthorizationPermissionsHandler(
-            IHttpContextAccessor httpContextAccessor,
-            IPrivilegeProvider privilegeProvider)
+        public WebPermissionsAuthorizationHandler(
+            IPrivilegeProvider<TPrivilegeEnum> privilegeProvider)
         {
-            _httpContextAccessor = httpContextAccessor;
             _privilegeProvider = privilegeProvider ?? throw new ArgumentNullException(nameof(privilegeProvider));
         }
 
@@ -47,7 +43,7 @@ namespace iCat.Authorization.Web
         /// <param name="context"></param>
         /// <param name="requirement"></param>
         /// <returns></returns>
-        protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, AuthorizationPermissionsRequirement requirement)
+        protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, PermissionsAuthorizationRequirement requirement)
         {
             if (!context.User.Identity?.IsAuthenticated ?? false) { context.Fail(); return; }
 
@@ -55,10 +51,10 @@ namespace iCat.Authorization.Web
             {
                 var endpoint = httpContext.GetEndpoint()!;
                 var routerPrivileges = _privilegeProvider.GetRouterPrivilegesRequired(endpoint);
-                var userPrivilege = _privilegeProvider.GetCurrentUserPrivileges();
+                var userPrivileges = _privilegeProvider.GetCurrentUserPrivileges();
                 foreach (var routerPrivilege in routerPrivileges)
                 {
-                    if (_privilegeProvider.ValidatePermission(userPrivilege, routerPrivilege))
+                    if (_privilegeProvider.Validate(userPrivileges, routerPrivilege))
                     {
                         context.Succeed(requirement);
                         await Task.FromResult(0);

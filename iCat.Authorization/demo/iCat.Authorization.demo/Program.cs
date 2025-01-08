@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using iCat.Authorization.demo.Enums;
 using iCat.Authorization.Web.Extensions;
+using iCat.Authorization.demo.Wrap;
+using iCat.Authorization.demo.Models;
 namespace iCat.Authorization.demo
 {
     public class Program
@@ -31,13 +33,14 @@ namespace iCat.Authorization.demo
         private static IServiceCollection ConfigureAuthorization(IServiceCollection services)
         {
             services
+                .AddScoped<CurrentUserData>()
                 .AddSingleton<IHttpContextAccessor, HttpContextAccessor>()
-                .AddWebAuthorizationPermission(typeof(PrivilegeEnum))
+                .AddWebPermissionAuthorizationProvider<PrivilegeEnum>()
                 .AddAuthorization(options =>
                 {
                     options.DefaultPolicy = new AuthorizationPolicyBuilder()
                         .AddAuthenticationSchemes(CookieAuthenticationDefaults.AuthenticationScheme)
-                        .AddAuthorizationPermissionRequirment()
+                        .AddWebPermissionsAuthorizationRequirment()
                         .RequireAuthenticatedUser()
                         .Build();
 

@@ -9,11 +9,11 @@ namespace iCat.Authorization.demo.Enums
 {
     public enum PrivilegeEnum
     {
-        [PrivilegDetail(typeof(UserProfilePermission))]
+        [PrivilegeDetail(typeof(UserProfilePermission))]
         UserProfile = 1,
-        [PrivilegDetail(typeof(OrderPermission))]
+        [PrivilegeDetail(typeof(OrderPermission))]
         Order = 2,
-        [PrivilegDetail(typeof(DepartmentPermission))]
+        [PrivilegeDetail(typeof(DepartmentPermission))]
         Department = 3
     }
 

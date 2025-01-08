@@ -10,15 +10,15 @@ namespace iCat.Authorization.ConsoleTest
         {
 
             //var method = typeof(Program).GetMethod("ss", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
-            //a.GetAuthorizationPermissionsData(method!.CustomAttributes.ToArray());
+            //a.GetPermissionsAuthorizationData(method!.CustomAttributes.ToArray());
             Console.WriteLine("Hello, World!");
         }
 
-        //[AuthorizationPermissions<UserProfilePermission, OrderPermission, UserProfilePermission>(
+        //[PermissionsAuthorization<UserProfilePermission, OrderPermission, UserProfilePermission>(
         //    UserProfilePermission.Add | UserProfilePermission.Read,
         //    OrderPermission.Edit | OrderPermission.Delete,
         //    UserProfilePermission.Edit | UserProfilePermission.Delete)]
-        [AuthorizationPermissions(
+        [PermissionsAuthorization(
             UserProfilePermission.Add | UserProfilePermission.Read,
             OrderPermission.Edit | OrderPermission.Delete,
             UserProfilePermission.Edit | UserProfilePermission.Delete)]

@@ -11,8 +11,4 @@
     <ProjectReference Include="..\..\src\iCat.Authorization.Web\iCat.Authorization.Web.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
-
 </Project>

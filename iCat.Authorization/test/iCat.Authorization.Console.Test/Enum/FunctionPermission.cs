@@ -8,11 +8,11 @@ namespace iCat.Authorization.ConsoleTest.Enum
 {
     public enum Privilege
     {
-        [PrivilegDetail(typeof(UserProfilePermission))]
+        [PrivilegeDetail(typeof(UserProfilePermission))]
         UserProfile = 1,
-        [PrivilegDetail(typeof(OrderPermission))]
+        [PrivilegeDetail(typeof(OrderPermission))]
         Order = 2,
-        [PrivilegDetail(typeof(DepartmentPermission))]
+        [PrivilegeDetail(typeof(DepartmentPermission))]
         Department = 3
     }
 

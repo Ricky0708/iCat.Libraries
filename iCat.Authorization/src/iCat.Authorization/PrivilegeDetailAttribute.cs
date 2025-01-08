@@ -10,12 +10,12 @@ namespace iCat.Authorization
     /// 
     /// </summary>
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false, Inherited = false)]
-    public class PrivilegDetailAttribute : Attribute
+    public class PrivilegeDetailAttribute : Attribute
     {
         /// <summary>
         /// 
         /// </summary>
-        public PrivilegDetailAttribute(Type permissionEnumTypes)
+        public PrivilegeDetailAttribute(Type permissionEnumTypes)
         {
         }
     }

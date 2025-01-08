@@ -6,51 +6,30 @@ using System.Threading.Tasks;
 
 namespace iCat.Authorization.Models
 {
-    /// <summary>
-    /// Privilege - Permission information
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public interface IPrivilege<T> where T : IPermission
-    {
-        /// <summary>
-        /// Privilege value
-        /// </summary>
-        int? Value { get; }
-
-        /// <summary>
-        /// permission detail
-        /// </summary>
-        List<T> PermissionsData { get; }
-
-        /// <summary>
-        /// Permissions
-        /// </summary>
-        int Permissions { get; }
-    }
 
     /// <summary>
     /// Privilege - Permission information
     /// </summary>
-    public class Privilege : IPrivilege<Permission>
+    public class Privilege<T> where T : Enum
     {
         /// <summary>
         /// Privilege name
         /// </summary>
-        public string? Name { get; internal set; }
+        public string Name { get; internal protected set; } = default!;
 
         /// <summary>
         /// Privilege value
         /// </summary>
-        public int? Value { get; internal set; }
+        public T Value { get; internal protected set; } = default!;
 
         /// <summary>
         /// permission detail
         /// </summary>
-        public List<Permission> PermissionsData { get; internal set; } = new List<Permission>();
+        public List<Permission> PermissionsData { get; internal protected set; } = new List<Permission>();
 
         /// <summary>
         /// Permissions
         /// </summary>
-        public int Permissions => PermissionsData?.Sum(p => p.Value) ?? 0;
+        public int Permissions => (int)PermissionsData?.Sum(p => p.Value)!;
     }
 }

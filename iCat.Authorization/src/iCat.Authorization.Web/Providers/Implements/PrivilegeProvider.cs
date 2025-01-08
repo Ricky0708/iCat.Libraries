@@ -15,96 +15,115 @@ using System.Threading.Tasks;
 namespace iCat.Authorization.Web.Providers.Implements
 {
     /// <inheritdoc/>
-    public class PrivilegeProvider : IPrivilegeProvider
+    public class PrivilegeProvider<T> : IPrivilegeProvider<T> where T : Enum
     {
 
-        private static readonly ConcurrentDictionary<string, List<Privilege>> _routePermissionCache = new();
+        private static readonly ConcurrentDictionary<string, List<Privilege<T>>> _routePermissionCache = new();
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IClaimProcessor _claimProcessor;
-        private readonly IPermissionProcessor _permissionProcessor;
+        private readonly IClaimProcessor<T> _claimProcessor;
+        private readonly IPrivilegeProcessor<T> _privilegeProcessor;
 
         /// <inheritdoc/>
         public PrivilegeProvider(
             IHttpContextAccessor httpContextAccessor,
-            IClaimProcessor claimProcessor,
-            IPermissionProcessor permissionProcessor)
+            IClaimProcessor<T> claimProcessor,
+            IPrivilegeProcessor<T> privilegeProcessor)
         {
             _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
             _claimProcessor = claimProcessor ?? throw new ArgumentNullException(nameof(claimProcessor));
-            _permissionProcessor = permissionProcessor ?? throw new ArgumentNullException(nameof(permissionProcessor));
+            _privilegeProcessor = privilegeProcessor ?? throw new ArgumentNullException(nameof(privilegeProcessor));
         }
 
+
         /// <inheritdoc/>
-        public IEnumerable<Privilege> GetCurrentUserPrivileges()
+        public Privilege<T> BuildPrivilege(int privilegeValue, int permissionsValue)
         {
-            var userPrivileges = _httpContextAccessor?.HttpContext?.User.Claims.Where(p => p.Type == Constants.ClaimTypes.Privilege).Select(p =>
-            {
-                var PrivilegeClaimData = p.Value.Split(",");
-                if (!int.TryParse(PrivilegeClaimData[0], out var privilegeValue)) throw new ArgumentException("Invalid Privilege claims");
-                if (!int.TryParse(PrivilegeClaimData[1], out var permissionsValue)) throw new ArgumentException("Invalid Privilege claims");
-                return _permissionProcessor.BuildPrivilege(privilegeValue, permissionsValue);
-            }) ?? throw new ArgumentNullException(nameof(_httpContextAccessor));
-            return userPrivileges;
+            return _privilegeProcessor.BuildPrivilege(privilegeValue, permissionsValue);
         }
 
         /// <inheritdoc/>
-        public IEnumerable<Privilege> GetUserPrivileges(HttpContext httpContext)
+        public Privilege<T> BuildPrivilege<E>(E permissionEnum) where E : Enum
+        {
+            return _privilegeProcessor.BuildPrivilege(permissionEnum);
+        }
+
+        /// <inheritdoc/>
+        public IEnumerable<Privilege<T>> GetCurrentUserPrivileges()
+        {
+            return GetUserPrivileges(_httpContextAccessor.HttpContext!);
+        }
+
+        /// <inheritdoc/>
+        public IEnumerable<Privilege<T>> GetUserPrivileges(HttpContext httpContext)
         {
             var userPrivileges = httpContext.User.Claims.Where(p => p.Type == Constants.ClaimTypes.Privilege).Select(p =>
             {
                 var privilegeClaimData = p.Value.Split(",");
                 if (!int.TryParse(privilegeClaimData[0], out var privilegeValue)) throw new ArgumentException("Invalid Privilege claims");
                 if (!int.TryParse(privilegeClaimData[1], out var permissionsValue)) throw new ArgumentException("Invalid Privilege claims");
-                return _permissionProcessor.BuildPrivilege(privilegeValue, permissionsValue);
+                //var enumValue = (T)(object)privilegeValue;
+                //var contructorType = enumValue.GetType().GetMember(enumValue.ToString())[0].CustomAttributes.SingleOrDefault(p => p.AttributeType == typeof(PrivilegeDetailAttribute))?.ConstructorArguments.First().Value as Type;
+                return _privilegeProcessor.BuildPrivilege(privilegeValue, permissionsValue);
             }) ?? throw new ArgumentNullException(nameof(_httpContextAccessor));
             return userPrivileges;
         }
 
         /// <inheritdoc/>
-        public List<Privilege> GetRouterPrivilegesRequired(Endpoint endpoint)
+        public List<Privilege<T>> GetRouterPrivilegesRequired(Endpoint endpoint)
         {
             var actionDescriptor = endpoint.Metadata.GetMetadata<ControllerActionDescriptor>()!;
             var cacheKey = $"{actionDescriptor.ControllerName}{actionDescriptor.ActionName}{string.Join("-", actionDescriptor.Parameters.Select(p => p.ParameterType.Name))}";
 
             if (!_routePermissionCache.TryGetValue(cacheKey, out var permissionNeedsData))
             {
-                if (!(actionDescriptor!.MethodInfo.CustomAttributes.Any(p => p.AttributeType.Name.StartsWith(nameof(AuthorizationPermissionsAttribute))))) throw new ArgumentException("Not have AuthorizationPermissionsAttribute.");
-                var permissionAttrs = actionDescriptor!.MethodInfo.CustomAttributes.Where(p => p.AttributeType.Name.StartsWith(nameof(AuthorizationPermissionsAttribute)));
+                if (!(actionDescriptor!.MethodInfo.CustomAttributes.Any(p => p.AttributeType.Name.StartsWith(nameof(PermissionsAuthorizationAttribute))))) throw new ArgumentException("Not have PermissionsAuthorizationAttribute.");
+                var permissionAttrs = actionDescriptor!.MethodInfo.CustomAttributes.Where(p => p.AttributeType.Name.StartsWith(nameof(PermissionsAuthorizationAttribute)));
 
-                permissionNeedsData = _permissionProcessor.GetPrivilegeFromAttribute(permissionAttrs.ToArray());
+                permissionNeedsData = _privilegeProcessor.GetPrivilegeFromAttribute(permissionAttrs.ToArray());
                 _routePermissionCache.TryAdd(cacheKey, permissionNeedsData);
             }
             return permissionNeedsData;
         }
 
         /// <inheritdoc/>
-        public Claim GenerateClaim<T>(IPrivilege<T> permission) where T : IPermission
+        public Claim GenerateClaim(Privilege<T> privilege)
         {
-            var claim = _claimProcessor.GeneratePrivilegeClaim(permission.Value!.Value, permission.Permissions);
+            var claim = _claimProcessor.GeneratePrivilegeClaim(privilege);
             return claim;
         }
 
         /// <inheritdoc/>
-        public Claim GenerateClaim<TPermission>(TPermission permission) where TPermission : Enum
+        public Claim GenerateClaim<TPermission>(TPermission permissionEnum) where TPermission : Enum
         {
-            var privilege = _permissionProcessor.GetPrivilegeDefinitionFromPermission(permission);
-            var claim = _claimProcessor.GeneratePrivilegeClaim(privilege.Value!.Value, (int)(object)permission);
+            var privilege = _privilegeProcessor.BuildPrivilege(permissionEnum);
+            var claim = _claimProcessor.GeneratePrivilegeClaim(privilege);
             return claim;
         }
 
         /// <inheritdoc/>
-        public Claim GenerateClaim(int privilege, int permission)
+        public bool Validate(IEnumerable<Privilege<T>> privileges, Privilege<T> privilegeRequired)
         {
-            var claim = _claimProcessor.GeneratePrivilegeClaim(privilege, permission);
-            return claim;
+            return _privilegeProcessor.Validate(privileges, privilegeRequired);
         }
 
         /// <inheritdoc/>
-        public bool ValidatePermission(IEnumerable<Privilege> userPrivilege, Privilege routerPrivilege)
+        public bool Validate<E>(IEnumerable<Privilege<T>> privileges, E permissionRequired) where E : Enum
         {
-            return _permissionProcessor.ValidatePermission(userPrivilege, routerPrivilege);
+            var privilegeRequired = _privilegeProcessor.BuildPrivilege(permissionRequired);
+            return _privilegeProcessor.Validate(privileges, privilegeRequired);
         }
 
+        /// <inheritdoc/>
+        public bool Validate(Privilege<T> privilegeRequired)
+        {
+            return _privilegeProcessor.Validate(GetCurrentUserPrivileges(), privilegeRequired);
+        }
 
+        /// <inheritdoc/>
+        public bool Validate<E>(E permissionRequired) where E : Enum
+        {
+            var privilegeRequired = _privilegeProcessor.BuildPrivilege(permissionRequired);
+            return _privilegeProcessor.Validate(GetCurrentUserPrivileges(), privilegeRequired);
+        }
     }
 }

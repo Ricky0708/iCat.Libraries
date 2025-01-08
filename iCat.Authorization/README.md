@@ -1,7 +1,7 @@
 # iCat.Authorization.Web
 
 iCat.Authorization.Web is integrated to the `Policy-based authorization`.<br>
-It customs `IAuthorizationRequirement`, `AuthorizationHandler` and provide provider for processing authorization-related data.
+It customs `IAuthorizationRequirement`, `AuthorizationHandler<>` and provide provider for processing authorization-related data.
 
 ## Installation
 ```bash
@@ -14,8 +14,8 @@ dotnet add package iCat.Authorization.Web
 
 The defination of privileges and permissions need to follow these rules.
 
-1. Permission needs to use bit wises value and set `Flags` attribute on the class.
-2. Use the `Permission` attribute to specify the permissions of the privilege .
+1. Use bitwise values to define permissions and apply the `Flags` attribute on the enum.
+2. Use the Permission attribute to assign specific privileges based on the defined permissions.
 
 ```C#
     using iCat.Authorization;
@@ -63,7 +63,7 @@ The defination of privileges and permissions need to follow these rules.
 
 ### Configure Requirment and Handler
 
-Register providers and privileges/permissions using the `.AddWebAuthorizationPermission(typeof(PrivilegeEnum))` method, add a requirment to the policies via `.AddAuthorizationPermissionRequirment()`.<br>
+Register providers and privileges/permissions using the `.AddWebPermissionAuthorizationProvider<T>` method, add a requirment to the policies via `.AddWebPermissionsAuthorizationRequirment()`.<br>
 iCat.Authorization.Web needs to use `IHttpContextAccessor` to obtain the current requested privileges/permissions.
 
 ```C#
@@ -78,12 +78,12 @@ iCat.Authorization.Web needs to use `IHttpContextAccessor` to obtain the current
         // Add services to the container.
         builder.Services
             .AddSingleton<IHttpContextAccessor, HttpContextAccessor>()
-            .AddAuthorizationPermission(typeof(PrivilegeEnum))
+            .AddWebPermissionAuthorizationProvider<PrivilegeEnum>()
             .AddAuthorization(options =>
             {
                 options.DefaultPolicy = new AuthorizationPolicyBuilder()
-                    .AddAuthenticationSchemes(CookieAuthenticationDefaults.AuthenticationScheme, "Bearer")
-                    .AddAuthorizationPermissionRequirment()
+                    .AddAuthenticationSchemes(CookieAuthenticationDefaults.AuthenticationScheme)
+                    .AddWebPermissionsAuthorizationRequirment()
                     .RequireAuthenticatedUser()
                     .Build();
 
@@ -95,9 +95,9 @@ iCat.Authorization.Web needs to use `IHttpContextAccessor` to obtain the current
     }
 ```
 
-### AuthorizationPermission on action
+### WebPermissionAuthorization on action
 
-Set the permission for the action through the `AuthorizationPermissions` attribute.
+Set the permission for the action through the `PermissionsAuthorization` attribute.
 
 ```C#
     using iCat.Authorization.Web;
@@ -106,7 +106,7 @@ Set the permission for the action through the `AuthorizationPermissions` attribu
 ```C#
     ...
 
-    [AuthorizationPermissions(
+    [PermissionsAuthorization(
         DepartmentPermission.Read | DepartmentPermission.Delete,
         UserProfilePermission.Add | UserProfilePermission.Edit | UserProfilePermission.Read)]
     [HttpGet("[action]")]
@@ -118,7 +118,7 @@ Set the permission for the action through the `AuthorizationPermissions` attribu
 
 ### Obtain current user privileges, claims
 
-The `IPrivilegeProvider` provides methods to obtain the logged user's claim from the `Privilege`. <br>
+The `IPrivilegeProvider<T>` provides methods to obtain the logged user's claim from the `Privilege`. <br>
 
 
 ```C#
@@ -131,14 +131,14 @@ The `IPrivilegeProvider` provides methods to obtain the logged user's claim from
    [Route("[controller]")]
    public class TestController : ControllerBase
    {
-        private readonly IPrivilegeProvider _privilegeProvider;
+        private readonly IPrivilegeProvider<PrivilegeEnum> _privilegeProvider;
 
-       public TestController(IPrivilegeProvider privilegeProvider, IPermissionProvider permissionProvider)
+       public TestController(IPrivilegeProvider<PrivilegeEnum> privilegeProvider)
        {
             _privilegeProvider = privilegeProvider ?? throw new ArgumentNullException(nameof(privilegeProvider));
        }
        
-       [AuthorizationPermissions(
+       [PermissionsAuthorization(
             DepartmentPermission.Read | DepartmentPermission.Delete,
             UserProfilePermission.Add | UserProfilePermission.Edit | UserProfilePermission.ReadPartialDetail)]
        [HttpGet("[action]")]

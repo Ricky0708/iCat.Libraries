@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 namespace iCat.Authorization.Web
 {
     /// <summary>
-    /// AuthorizationPermissionsRequirement
+    /// PermissionsAuthorizationRequirement
     /// </summary>
-    public class AuthorizationPermissionsRequirement : IAuthorizationRequirement
+    public class PermissionsAuthorizationRequirement : IAuthorizationRequirement
     {
 
     }
