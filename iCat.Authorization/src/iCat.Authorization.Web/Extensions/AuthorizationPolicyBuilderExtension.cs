@@ -18,7 +18,7 @@ namespace iCat.Authorization.Web.Extensions
         /// </summary>
         /// <param name="builder"></param>
         /// <returns></returns>
-        public static AuthorizationPolicyBuilder AddPermissionsAuthorizationRequirment(this AuthorizationPolicyBuilder builder)
+        public static AuthorizationPolicyBuilder AddWebPermissionsAuthorizationRequirment(this AuthorizationPolicyBuilder builder)
         {
             builder.AddRequirements(new PermissionsAuthorizationRequirement());
             return builder;

@@ -43,7 +43,7 @@ namespace iCat.Authorization.demo
                 {
                     options.DefaultPolicy = new AuthorizationPolicyBuilder()
                         .AddAuthenticationSchemes(CookieAuthenticationDefaults.AuthenticationScheme)
-                        .AddPermissionsAuthorizationRequirment()
+                        .AddWebPermissionsAuthorizationRequirment()
                         .RequireAuthenticatedUser()
                         .Build();
 
