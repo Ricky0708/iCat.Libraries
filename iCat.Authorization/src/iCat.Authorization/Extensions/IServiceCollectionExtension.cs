@@ -21,7 +21,7 @@ namespace iCat.Authorization.Extensions
         /// <typeparam name="TPrivilegeEnum"></typeparam>
         /// <param name="services"></param>
         /// <returns></returns>
-        public static IServiceCollection AddPermissionAuthorization<TPrivilegeEnum>(this IServiceCollection services) where TPrivilegeEnum : Enum
+        public static IServiceCollection AddWebPermissionAuthorizationProcessor<TPrivilegeEnum>(this IServiceCollection services) where TPrivilegeEnum : Enum
         {
             services.AddSingleton<IPrivilegeProcessor<TPrivilegeEnum>, PrivilegeProcessor<TPrivilegeEnum>>();
             services.AddSingleton<IClaimProcessor<TPrivilegeEnum>, ClaimProcessor<TPrivilegeEnum>>();

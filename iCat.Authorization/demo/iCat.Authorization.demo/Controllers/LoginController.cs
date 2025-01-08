@@ -16,12 +16,12 @@ namespace iCat.Authorization.demo.Controllers
     public class LoginController : ControllerBase
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IPrivilegeProvider _privilegeProvider;
+        private readonly IPrivilegeProvider<PrivilegeEnum> _privilegeProvider;
         private readonly CurrentUserData _currentUserData;
 
         public LoginController(
             IHttpContextAccessor httpContextAccessor,
-            IPrivilegeProvider privilegeProvider,
+            IPrivilegeProvider<PrivilegeEnum> privilegeProvider,
             CurrentUserData currentUserData)
         {
             _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));

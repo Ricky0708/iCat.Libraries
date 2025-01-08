@@ -11,16 +11,16 @@ namespace iCat.Authorization.Web.Models
     /// <summary>
     /// Authorized base model
     /// </summary>
-    /// <typeparam name="PrivilegeEnum"></typeparam>
-    public abstract class AuthorizedPrivilege<PrivilegeEnum> where PrivilegeEnum : Enum
+    /// <typeparam name="TPrivilegeEnum"></typeparam>
+    public abstract class AuthorizedPrivilege<TPrivilegeEnum> where TPrivilegeEnum : Enum
     {
-        private readonly IPrivilegeProvider<PrivilegeEnum> _privilegeProvider;
+        private readonly IPrivilegeProvider<TPrivilegeEnum> _privilegeProvider;
 
         /// <summary>
         /// Authorized base model
         /// </summary>
         /// <param name="privilegeProvider"></param>
-        protected AuthorizedPrivilege(IPrivilegeProvider<PrivilegeEnum> privilegeProvider)
+        protected AuthorizedPrivilege(IPrivilegeProvider<TPrivilegeEnum> privilegeProvider)
         {
             _privilegeProvider = privilegeProvider;
         }
@@ -28,6 +28,6 @@ namespace iCat.Authorization.Web.Models
         /// <summary>
         /// Current user privileges
         /// </summary>
-        public IEnumerable<Privilege<PrivilegeEnum>> Privileges => _privilegeProvider.GetCurrentUserPrivileges();
+        public IEnumerable<Privilege<TPrivilegeEnum>> Privileges => _privilegeProvider.GetCurrentUserPrivileges();
     }
 }

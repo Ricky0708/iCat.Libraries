@@ -12,17 +12,14 @@ namespace iCat.Authorization.demo.Controllers
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
     {
-        private readonly IPrivilegeProvider _privilegeProvider;
-        private readonly IPrivilegeProcessor _permissionProcessor;
+        private readonly IPrivilegeProvider<PrivilegeEnum> _privilegeProvider;
         private readonly CurrentUserData _currentUserData;
 
         public WeatherForecastController(
-            IPrivilegeProvider permissionProvider,
-            IPrivilegeProcessor permissionProcessor,
+            IPrivilegeProvider<PrivilegeEnum> permissionProvider,
             CurrentUserData currentUserData)
         {
             _privilegeProvider = permissionProvider ?? throw new ArgumentNullException(nameof(permissionProvider));
-            _permissionProcessor = permissionProcessor ?? throw new ArgumentNullException(nameof(permissionProcessor));
             _currentUserData = currentUserData ?? throw new ArgumentNullException(nameof(currentUserData));
         }
 
