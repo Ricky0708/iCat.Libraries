@@ -36,7 +36,7 @@ namespace iCat.Authorization.Extensions
         /// <typeparam name="TClaimProcessorType"></typeparam>
         /// <param name="services"></param>
         /// <returns></returns>
-        public static IServiceCollection AddPermissionAuthorization<
+        public static IServiceCollection AddWebPermissionAuthorizationProcessor<
               TPrivilegeEnum
             , TPrivilegeProcessorType
             , TClaimProcessorType>(

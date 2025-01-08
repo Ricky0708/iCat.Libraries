@@ -38,7 +38,7 @@ namespace iCat.Authorization.demo
                 .AddSingleton<IPrivilegeProvider, PrivilegeProvider>()
                 .AddSingleton<IPrivilegeProcessor, PrivilegeProcessor>()
                 .AddSingleton<IClaimProcessor, ClaimProcessor>()
-                .AddWebPermissionAuthorization<PrivilegeEnum, IPrivilegeProvider, IPrivilegeProcessor, IClaimProcessor>()
+                .AddWebPermissionAuthorizationProvider<PrivilegeEnum, IPrivilegeProvider, IPrivilegeProcessor, IClaimProcessor>()
                 .AddAuthorization(options =>
                 {
                     options.DefaultPolicy = new AuthorizationPolicyBuilder()
