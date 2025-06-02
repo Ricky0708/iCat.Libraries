@@ -20,7 +20,7 @@ namespace iCat.MQ.Abstraction.Interfaces
         /// Subscribe a queue/topic, auto ack
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="queueName"></param>
+        /// <param name="messageGroup">queue/group name</param>
         /// <param name="processReceived"></param>
         /// <returns></returns>
         Task Subscribe<T>(string messageGroup, Action<T> processReceived);
@@ -29,7 +29,7 @@ namespace iCat.MQ.Abstraction.Interfaces
         /// Subscribe a queue/topic, ack
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="queueName"></param>
+        /// <param name="messageGroup">queue/group name</param>
         /// <param name="processReceived"></param>
         /// <returns></returns>
         Task Subscribe<T>(string messageGroup, Func<T, bool> processReceived);
@@ -38,7 +38,7 @@ namespace iCat.MQ.Abstraction.Interfaces
         /// Subscribe a queue/topic, auto ack
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="queueName"></param>
+        /// <param name="messageGroup">queue/group name</param>
         /// <param name="processReceived"></param>
         /// <returns></returns>
         Task SubscribeToString<T>(string messageGroup, Action<string> processReceived);
@@ -47,7 +47,7 @@ namespace iCat.MQ.Abstraction.Interfaces
         /// Subscribe a queue/topic, ack
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="queueName"></param>
+        /// <param name="messageGroup">queue/group name</param>
         /// <param name="processReceived"></param>
         /// <returns></returns>
         Task SubscribeToString<T>(string messageGroup, Func<string, bool> processReceived);
