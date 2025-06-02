@@ -46,11 +46,11 @@ namespace iCat.MQ.RabbitMQ.Implements
         #region public methods
 
         /// <inheritdoc/>
-        public override Task Subscribe<T>(string queueName, Action<T> processReceived)
+        public override Task Subscribe<T>(string messageGroup, Action<T> processReceived)
         {
             var exchangeName = base.GetRouteName(typeof(T));
             var lambda = BuildDelg<T>();
-            SubscribeCore(exchangeName, queueName, _isAutoDeleteQueue, true, (channel, ea) =>
+            SubscribeCore(exchangeName, messageGroup, _isAutoDeleteQueue, true, (channel, ea) =>
             {
                 processReceived(lambda.Invoke(Encoding.UTF8.GetString(ea.Body.ToArray())));
             });
@@ -58,11 +58,11 @@ namespace iCat.MQ.RabbitMQ.Implements
         }
 
         /// <inheritdoc/>
-        public override Task Subscribe<T>(string queueName, Func<T, bool> processReceived)
+        public override Task Subscribe<T>(string messageGroup, Func<T, bool> processReceived)
         {
             var exchangeName = GetRouteName(typeof(T));
             var lambda = BuildDelg<T>();
-            SubscribeCore(exchangeName, queueName, _isAutoDeleteQueue, false, (channel, ea) =>
+            SubscribeCore(exchangeName, messageGroup, _isAutoDeleteQueue, false, (channel, ea) =>
             {
                 if (processReceived(lambda.Invoke(Encoding.UTF8.GetString(ea.Body.ToArray()))))
                 {
@@ -78,10 +78,10 @@ namespace iCat.MQ.RabbitMQ.Implements
         }
 
         /// <inheritdoc/>
-        public override Task SubscribeToString<T>(string queueName, Action<string> processReceived)
+        public override Task SubscribeToString<T>(string messageGroup, Action<string> processReceived)
         {
             var exchangeName = GetRouteName(typeof(T));
-            SubscribeCore(exchangeName, queueName, _isAutoDeleteQueue, true, (channel, ea) =>
+            SubscribeCore(exchangeName, messageGroup, _isAutoDeleteQueue, true, (channel, ea) =>
             {
                 processReceived(Encoding.UTF8.GetString(ea.Body.ToArray()));
             });
@@ -89,10 +89,10 @@ namespace iCat.MQ.RabbitMQ.Implements
         }
 
         /// <inheritdoc/>
-        public override Task SubscribeToString<T>(string queueName, Func<string, bool> processReceived)
+        public override Task SubscribeToString<T>(string messageGroup, Func<string, bool> processReceived)
         {
             var exchangeName = GetRouteName(typeof(T));
-            SubscribeCore(exchangeName, queueName, _isAutoDeleteQueue, false, (channel, ea) =>
+            SubscribeCore(exchangeName, messageGroup, _isAutoDeleteQueue, false, (channel, ea) =>
             {
                 if (processReceived(Encoding.UTF8.GetString(ea.Body.ToArray())))
                 {
