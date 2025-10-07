@@ -210,12 +210,6 @@ namespace iCat.Token.Implements
                     {
                         var targetExpr = Expression.Parameter(typeof(T), "target");
                         var valueExpr = Expression.Parameter(typeof(V).GetMethod("Invoke")!.GetParameters()[1].ParameterType, "value");
-
-                        if (prop.PropertyType.IsValueType)
-                        {
-
-                        }
-
                         var methodExpr = prop.PropertyType.IsValueType
                             ? prop.PropertyType.IsEnum
                                    ? (Expression)Expression.Convert(Expression.Call(typeof(Convert).GetMethod(GetConvertName(prop.PropertyType), new[] { typeof(object) })!, valueExpr), prop.PropertyType)
