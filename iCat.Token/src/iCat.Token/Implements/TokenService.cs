@@ -19,6 +19,7 @@ namespace iCat.Token.Implements
         private readonly ITokenGenerator _tokenGenerator;
         private readonly ITokenValidator _tokenValidator;
         private static readonly ConcurrentDictionary<string, delgGetPropString> _dicGetString = new ConcurrentDictionary<string, delgGetPropString>();
+        private static readonly ConcurrentDictionary<string, delgGetPropGuid> _dicGetGuid = new ConcurrentDictionary<string, delgGetPropGuid>();
         private static readonly ConcurrentDictionary<string, delgGetPropLong> _dicGetLong = new ConcurrentDictionary<string, delgGetPropLong>();
         private static readonly ConcurrentDictionary<string, delgGetPropIEnumerable> _dicGetList = new ConcurrentDictionary<string, delgGetPropIEnumerable>();
 
@@ -27,6 +28,7 @@ namespace iCat.Token.Implements
         private static readonly ConcurrentDictionary<string, delgAddPropList> _dicAddList = new ConcurrentDictionary<string, delgAddPropList>();
 
 
+        private delegate Guid delgGetPropGuid(T obj);
         private delegate string delgGetPropString(T obj);
         private delegate long delgGetPropLong(T obj);
         private delegate IEnumerable delgGetPropIEnumerable(T obj);
@@ -82,6 +84,11 @@ namespace iCat.Token.Implements
                     )
                 {
                     var result = TokenService<T>.GetGetDelg(_dicGetLong, prop).Invoke(dataModel);
+                    claims.Add(new Claim(prop.Name, result.ToString()));
+                }
+                else if (prop.PropertyType == typeof(Guid))
+                {
+                    var result = TokenService<T>.GetGetDelg(_dicGetGuid, prop).Invoke(dataModel);
                     claims.Add(new Claim(prop.Name, result.ToString()));
                 }
                 else
@@ -204,10 +211,17 @@ namespace iCat.Token.Implements
                         var targetExpr = Expression.Parameter(typeof(T), "target");
                         var valueExpr = Expression.Parameter(typeof(V).GetMethod("Invoke")!.GetParameters()[1].ParameterType, "value");
 
+                        if (prop.PropertyType.IsValueType)
+                        {
+
+                        }
+
                         var methodExpr = prop.PropertyType.IsValueType
                             ? prop.PropertyType.IsEnum
                                    ? (Expression)Expression.Convert(Expression.Call(typeof(Convert).GetMethod(GetConvertName(prop.PropertyType), new[] { typeof(object) })!, valueExpr), prop.PropertyType)
-                                   : (Expression)Expression.Call(typeof(Convert).GetMethod(GetConvertName(prop.PropertyType), new[] { typeof(object) })!, valueExpr)
+                                   : prop.PropertyType == typeof(Guid)
+                                    ? (Expression)Expression.Call(typeof(Guid).GetMethod(nameof(Guid.Parse), new[] { typeof(string) })!, Expression.Call(valueExpr, typeof(object).GetMethod("ToString")!))
+                                    : (Expression)Expression.Call(typeof(Convert).GetMethod(GetConvertName(prop.PropertyType), new[] { typeof(object) })!, valueExpr)
                             : (Expression)Expression.Convert(valueExpr, prop.PropertyType);
                         var memExpr = Expression.Property(targetExpr, prop);
 
