@@ -15,6 +15,11 @@ namespace iCat.Token.Interfaces
     public interface ITokenService<T>
     {
         /// <summary>
+        /// Token category
+        /// </summary>
+        string Category { get; }
+
+        /// <summary>
         /// Generate token by claims
         /// </summary>
         /// <param name="claims"></param>
