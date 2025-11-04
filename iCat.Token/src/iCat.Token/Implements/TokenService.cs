@@ -16,6 +16,9 @@ namespace iCat.Token.Implements
     /// <inheritdoc/>
     public class TokenService<T> : ITokenService<T>
     {
+        /// <inheritdoc/>
+        public string Category { get; init; } = string.Empty;
+
         private readonly ITokenGenerator _tokenGenerator;
         private readonly ITokenValidator _tokenValidator;
         private static readonly ConcurrentDictionary<string, delgGetPropString> _dicGetString = new ConcurrentDictionary<string, delgGetPropString>();
@@ -37,6 +40,12 @@ namespace iCat.Token.Implements
         private delegate void delgSetPropS(T obj, object value);
         private delegate void delgAddPropList(T obj, object value);
 
+
+        /// <inheritdoc/>
+        public TokenService(string category, ITokenGenerator tokenGenerator, ITokenValidator tokenValidator) : this(tokenGenerator, tokenValidator)
+        {
+            Category = category;
+        }
 
         /// <inheritdoc/>
         public TokenService(ITokenGenerator tokenGenerator, ITokenValidator tokenValidator)

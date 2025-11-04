@@ -13,12 +13,12 @@
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<RepositoryUrl>https://github.com/Ricky0708/iCat.Libraries/tree/main/iCat.Token</RepositoryUrl>
 		<PackageTags>Token, JWT, Sequence</PackageTags>
-		<PackageReleaseNotes>Version 1.0.2</PackageReleaseNotes>
+		<PackageReleaseNotes>Version 1.0.3</PackageReleaseNotes>
 		<PackAsTool>False</PackAsTool>
 		<NeutralLanguage>zh-TW</NeutralLanguage>
-		<AssemblyVersion>1.0.2</AssemblyVersion>
-		<FileVersion>1.0.2</FileVersion>
-		<Version>1.0.2</Version>
+		<AssemblyVersion>1.0.3</AssemblyVersion>
+		<FileVersion>1.0.3</FileVersion>
+		<Version>1.0.3</Version>
 		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
 	</PropertyGroup>
 	<ItemGroup>
