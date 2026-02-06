@@ -1,0 +1,38 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+		<Title>iCat.MQ.Kafka</Title>
+		<Authors>Ricky0708</Authors>
+		<Description>Wrapping RabitMQ makes subscribing and publishing easier</Description>
+		<PackageProjectUrl>https://github.com/Ricky0708/iCat.Libraries/tree/main/iCat.MQ.Kafka</PackageProjectUrl>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<RepositoryUrl>https://github.com/Ricky0708/iCat.Libraries/tree/main/iCat.MQ.Kafka</RepositoryUrl>
+		<PackageTags>Kafka</PackageTags>
+		<PackageReleaseNotes>Version 1.0.0</PackageReleaseNotes>
+		<PackAsTool>False</PackAsTool>
+		<NeutralLanguage>zh-TW</NeutralLanguage>
+		<AssemblyVersion>1.0.1</AssemblyVersion>
+		<FileVersion>1.0.1</FileVersion>
+		<Version>1.0.1</Version>
+		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\iCat.MQ.Abstraction\iCat.MQ.Abstraction.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="..\..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+	<ItemGroup>
+	  <PackageReference Include="Confluent.Kafka" Version="2.13.0" />
+	  <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />
+	</ItemGroup>
+</Project>
