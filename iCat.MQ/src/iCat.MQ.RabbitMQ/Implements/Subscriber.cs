@@ -22,7 +22,7 @@ namespace iCat.MQ.RabbitMQ.Implements
         private readonly IConnection _connection;
         private readonly string _prefix;
         private readonly bool _isAutoDeleteQueue;
-
+        private bool _disposed = false;
         private delegate T delgExecuter<T>(string message);
         private readonly ConcurrentDictionary<string, IModel> _models;
         private readonly ConcurrentDictionary<string, string> _consumeTags;
@@ -197,11 +197,23 @@ namespace iCat.MQ.RabbitMQ.Implements
         #region dispose
 
         /// <summary>
-        /// 
+        /// Dispose the producer, flush the messages in the queue before disposing.
+        /// </summary>
+        public override void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Dispose the producer, flush the messages in the queue before disposing.
         /// </summary>
         /// <param name="disposing"></param>
-        protected override void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
+            if (_disposed) return;
+            _disposed = true;
+
             if (disposing)
             {
                 if (_models != null)

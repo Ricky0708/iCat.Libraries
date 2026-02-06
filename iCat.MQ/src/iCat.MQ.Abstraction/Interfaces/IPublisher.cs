@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace iCat.MQ.Abstraction.Interfaces
 {
-    public interface IPublisher
+    public interface IPublisher: IDisposable
     {
         ///// <summary>
         ///// Get all available exchanges

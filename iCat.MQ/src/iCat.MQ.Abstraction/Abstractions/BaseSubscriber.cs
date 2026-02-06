@@ -50,17 +50,6 @@ namespace iCat.MQ.Abstraction.Abstractions
             }
             return exchangeName!;
         }
-
-        public void Dispose()
-        {
-
-            Dispose(true);
-            GC.SuppressFinalize(this);
-
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-        }
+        public abstract void Dispose();
     }
 }

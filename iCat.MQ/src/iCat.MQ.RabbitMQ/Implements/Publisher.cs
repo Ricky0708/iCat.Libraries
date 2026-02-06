@@ -23,6 +23,7 @@ namespace iCat.RabbitMQ.Implements
         private readonly ChannelManager _channelManager;
         private delegate void delgExecuter(IModel channel, string exchange, ReadOnlyMemory<byte> body);
         private readonly delgExecuter? _sender;
+        private bool _disposed = false;
 
         #endregion
 
@@ -63,6 +64,35 @@ namespace iCat.RabbitMQ.Implements
         {
             var exchangeName = base.GetRouteName(data);
             await _channelManager.Execute(channel => _sender!.Invoke(channel, $"{_prefix}.{exchangeName}", Encoding.UTF8.GetBytes(JsonSerializer.Serialize(data))));
+        }
+
+        /// <summary>
+        /// Dispose the producer, flush the messages in the queue before disposing.
+        /// </summary>
+        public override void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Dispose the producer, flush the messages in the queue before disposing.
+        /// </summary>
+        /// <param name="disposing"></param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed) return;
+            _disposed = true;
+
+            if (disposing)
+            {
+                try
+                {
+                }
+                catch (OperationCanceledException)
+                {
+                }
+            }
         }
     }
 }

@@ -49,5 +49,7 @@ namespace iCat.MQ.Abstraction.Abstractions
             return RouteName ?? throw new ArgumentException("Can't get route name from the instance.");
 
         }
+
+        public abstract void Dispose();
     }
 }
