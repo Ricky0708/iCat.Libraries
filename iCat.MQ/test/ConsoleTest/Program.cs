@@ -15,7 +15,6 @@ namespace ConsoleTest
         {
             //        var config = new AdminClientConfig
             //        {
-            //            BootstrapServers = "b-2.mskdev.roksss.c3.kafka.ap-southeast-1.amazonaws.com:9092,b-1.mskdev.roksss.c3.kafka.ap-southeast-1.amazonaws.com:9092",
             //        };
 
             //        using var adminClient = new AdminClientBuilder(config).Build();
@@ -49,7 +48,6 @@ namespace ConsoleTest
 
             var publisher = new Publisher("default", new iCat.MQ.Kafka.Models.ProducerConfig
             {
-                BootstrapServers = "b-2.mskdev.roksss.c3.kafka.ap-southeast-1.amazonaws.com:9092,b-1.mskdev.roksss.c3.kafka.ap-southeast-1.amazonaws.com:9092",
                 MessageMaxBytes = 1000000,
                 SocketTimeoutMs = 60000,
                 RequestTimeoutMs = 5000,
@@ -66,7 +64,6 @@ namespace ConsoleTest
 
             var sub = new Subscriber("A", new iCat.MQ.Kafka.Models.ConsumerConfig
             {
-                BootstrapServers = "b-2.mskdev.roksss.c3.kafka.ap-southeast-1.amazonaws.com:9092,b-1.mskdev.roksss.c3.kafka.ap-southeast-1.amazonaws.com:9092",
                 GroupId = "test-consumer-group",
                 AutoOffsetReset = AutoOffsetReset.Earliest,
                 EnableAutoCommit = false,
