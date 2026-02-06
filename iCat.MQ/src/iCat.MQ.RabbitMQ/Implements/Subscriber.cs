@@ -9,6 +9,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace iCat.MQ.RabbitMQ.Implements
@@ -33,8 +34,9 @@ namespace iCat.MQ.RabbitMQ.Implements
         /// <param name="category"></param>
         /// <param name="prefix"></param>
         /// <param name="isAutoDeleteQueue"></param>
+        /// <param name="cancellationToken"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public Subscriber(IConnection connection, string category, string prefix, bool isAutoDeleteQueue) : base(category)
+        public Subscriber(IConnection connection, string category, string prefix, bool isAutoDeleteQueue, CancellationToken cancellationToken) : base(category, cancellationToken)
         {
             this._connection = connection ?? throw new ArgumentNullException(nameof(connection));
             this._prefix = prefix;
@@ -121,7 +123,7 @@ namespace iCat.MQ.RabbitMQ.Implements
                 // define and create MQ
                 channel = DeclareChannelAndQueInfo(_connection, queueFullName, isAutoDeleteQueue, exchangeFullName);
 
-                // subsribe
+                // subscribe
                 var consumer = new EventingBasicConsumer(channel);
                 consumer.Received += (model, ea) =>
                 {
@@ -133,6 +135,10 @@ namespace iCat.MQ.RabbitMQ.Implements
                                      );
                 _models.TryAdd(queueFullName, channel);
                 _consumeTags.TryAdd(queueFullName, tag);
+                _cancellationToken.Register(() =>
+                {
+                    channel.BasicCancel(tag);
+                });
                 return channel;
 
             }

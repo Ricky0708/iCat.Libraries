@@ -19,10 +19,12 @@ namespace iCat.MQ.Abstraction.Abstractions
         public string Category => _category;
 
         private readonly string _category;
+        protected readonly CancellationToken _cancellationToken;
 
-        protected BaseSubscriber(string category)
+        protected BaseSubscriber(string category, CancellationToken cancellationToken)
         {
             _category = category;
+            _cancellationToken = cancellationToken;
         }
 
         public abstract Task Subscribe<T>(string messageGroup, Action<T> processReceived);

@@ -6,6 +6,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using static Confluent.Kafka.ConfigPropertyNames;
 
@@ -16,7 +17,7 @@ namespace iCat.MQ.Kafka.Implements
         private readonly ConcurrentDictionary<string, ConsumerInfo<TKey>> _consumers;
         private readonly ConcurrentDictionary<string, Delegate> _delegates;
         private readonly ConsumerConfig _config;
-        public Subscriber(string category, ConsumerConfig config) : base(category)
+        public Subscriber(string category, ConsumerConfig config, CancellationToken cancellationToken) : base(category, cancellationToken)
         {
             _config = config;
         }
