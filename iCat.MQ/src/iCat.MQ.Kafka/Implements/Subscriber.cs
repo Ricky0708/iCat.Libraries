@@ -24,7 +24,6 @@ namespace iCat.MQ.Kafka.Implements
     {
         private readonly Models.ConsumerConfig _config;
         private readonly ILogger _logger;
-        private readonly CancellationToken _cancellationToken;
         private readonly CancellationTokenSource _ctx;
         private readonly ConcurrentHashSet<string> _set = new ConcurrentHashSet<string>();
         private delegate T delgExecuter<T>(string message);
@@ -41,9 +40,8 @@ namespace iCat.MQ.Kafka.Implements
         {
             _config = config;
             _logger = logger;
-            _cancellationToken = cancellationToken;
             _ctx = new CancellationTokenSource();
-            cancellationToken.Register(() => _ctx.Cancel());
+            _cancellationToken.Register(() => _ctx.Cancel());
         }
 
         public override Task Subscribe<T>(string messageGroup, Action<T> processReceived)
@@ -121,11 +119,12 @@ namespace iCat.MQ.Kafka.Implements
         private async Task SubscribeCore<T>(string messageGroup, Action<IConsumer<string, string>, ConsumeResult<string, string>> process)
         {
             var topic = base.GetRouteName(typeof(T));
-            if (_set.Add(topic))
+            if (_set.Add($"{topic}-{messageGroup}"))
             {
                 await Common.EnsureTopicAsync(_config.BootstrapServers, topic, _config.Partitions, _config.ReplicationFactor);
+                _config.GroupId = messageGroup;
                 var consumer = new ConsumerBuilder<string, string>(_config).Build();
- 
+
                 _ = Task.Run(() =>
                 {
                     consumer.Subscribe(topic);
