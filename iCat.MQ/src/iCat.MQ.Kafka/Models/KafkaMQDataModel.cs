@@ -16,10 +16,5 @@ namespace iCat.MQ.Kafka.Models
         /// Key for the message, can be used for identification or partition of Kafka.
         /// </summary>
         public string? Key { get; set; } = null;
-
-        /// <summary>
-        /// Topic for the message, it will be used to determine which topic to send the message to. If not set, it will be determined by the route name of the data type.
-        /// </summary>
-        internal string Topic { get; set; } = "";
     }
 }
