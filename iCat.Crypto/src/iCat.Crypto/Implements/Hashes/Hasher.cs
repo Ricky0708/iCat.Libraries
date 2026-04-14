@@ -29,9 +29,15 @@ namespace iCat.Crypto.Implements.Hashes
         }
 
         /// <inheritdoc/>
+        public string HMACMD5(string message)
+        {
+            return iCat.Crypto.Hash.HMACMD5(_key, message);
+        }
+
+        /// <inheritdoc/>
         public string MD5(string message)
         {
-            return iCat.Crypto.Hash.MD5(_key, message);
+            return iCat.Crypto.Hash.MD5(message);
         }
 
         /// <inheritdoc/>

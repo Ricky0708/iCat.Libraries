@@ -13,12 +13,12 @@ namespace iCat.Crypto
     public static class Hash
     {
         /// <summary>
-        /// MD5
+        /// HMACMD5
         /// </summary>
         /// <param name="message"></param>
         /// <param name="key"></param>
         /// <returns></returns>
-        public static string MD5(string key, string message)
+        public static string HMACMD5(string key, string message)
         {
             var encoding = new UTF8Encoding();
             byte[] keyByte = encoding.GetBytes(key);
@@ -28,6 +28,21 @@ namespace iCat.Crypto
                 byte[] hashMessage = hmacSHA.ComputeHash(messageBytes);
                 return BitConverter.ToString(hashMessage).Replace("-", "").ToLower();
             }
+        }
+
+        /// <summary>
+        /// MD5
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static string MD5(string message)
+        {
+            using var md5 = System.Security.Cryptography.MD5.Create();
+
+            byte[] inputBytes = Encoding.UTF8.GetBytes(message);
+            byte[] hashBytes = md5.ComputeHash(inputBytes);
+
+            return Convert.ToHexString(hashBytes).ToLower();
         }
 
         /// <summary>
