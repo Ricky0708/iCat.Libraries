@@ -35,6 +35,12 @@ namespace iCat.Crypto.Implements.Hashes
         }
 
         /// <inheritdoc/>
+        public string MD5(string message)
+        {
+            return iCat.Crypto.Hash.MD5(message);
+        }
+
+        /// <inheritdoc/>
         public string SHA1(string message)
         {
             return iCat.Crypto.Hash.SHA1(_key, message);
