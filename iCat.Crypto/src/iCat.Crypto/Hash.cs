@@ -39,7 +39,7 @@ namespace iCat.Crypto
         {
             using var md5 = System.Security.Cryptography.MD5.Create();
 
-            byte[] inputBytes = Encoding.UTF8.GetBytes(input);
+            byte[] inputBytes = Encoding.UTF8.GetBytes(message);
             byte[] hashBytes = md5.ComputeHash(inputBytes);
 
             return Convert.ToHexString(hashBytes).ToLower();
