@@ -21,6 +21,13 @@ namespace iCat.Crypto.Interfaces
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
+        string HMACMD5(string message);
+
+        /// <summary>
+        /// MD5
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
         string MD5(string message);
 
         /// <summary>

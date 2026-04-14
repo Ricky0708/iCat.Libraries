@@ -37,7 +37,7 @@ namespace iCat.Cache.demo.Controllers
             var resultDES = _cryptors.First(p => p.Category == "DES").Decrypt(cipherTextDES);
             var resultRSA = _cryptors.First(p => p.Category == "RSA").Decrypt(cipherTextRSA);
 
-            var hashMD5 = _hasher.MD5(plainText);
+            var hashMD5 = _hasher.HMACMD5(plainText);
             var hashSH1 = _hasher.SHA1(plainText);
             var hashSH256 = _hasher.SHA256(plainText);
             var hashSH384 = _hasher.SHA384(plainText);
@@ -52,7 +52,7 @@ namespace iCat.Cache.demo.Controllers
             resultDES = DES.Decrypt("your key", plainText);
             resultRSA = RSA.Decrypt("your RSA private key", plainText);
 
-            hashMD5 = Hash.MD5("your key", plainText);
+            hashMD5 = Hash.HMACMD5("your key", plainText);
             hashSH1 = Hash.SHA1("your key", plainText);
             hashSH256 = Hash.SHA256("your key", plainText);
             hashSH384 = Hash.SHA384("your key", plainText);
