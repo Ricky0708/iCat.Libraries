@@ -35,7 +35,6 @@ namespace iCat.Cache.Implements
         public async Task<T?> GetAsync<T>(string key, CancellationToken cancellationToken = default) where T : class
         {
             var result = await GetStringAsync(key, cancellationToken);
-            await RefreshAsync(key, cancellationToken);
             return string.IsNullOrWhiteSpace(result) ? default : JsonSerializer.Deserialize<T>(result);
         }
 
